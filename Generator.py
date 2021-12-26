@@ -42,6 +42,7 @@ def intialize_building_names():
     return building_name_details
 
 def initlalize_general_details():
+    """Read in files from the General details folder and store then in the proper lists needed for world generation"""
     os.chdir("Json_Files\General_Details")
     general_fileList = os.listdir("./")
     general_details  = {}
@@ -54,18 +55,19 @@ def initlalize_general_details():
         
 
 def generateGender():
-        if (rand.randint(0,1)) == 0:
-            return "M"
-        else:
-            return "F"
+    """50/50 chance to generate either gender"""
+    if (rand.randint(0,1)) == 0:
+        return "M"
+    else:
+        return "F"
 
 class generator(): # create a generator object
      #Class Variables
     race_list = {} # a dictionary of all the races
     profession_master=[] #master list of all jobs
     professions_Categorized = {} #jobs sorted by categories
-    building_names = {}
-    general_details = {}
+    building_names = {} #building name details
+    general_details = {} #details that might be used between multiple generators
     #create a generator object that stores all the data at the start
     def __init__(self):
         base = os.getcwd()
@@ -172,8 +174,10 @@ class generator(): # create a generator object
                 name = rand.choice(self.building_names["Nouns"]) + " & " + rand.choice(self.building_names["Nouns"])
             case 3:
                 name = "The " + rand.choice(self.building_names["Nouns"]) + " & " + rand.choice(self.building_names["Nouns"])
+        return name
 
-
+    def generateChurchName(self):
+        name = rand.choice(self.building_names["Worship_Titles"]) + " of [" + rand.choice(self.general_details["Domains"]) + "] God"
         return name
 
 
