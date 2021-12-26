@@ -1,6 +1,7 @@
 import json as js
 import os
 import random as rand
+import math
 
 def initialize_race(race: str):
     """Used to get all the information for each race in the Json File folder for races"""
@@ -27,7 +28,6 @@ def intialize_professions():
         data = js.load(file) # load the data into an list
         profession_master = profession_master + data # add the list to the master
         professions_Categorized[file_name.removesuffix(".json")] = data #store in dicitonary
-
     return profession_master,professions_Categorized
 
 class generator(): # create a generator object
@@ -47,7 +47,10 @@ class generator(): # create a generator object
             else:
                 print(race + "is not in a valid format, checking settings file in race folder")
         os.chdir(base)
-        profession_master, professions_Categorized = intialize_professions() #intialize profession master
+        self.profession_master, self.professions_Categorized = intialize_professions() #intialize profession master
+
+    
+        
         
 
 
@@ -73,6 +76,25 @@ class generator(): # create a generator object
                 name = name + " of " + rand.choice(self.race_list[race][race+"_Pre"])  + " " + rand.choice(self.race_list[race][race+"_Post"])
         return name
 
+    def generateProfession(self,category: str = ""):
+        job = ""
+        if category == "":
+            job = rand.choice(self.profession_master)
+        elif category in self.professions_Categorized:
+            job = rand.choice(self.professions_Categorized[category])
+        else:
+            print("Invalid category, returning random profession")
+            job = rand.choice(self.profession_master)
+        return job
+        
+    def generateAge(self,max_age: int,maturity: int,isAdult: bool = True):
+        multiplier = rand.uniform(0,1)
+        if isAdult:
+            age = maturity + (max_age * multiplier ** 2)
+            return math.floor(age)
+        else:
+            age = maturity - (maturity* multiplier ** 2)
+            return math.floor
 
 
 
