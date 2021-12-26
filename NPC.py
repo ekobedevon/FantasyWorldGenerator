@@ -36,11 +36,11 @@ class NPC():
         window.close()
     def createDisplayA(self):
         layout =[[sg.Text('NPC TEXT')],
-            [sg.Text("Name: " + self.name,background_color="white",text_color="black")],
-            [sg.Text("Race: " +self.race,background_color="white",text_color="black")],
-            [sg.Text("Sex: " +self.sex,background_color="white",text_color="black")],
-            [sg.Text("Age: " +str(self.age),background_color="white",text_color="black")],
-            [sg.Text("Profession: " +self.profession,background_color="white",text_color="black")]]      
+            [sg.Text("Name: " + self.name)],
+            [sg.Text("Race: " +self.race)],
+            [sg.Text("Sex: " +self.sex)],
+            [sg.Text("Age: " +str(self.age))],
+            [sg.Text("Profession: " +self.profession)]]      
 
         return layout
 
