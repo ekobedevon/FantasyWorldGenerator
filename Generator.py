@@ -40,6 +40,17 @@ def intialize_building_names():
         data = js.load(file)
         building_name_details[file_name.removesuffix(".json")] = data
     return building_name_details
+
+def initlalize_general_details():
+    os.chdir("Json_Files\General_Details")
+    general_fileList = os.listdir("./")
+    general_details  = {}
+    for file_name in general_fileList:
+        file = open(file_name)
+        data = js.load(file)
+        general_details[file_name.removesuffix(".json")] = data
+    return general_details
+
         
 
 def generateGender():
@@ -54,6 +65,7 @@ class generator(): # create a generator object
     profession_master=[] #master list of all jobs
     professions_Categorized = {} #jobs sorted by categories
     building_names = {}
+    general_details = {}
     #create a generator object that stores all the data at the start
     def __init__(self):
         base = os.getcwd()
@@ -69,6 +81,8 @@ class generator(): # create a generator object
         self.profession_master, self.professions_Categorized = intialize_professions() #intialize profession master
         os.chdir(base)
         self.building_names = intialize_building_names()
+        os.chdir(base)
+        self.general_details = initlalize_general_details()
 
 
     def generateRace(self):
@@ -120,7 +134,47 @@ class generator(): # create a generator object
         else:
             age = maturity - (maturity* multiplier ** 2)
             return math.floor
+    def generateTavernName(self):
+        name = ""
+        num = rand.randint(0,9)
+        match(num):
+            case 0:
+                name = rand.choice(self.building_names["Adjectives"]) + " " + rand.choice(self.building_names["Nouns"])
+            case 1:
+                name = rand.choice(self.building_names["Adjectives"]) + " " + rand.choice(self.building_names["Nouns"]) + " " + rand.choice(self.building_names["Bar_Titles"])
+            case 2:
+                name = "The " + rand.choice(self.building_names["Adjectives"]) + " " + rand.choice(self.building_names["Nouns"])
+            case 3:
+                name = "The " + rand.choice(self.building_names["Adjectives"]) + " " + rand.choice(self.building_names["Nouns"]) + " " + rand.choice(self.building_names["Bar_Titles"])
+            case 4:
+                name = rand.choice(self.building_names["Nouns"]) + " & " + rand.choice(self.building_names["Nouns"])
+            case 5:
+                name = rand.choice(self.building_names["Nouns"]) + " & " + rand.choice(self.building_names["Nouns"]) + " " + rand.choice(self.building_names["Bar_Titles"])
+            case 6:
+                name = "The " + rand.choice(self.building_names["Nouns"]) + " & " + rand.choice(self.building_names["Nouns"])
+            case 7:
+                name = "The " + rand.choice(self.building_names["Nouns"]) + " & " + rand.choice(self.building_names["Nouns"]) + " " + rand.choice(self.building_names["Bar_Titles"])
+            case 8:
+                name = rand.choice(self.building_names["Adjectives"]) + " " + rand.choice(self.building_names["Bar_Titles"])
+            case 9:
+                name = "The " + rand.choice(self.building_names["Adjectives"]) + " " + rand.choice(self.building_names["Bar_Titles"])
 
+        return name
+    def generateBuildingName(self):
+        name = ""
+        num = rand.randint(0,3)
+        match(num):
+            case 0:
+                name = rand.choice(self.building_names["Adjectives"]) + " " + rand.choice(self.building_names["Nouns"])
+            case 1:
+                name = "The " + rand.choice(self.building_names["Adjectives"]) + " " + rand.choice(self.building_names["Nouns"])
+            case 2:
+                name = rand.choice(self.building_names["Nouns"]) + " & " + rand.choice(self.building_names["Nouns"])
+            case 3:
+                name = "The " + rand.choice(self.building_names["Nouns"]) + " & " + rand.choice(self.building_names["Nouns"])
+
+
+        return name
 
 
 
