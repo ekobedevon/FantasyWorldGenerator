@@ -30,13 +30,19 @@ def intialize_professions():
         professions_Categorized[file_name.removesuffix(".json")] = data #store in dicitonary
     return profession_master,professions_Categorized
 
+def generateGender():
+        if (rand.randint(0,1)) == 0:
+            return "M"
+        else:
+            return "F"
+
 class generator(): # create a generator object
      #Class Variables
     race_list = {} # a dictionary of all the races
     profession_master=[] #master list of all jobs
     professions_Categorized = {} #jobs sorted by categories
     #create a generator object that stores all the data at the start
-    def __init__(self) -> None:
+    def __init__(self):
         base = os.getcwd()
         os.chdir("Json_Files\Races")
         race_fileList = os.listdir("./") # all races in the files
@@ -49,11 +55,13 @@ class generator(): # create a generator object
         os.chdir(base)
         self.profession_master, self.professions_Categorized = intialize_professions() #intialize profession master
 
+
+    def generateRace(self):
+        if len(self.race_list) != None:
+            list_keys = list(self.race_list.keys())
+            return rand.choice(list_keys)
+
     
-        
-        
-
-
 
     def generateName(self,race: str, sex: str = ""):
         """Given a string, generate a name based of settings"""
@@ -87,7 +95,9 @@ class generator(): # create a generator object
             job = rand.choice(self.profession_master)
         return job
         
-    def generateAge(self,max_age: int,maturity: int,isAdult: bool = True):
+    def generateAge(self,race: str = "Human",isAdult: bool = True):
+        max_age = self.race_list[race]["Settings"]["Max_Age"]
+        maturity = self.race_list[race]["Settings"]["Maturity"]
         multiplier = rand.uniform(0,1)
         if isAdult:
             age = maturity + (max_age * multiplier ** 2)

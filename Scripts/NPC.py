@@ -1,19 +1,24 @@
+import Generator
 class NPC():
-    def __init__(self, name="",age=-1,race = "npc",profession="npc",dict_data = None):
+    race = ""
+    name = ""
+    sex = ""
+    age = 0
+    profession = ""
+    def __init__(self,gen: Generator.generator = None,dict_data = None, isAdult:bool = True):
         if dict_data == None:
-            self.name = name
-            self.age = age
-            self.race  = race
-            self.profession = profession
+            self.race = gen.generateRace()
+            self.sex = Generator.generateGender()
+            self.name = gen.generateName(self.race,self.sex)
+            self.age = gen.generateAge(self.race,isAdult)
+            self.profession = gen.generateProfession()
+        else:
+            self.name = dict_data['name']
+            self.age = dict_data['age']
+            self.race  = dict_data['race']
+            self.profession = dict_data['profession']
 
-    def NPC2Dict(self):
-        export = {'name':self.name,'age': self.age,'race':self.race,'profession':self.profession,}
-        return export
 
 
-    def dict2NPC(self,dict_data):
-        self.name = dict_data['name']
-        self.age = dict_data['age']
-        self.race  = dict_data['race']
-        self.profession = dict_data['profession']
+    
         
