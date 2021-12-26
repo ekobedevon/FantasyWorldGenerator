@@ -30,6 +30,18 @@ def intialize_professions():
         professions_Categorized[file_name.removesuffix(".json")] = data #store in dicitonary
     return profession_master,professions_Categorized
 
+def intialize_building_names():
+    """Read in files from the buildings folder and store then in the proper lists needed for world generation"""
+    os.chdir("Json_Files\Buildings") # set to building directory
+    building_fileList = os.listdir("./")
+    building_name_details = {}
+    for file_name in building_fileList:
+        file = open(file_name)
+        data = js.load(file)
+        building_name_details[file_name.removesuffix(".json")] = data
+    return building_name_details
+        
+
 def generateGender():
         if (rand.randint(0,1)) == 0:
             return "M"
@@ -41,6 +53,7 @@ class generator(): # create a generator object
     race_list = {} # a dictionary of all the races
     profession_master=[] #master list of all jobs
     professions_Categorized = {} #jobs sorted by categories
+    building_names = {}
     #create a generator object that stores all the data at the start
     def __init__(self):
         base = os.getcwd()
@@ -54,6 +67,8 @@ class generator(): # create a generator object
                 print(race + "is not in a valid format, checking settings file in race folder")
         os.chdir(base)
         self.profession_master, self.professions_Categorized = intialize_professions() #intialize profession master
+        os.chdir(base)
+        self.building_names = intialize_building_names()
 
 
     def generateRace(self):
