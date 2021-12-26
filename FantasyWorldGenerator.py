@@ -16,13 +16,14 @@ while(exit):
     events, values = window.read()
     if "--EXIT--" in events:
         exit = 0
+        window.close()
     elif "--NewNPC--" in events:
         test_npc = NPC.NPC(MASTER_GENERATOR)
         window.close()
 
 
 
-window.close()
+
 
 
 
