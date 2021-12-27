@@ -201,6 +201,37 @@ class generator(): # create a generator object
         name = rand.choice(self.building_names["Worship_Titles"]) + " of [" + rand.choice(self.general_details["Domains"]) + "] God"
         return name
 
+    def generateBuilding(self,building_type: str = None):
+        building_name = ""
+        owner_proffesion = ""
+        if building_type == None or building_type not in self.building_type: #if their is no building type or if the building type is not valid
+            #print("No valid building type given, generating random building name")
+            building_type = rand.choice(self.building_types) # generate a building type
+        match(building_type):
+            case "Shops":
+                building_name = self.generateBuildingName()
+                owner_proffesion = "Owner and Operator of " + building_name
+            case "Tavern":
+                building_name = self.generateTavernName()
+                owner_proffesion = "Owner and Operator of " + building_name
+            case "Guild_Types":
+                building_name = rand.choice(self.building_types_names["Guild_Types"]) + " Guild"
+                owner_proffesion = "Leader of local " + building_name
+            case "Normal_Homes":
+                building_name = rand.choice(self.building_types_names["Normal_Homes"])
+                owner_proffesion = ""
+            case "Government Building":
+                building_name = "Government Building"
+                owner_proffesion = "Leader for local government"
+            case "Notable_Housing":
+                building_name = rand.choice(self.building_types_names["Notable_Housing"])
+                owner_proffesion = ""
+            case "Craftsmen":
+                building_name = self.generateBuildingName()
+                owner_proffesion = "Owner and Operator of " + building_name
 
+        return building_name, owner_proffesion,building_type
+            
+        
 
 
