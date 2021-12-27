@@ -32,7 +32,7 @@ def intialize_professions():
 
 def intialize_building_names():
     """Read in files from the buildings folder and store then in the proper lists needed for world generation"""
-    os.chdir("Json_Files\Buildings") # set to building directory
+    os.chdir("Json_Files\Buildings\Building_Details") # set to building directory
     building_fileList = os.listdir("./")
     building_name_details = {}
     for file_name in building_fileList:
@@ -136,6 +136,7 @@ class generator(): # create a generator object
         else:
             age = maturity - (maturity* multiplier ** 2)
             return math.floor
+        
     def generateTavernName(self):
         name = ""
         num = rand.randint(0,9)
