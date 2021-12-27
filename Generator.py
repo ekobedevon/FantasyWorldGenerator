@@ -68,6 +68,16 @@ def initlalize_general_details():
         general_details[file_name.removesuffix(".json")] = data
     return general_details
 
+def intialize_item_details():
+    """Read in files from item folder and store them in a dictionary"""
+    os.chdir("Json_Files\Items")
+    general_fileList = os.listdir("./")
+    item_details = {}
+    for file_name in general_fileList:
+        file = open(file_name)
+        data = js.load(file)
+        item_details[file_name.removesuffix(".json")] = data
+    return item_details
         
 
 def generateGender():
@@ -86,6 +96,7 @@ class generator(): # create a generator object
     building_types = []
     building_types_names  = {}
     general_details = {} #details that might be used between multiple generators
+    item_details = {} #details used for item generation
     #create a generator object that stores all the data at the start
     def __init__(self):
         base = os.getcwd()
@@ -105,6 +116,8 @@ class generator(): # create a generator object
         self.general_details = initlalize_general_details()
         os.chdir(base)
         self.building_types, self.building_types_names = intialize_building_types()
+        os.chdir(base)
+        self.item_details = intialize_item_details()
 
 
     def generateRace(self):
@@ -232,6 +245,23 @@ class generator(): # create a generator object
 
         return building_name, owner_proffesion,building_type
             
+    def generateMacguffin(self,item_type: str = None):
+        name =""
+        if item_type == None or item_type not in self.item_details["Item_Types"]:# generate a item type if no valid item is given
+            item_base  = rand.choice(self.item_details["Item_Types"])
+
+        if item_base == "Armor" or item_base == "Weapon": # if it is armor or weapon type
+            name = rand.choice(self.item_details[item_base]) #chose from armor/weapon list
+        else:
+            name = item_base #asign item type to name
+
+        if(rand.randint(0,2) == 0): # pick either of two name formates, weighted for non named items
+            name = name + " of " + self.generateName(self.generateRace(),generateGender()) 
+        else:
+            name = name + " of " + rand.choice(self.item_details["Item_Preffix"]) + " " + rand.choice(self.item_details["Item_Suffix"])
+        return name # return name
+
+    def generateHook(self,quest_giver: str = None,target: str = None,location: str = None, reward: str = None):
+        if quest_giver == None:
+            quest_giver = self.generateName(self.generateRace(),generateGender())
         
-
-

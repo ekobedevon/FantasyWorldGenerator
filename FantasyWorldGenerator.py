@@ -5,10 +5,9 @@ import Generator
 
 MASTER_GENERATOR =Generator.generator()
 test_npc = NPC.NPC(MASTER_GENERATOR)
-for x in range(0,20):
-    temp = Building.Building(gen=MASTER_GENERATOR)
-    dict_temp = temp.__dict__()
-    print(dict_temp)
+for x in range(0,10):
+    print(MASTER_GENERATOR.generateMacguffin())
+
 
 
 exit = 0;
