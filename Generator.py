@@ -41,6 +41,22 @@ def intialize_building_names():
         building_name_details[file_name.removesuffix(".json")] = data
     return building_name_details
 
+def intialize_building_types():
+    os.chdir("Json_Files\Buildings")
+    file = open("Building_Types.json")
+    data = js.load(file)
+    building_types = data
+    building_types_names  = {}
+    os.chdir("./Building_Types")
+    building_fileList = os.listdir("./")
+    for file_name in building_fileList:
+        file = open(file_name)
+        data = js.load(file)
+        building_types_names[file_name.removesuffix(".json")] = data
+    
+    return building_types, building_types_names
+
+
 def initlalize_general_details():
     """Read in files from the General details folder and store then in the proper lists needed for world generation"""
     os.chdir("Json_Files\General_Details")
@@ -62,11 +78,13 @@ def generateGender():
         return "F"
 
 class generator(): # create a generator object
-     #Class Variables
+    #Class Variables
     race_list = {} # a dictionary of all the races
     profession_master=[] #master list of all jobs
     professions_Categorized = {} #jobs sorted by categories
     building_names = {} #building name details
+    building_types = []
+    building_types_names  = {}
     general_details = {} #details that might be used between multiple generators
     #create a generator object that stores all the data at the start
     def __init__(self):
@@ -85,6 +103,8 @@ class generator(): # create a generator object
         self.building_names = intialize_building_names()
         os.chdir(base)
         self.general_details = initlalize_general_details()
+        os.chdir(base)
+        self.building_types, self.building_types_names = intialize_building_types()
 
 
     def generateRace(self):

@@ -6,7 +6,7 @@ MASTER_GENERATOR =Generator.generator()
 test_npc = NPC.NPC(MASTER_GENERATOR)
 
 
-exit = 1;
+exit = 0;
 
 while(exit):
     layout = test_npc.createDisplayA()
