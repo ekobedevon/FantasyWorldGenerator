@@ -261,7 +261,7 @@ class generator(): # create a generator object
             name = name + " of " + rand.choice(self.item_details["Item_Preffix"]) + " " + rand.choice(self.item_details["Item_Suffix"])
         return name # return name
 
-    def generateHook(self,quest_giver: str = None,target: str = None,location: str = None, reward: str = None):
+    def generateHook(self,quest_giver: str = None,target: str = None,location: str = None, reward: str = None,Q_type: int = 1):
         hook = None
         if quest_giver == None: #generate quest giver name if not given one
             quest_giver = self.generateName(self.generateRace(),generateGender())
@@ -274,7 +274,7 @@ class generator(): # create a generator object
         if location == None:
             location = "[NAME TBD]" #Implement location name generator later after building
         
-        if rand.randint(0,1):
+        if rand.randint(0,1) and Q_type == 1:
             party_verb = rand.choice(self.general_details["Kill_Synonyms"])
             if target == None: # if no target given, generate a monster to target
                 target = rand.choice(self.general_details["Monsters"]) + "(s)"

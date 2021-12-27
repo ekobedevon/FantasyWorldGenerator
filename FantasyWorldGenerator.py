@@ -5,7 +5,8 @@ import Generator
 
 MASTER_GENERATOR =Generator.generator()
 test_npc = NPC.NPC(MASTER_GENERATOR)
-
+temp = Building.Building(MASTER_GENERATOR)
+print(temp.__dict__())
 
 
 exit = 0;
