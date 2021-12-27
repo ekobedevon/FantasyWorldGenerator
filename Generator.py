@@ -176,7 +176,7 @@ class generator(): # create a generator object
                 name = "The " + rand.choice(self.building_names["Nouns"]) + " & " + rand.choice(self.building_names["Nouns"])
         return name
 
-    def generateChurchName(self):
+    def generateReligiousBuildingName(self):
         name = rand.choice(self.building_names["Worship_Titles"]) + " of [" + rand.choice(self.general_details["Domains"]) + "] God"
         return name
 
