@@ -5,8 +5,6 @@ import Generator
 
 MASTER_GENERATOR =Generator.generator()
 test_npc = NPC.NPC(MASTER_GENERATOR)
-for x in range(0,10):
-    print(MASTER_GENERATOR.generateMacguffin())
 
 
 

@@ -262,6 +262,30 @@ class generator(): # create a generator object
         return name # return name
 
     def generateHook(self,quest_giver: str = None,target: str = None,location: str = None, reward: str = None):
-        if quest_giver == None:
+        hook = None
+        if quest_giver == None: #generate quest giver name if not given one
             quest_giver = self.generateName(self.generateRace(),generateGender())
+
+        if reward == None:
+            if(rand.randint(0,1)):
+                reward = "level appropriate gold amount"
+            else:
+                reward = self.generateMacguffin() + "and level appropriate gold amount"
+        if location == None:
+            location = "[NAME TBD]" #Implement location name generator later after building
         
+        if rand.randint(0,1):
+            party_verb = rand.choice(self.general_details["Kill_Synonyms"])
+            if target == None: # if no target given, generate a monster to target
+                target = rand.choice(self.general_details["Monsters"]) + "(s)"
+            objective_verb = rand.choice(self.general_details["Oppresive_synonyms"])
+            hook = quest_giver + " wants to hire the party to " + party_verb + " the " + target + " that has been " + objective_verb + " the " + location + " and will pay them with a " + reward + "."
+        else:
+            party_verb = rand.choice(self.general_details["Find_Synonyms"])
+            guide_item = rand.choice(self.general_details["Map_Alternates"])
+            
+            hook = "The Party " + party_verb + " a " + guide_item + " that leads them to " + location + ", the " + guide_item + " leads them to believe there is a " + reward + " located somewhere inside."
+        return hook
+            
+                             
+                   
