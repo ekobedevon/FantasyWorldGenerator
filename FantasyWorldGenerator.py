@@ -41,7 +41,7 @@ while(exit): # loop until exit is changed
         case "--Export--": #export the currently displayed information
             os.chdir("./Export")
             path = os.getcwd()
-            #OutOD.export(current_displayed) # export the displayer info
+            OutOD.export(current_displayed) # export the displayer info
             window.close()
             layout = [[sg.Text("Exported to " + path,justification="center",size=(50,1))],[sg.Text("Returning to main menu...",justification="center",size=(50,1))],[sg.Column([[sg.Button("OK",size=d_f_b)]],justification='center')]]
             window = sg.Window("Abnormal World Generator",layout)
