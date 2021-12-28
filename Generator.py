@@ -47,7 +47,7 @@ def intialize_building_types():
     data = js.load(file)
     building_types = data
     building_types_names  = {}
-    os.chdir("./Building_Types")
+    os.chdir("./Building_Types_Names")
     building_fileList = os.listdir("./")
     for file_name in building_fileList:
         file = open(file_name)
@@ -240,7 +240,7 @@ class generator(): # create a generator object
                 building_name = rand.choice(self.building_types_names["Notable_Housing"])
                 owner_proffesion = ""
             case "Craftsmen":
-                building_name = self.generateBuildingName()
+                building_name = self.generateBuildingName() + " " + rand.choice(self.building_types_names['Craftsmen'])
                 owner_proffesion = "Owner and Operator of " + building_name
 
         return building_name, owner_proffesion,building_type
