@@ -11,7 +11,7 @@ def GenerateUniqueName(file_name: str,file_set: set,file_extension: str = ""):
     return file_name
 
 
-def export(item):
+def export(item): #generic export to be used when item type is not stricly defined
     if type(item) == Building.Building:
         exportBuilding(item)
     if type(item) == NPC.NPC:
@@ -21,7 +21,6 @@ def export(item):
 def exportNPC(npc: NPC.NPC):
     file_set = set(os.listdir())
     file_name =GenerateUniqueName(npc.name,file_set,".MD")
-
     file = open(file_name, 'w')
     file.write("**Name:** %s<br>\n" % npc.name)
     file.write("**Race:** %s<br>\n" % npc.race)
@@ -31,12 +30,12 @@ def exportNPC(npc: NPC.NPC):
     file.close()
 
 def exportBuilding(building: Building.Building, parentfolder = ""):
-    file_set = set(os.listdir())
-    folder_name = building.building_name
-    folder_name = GenerateUniqueName(folder_name,file_set)
+    file_set = set(os.listdir()) #get all files in director
+    folder_name = building.building_name #get potential name
+    folder_name = GenerateUniqueName(folder_name,file_set) #generate unique name  for this building
     os.mkdir(folder_name) #create a folder just for the building name
     os.chdir("./"+folder_name) #enter that folder
-    os.mkdir("Occupants")
+    os.mkdir("Occupants") #create occupants folder
     file = open(building.building_name + ".MD", 'w')
     file.write("## General Info <br>\n")
     file.write("**Name:** %s<br>\n" % building.building_name)
@@ -49,7 +48,7 @@ def exportBuilding(building: Building.Building, parentfolder = ""):
     for hook in building.hooks:
         file.write("%s <br>\n" % hook)
     file.close()
-    os.chdir("./Occupants")
+    os.chdir("./Occupants") #write all occupants 
     exportNPC(building.owner)
     for occupant in building.occupants:
         exportNPC(occupant)
