@@ -79,7 +79,7 @@ def intialize_item_details():
         item_details[file_name.removesuffix(".json")] = data
     return item_details
 
-def intialize_Quest_details():
+def intialize_quest_details():
     os.chdir("Json_Files\Quest_Details")
     general_fileList = os.listdir("./")
     quest_details = {}
@@ -89,7 +89,7 @@ def intialize_Quest_details():
         quest_details[file_name.removesuffix(".json")] = data
     return quest_details
 
-def intialize_Location_details():
+def intialize_location_details():
     os.chdir("Json_Files\Location")
     general_fileList = os.listdir("./")
     location_details = {}
@@ -141,9 +141,10 @@ class generator(): # create a generator object
         os.chdir(base)
         self.item_details = intialize_item_details()
         os.chdir(base)
-        self.location_details = intialize_Location_details()
+        self.location_details = intialize_location_details()
         os.chdir(base)
-        self.quest_details = intialize_Quest_details()
+        self.quest_details = intialize_quest_details()
+        os.chdir(base)
 
 
 
@@ -152,7 +153,6 @@ class generator(): # create a generator object
             list_keys = list(self.race_list.keys())
             return rand.choice(list_keys)
 
-    
 
     def generateName(self,race: str, sex: str = ""):
         """Given a string, generate a name based of settings"""
@@ -302,7 +302,7 @@ class generator(): # create a generator object
             else:
                 reward = self.generateMacguffin() + " and level appropriate gold amount"
         if location == None:
-            location = "[NAME TBD]" #Implement location name generator later after building
+            location = self.generateLOI()
         
         if rand.randint(0,1) and Q_type == 1:
             party_verb = rand.choice(self.quest_details["Kill_Synonyms"])
@@ -317,5 +317,27 @@ class generator(): # create a generator object
             hook = "The Party " + party_verb + " a " + guide_item + " that leads them to " + location + ", the " + guide_item + " leads them to believe there is a " + reward + " located somewhere inside."
         return hook
             
-                             
-                   
+    def generateLOI(self,natural: bool = None):
+        """Generate a Location of interest"""
+        if natural == None:
+            natural = rand.randint(0,1)
+        location_type = ""
+        if natural:
+            location_type = rand.choice(self.location_details["Locations_Natural"])
+        else:
+            location_type = rand.choice(self.location_details["Locations_ManMade"])
+        name = ""
+        
+        match(rand.randint(0,4)):
+            case 0:
+                name = location_type + " of " + rand.choice(self.location_details["Adjectives"]) + " " + rand.choice(self.location_details["Noun"])
+            case 1:
+                name = location_type + " of " + rand.choice(self.location_details["Noun"])
+            case 2:
+                name = "The " + rand.choice(self.location_details["Adjectives"]) + " " + location_type
+            case 3:
+                name = rand.choice(self.location_details["Adjectives"]) + " " + location_type
+            case 4:
+                name = rand.choice(self.location_details["Adjectives"]) + " " + rand.choice(self.location_details["Noun"]) + " " + location_type
+
+        return name                
