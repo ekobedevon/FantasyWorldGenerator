@@ -98,6 +98,8 @@ def intialize_location_details():
         data = js.load(file)
         location_details[file_name.removesuffix(".json")] = data
     return location_details
+
+
         
 
 def generateGender():
@@ -119,6 +121,7 @@ class generator(): # create a generator object
     item_details = {} #details used for item generation
     location_details = {}
     quest_details = {}
+    city_details = {}
     #create a generator object that stores all the data at the start
     def __init__(self):
         base = os.getcwd()
