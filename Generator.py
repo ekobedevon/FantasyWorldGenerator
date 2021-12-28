@@ -30,17 +30,73 @@ def intialize_professions():
         professions_Categorized[file_name.removesuffix(".json")] = data #store in dicitonary
     return profession_master,professions_Categorized
 
+def intialize_building_names():
+    """Read in files from the buildings folder and store then in the proper lists needed for world generation"""
+    os.chdir("Json_Files\Buildings\Building_Details") # set to building directory
+    building_fileList = os.listdir("./")
+    building_name_details = {}
+    for file_name in building_fileList:
+        file = open(file_name)
+        data = js.load(file)
+        building_name_details[file_name.removesuffix(".json")] = data
+    return building_name_details
+
+def intialize_building_types():
+    os.chdir("Json_Files\Buildings")
+    file = open("Building_Types.json")
+    data = js.load(file)
+    building_types = data
+    building_types_names  = {}
+    os.chdir("./Building_Types_Names")
+    building_fileList = os.listdir("./")
+    for file_name in building_fileList:
+        file = open(file_name)
+        data = js.load(file)
+        building_types_names[file_name.removesuffix(".json")] = data
+    
+    return building_types, building_types_names
+
+
+def initlalize_general_details():
+    """Read in files from the General details folder and store then in the proper lists needed for world generation"""
+    os.chdir("Json_Files\General_Details")
+    general_fileList = os.listdir("./")
+    general_details  = {}
+    for file_name in general_fileList:
+        file = open(file_name)
+        data = js.load(file)
+        general_details[file_name.removesuffix(".json")] = data
+    return general_details
+
+def intialize_item_details():
+    """Read in files from item folder and store them in a dictionary"""
+    os.chdir("Json_Files\Items")
+    general_fileList = os.listdir("./")
+    item_details = {}
+    for file_name in general_fileList:
+        file = open(file_name)
+        data = js.load(file)
+        item_details[file_name.removesuffix(".json")] = data
+    return item_details
+        
+
 def generateGender():
-        if (rand.randint(0,1)) == 0:
-            return "M"
-        else:
-            return "F"
+    """50/50 chance to generate either gender"""
+    if (rand.randint(0,1)) == 0:
+        return "M"
+    else:
+        return "F"
 
 class generator(): # create a generator object
-     #Class Variables
+    #Class Variables
     race_list = {} # a dictionary of all the races
     profession_master=[] #master list of all jobs
     professions_Categorized = {} #jobs sorted by categories
+    building_names = {} #building name details
+    building_types = []
+    building_types_names  = {}
+    general_details = {} #details that might be used between multiple generators
+    item_details = {} #details used for item generation
     #create a generator object that stores all the data at the start
     def __init__(self):
         base = os.getcwd()
@@ -54,6 +110,14 @@ class generator(): # create a generator object
                 print(race + "is not in a valid format, checking settings file in race folder")
         os.chdir(base)
         self.profession_master, self.professions_Categorized = intialize_professions() #intialize profession master
+        os.chdir(base)
+        self.building_names = intialize_building_names()
+        os.chdir(base)
+        self.general_details = initlalize_general_details()
+        os.chdir(base)
+        self.building_types, self.building_types_names = intialize_building_types()
+        os.chdir(base)
+        self.item_details = intialize_item_details()
 
 
     def generateRace(self):
@@ -105,8 +169,123 @@ class generator(): # create a generator object
         else:
             age = maturity - (maturity* multiplier ** 2)
             return math.floor
+        
+    def generateTavernName(self):
+        name = ""
+        num = rand.randint(0,9)
+        match(num):
+            case 0:
+                name = rand.choice(self.building_names["Adjectives"]) + " " + rand.choice(self.building_names["Nouns"])
+            case 1:
+                name = rand.choice(self.building_names["Adjectives"]) + " " + rand.choice(self.building_names["Nouns"]) + " " + rand.choice(self.building_names["Bar_Titles"])
+            case 2:
+                name = "The " + rand.choice(self.building_names["Adjectives"]) + " " + rand.choice(self.building_names["Nouns"])
+            case 3:
+                name = "The " + rand.choice(self.building_names["Adjectives"]) + " " + rand.choice(self.building_names["Nouns"]) + " " + rand.choice(self.building_names["Bar_Titles"])
+            case 4:
+                name = rand.choice(self.building_names["Nouns"]) + " & " + rand.choice(self.building_names["Nouns"])
+            case 5:
+                name = rand.choice(self.building_names["Nouns"]) + " & " + rand.choice(self.building_names["Nouns"]) + " " + rand.choice(self.building_names["Bar_Titles"])
+            case 6:
+                name = "The " + rand.choice(self.building_names["Nouns"]) + " & " + rand.choice(self.building_names["Nouns"])
+            case 7:
+                name = "The " + rand.choice(self.building_names["Nouns"]) + " & " + rand.choice(self.building_names["Nouns"]) + " " + rand.choice(self.building_names["Bar_Titles"])
+            case 8:
+                name = rand.choice(self.building_names["Adjectives"]) + " " + rand.choice(self.building_names["Bar_Titles"])
+            case 9:
+                name = "The " + rand.choice(self.building_names["Adjectives"]) + " " + rand.choice(self.building_names["Bar_Titles"])
 
+        return name
+    def generateBuildingName(self):
+        name = ""
+        num = rand.randint(0,3)
+        match(num):
+            case 0:
+                name = rand.choice(self.building_names["Adjectives"]) + " " + rand.choice(self.building_names["Nouns"])
+            case 1:
+                name = "The " + rand.choice(self.building_names["Adjectives"]) + " " + rand.choice(self.building_names["Nouns"])
+            case 2:
+                name = rand.choice(self.building_names["Nouns"]) + " & " + rand.choice(self.building_names["Nouns"])
+            case 3:
+                name = "The " + rand.choice(self.building_names["Nouns"]) + " & " + rand.choice(self.building_names["Nouns"])
+        return name
 
+    def generateReligiousBuildingName(self):
+        name = rand.choice(self.building_names["Worship_Titles"]) + " of [" + rand.choice(self.general_details["Domains"]) + "] God"
+        return name
 
+    def generateBuilding(self,building_type: str = None):
+        building_name = ""
+        owner_proffesion = ""
+        if building_type == None or building_type not in self.building_type: #if their is no building type or if the building type is not valid
+            #print("No valid building type given, generating random building name")
+            building_type = rand.choice(self.building_types) # generate a building type
+        match(building_type):
+            case "Shops":
+                building_name = self.generateBuildingName()
+                owner_proffesion = "Owner and Operator of " + building_name
+            case "Tavern":
+                building_name = self.generateTavernName()
+                owner_proffesion = "Owner and Operator of " + building_name
+            case "Guild_Types":
+                building_name = rand.choice(self.building_types_names["Guild_Types"]) + " Guild"
+                owner_proffesion = "Leader of local " + building_name
+            case "Normal_Homes":
+                building_name = rand.choice(self.building_types_names["Normal_Homes"])
+                owner_proffesion = ""
+            case "Government Building":
+                building_name = "Government Building"
+                owner_proffesion = "Leader for local government"
+            case "Notable_Housing":
+                building_name = rand.choice(self.building_types_names["Notable_Housing"])
+                owner_proffesion = ""
+            case "Craftsmen":
+                building_name = self.generateBuildingName() + " " + rand.choice(self.building_types_names['Craftsmen'])
+                owner_proffesion = "Owner and Operator of " + building_name
 
+        return building_name, owner_proffesion,building_type
+            
+    def generateMacguffin(self,item_type: str = None):
+        name =""
+        if item_type == None or item_type not in self.item_details["Item_Types"]:# generate a item type if no valid item is given
+            item_base  = rand.choice(self.item_details["Item_Types"])
 
+        if item_base == "Armor" or item_base == "Weapon": # if it is armor or weapon type
+            name = rand.choice(self.item_details[item_base]) #chose from armor/weapon list
+        else:
+            name = item_base #asign item type to name
+
+        if(rand.randint(0,2) == 0): # pick either of two name formates, weighted for non named items
+            name = name + " of " + self.generateName(self.generateRace(),generateGender()) 
+        else:
+            name = name + " of " + rand.choice(self.item_details["Item_Preffix"]) + " " + rand.choice(self.item_details["Item_Suffix"])
+        return name # return name
+
+    def generateHook(self,quest_giver: str = None,target: str = None,location: str = None, reward: str = None,Q_type: int = 1):
+        hook = None
+        if quest_giver == None: #generate quest giver name if not given one
+            quest_giver = self.generateName(self.generateRace(),generateGender())
+
+        if reward == None:
+            if(rand.randint(0,1)):
+                reward = "level appropriate gold amount"
+            else:
+                reward = self.generateMacguffin() + "and level appropriate gold amount"
+        if location == None:
+            location = "[NAME TBD]" #Implement location name generator later after building
+        
+        if rand.randint(0,1) and Q_type == 1:
+            party_verb = rand.choice(self.general_details["Kill_Synonyms"])
+            if target == None: # if no target given, generate a monster to target
+                target = rand.choice(self.general_details["Monsters"]) + "(s)"
+            objective_verb = rand.choice(self.general_details["Oppresive_synonyms"])
+            hook = quest_giver + " wants to hire the party to " + party_verb + " the " + target + " that has been " + objective_verb + " the " + location + " and will pay them with a " + reward + "."
+        else:
+            party_verb = rand.choice(self.general_details["Find_Synonyms"])
+            guide_item = rand.choice(self.general_details["Map_Alternates"])
+            
+            hook = "The Party " + party_verb + " a " + guide_item + " that leads them to " + location + ", the " + guide_item + " leads them to believe there is a " + reward + " located somewhere inside."
+        return hook
+            
+                             
+                   
