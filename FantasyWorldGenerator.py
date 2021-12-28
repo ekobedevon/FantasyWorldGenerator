@@ -13,7 +13,6 @@ while(exit):
     layout= [[sg.Column(layout),sg.Column(button_layout)]]
     window = sg.Window("Abnormal World Generator",layout)
     events,values = window.read()
-    print(events)
     if events != None:
         if "--EXIT--" in events:
             exit = 0
