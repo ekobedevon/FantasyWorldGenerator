@@ -3,21 +3,7 @@ import NPC
 import Building
 import Generator
 sg.theme('DarkTeal9')
-
-
 MASTER_GENERATOR =Generator.generator()
-test_npc = NPC.NPC(MASTER_GENERATOR)
-test_npcA = NPC.NPC(MASTER_GENERATOR)
-test_building = Building.Building(MASTER_GENERATOR)
-layout =[[]]
-"""for x in range(0,1):
-    layout = [[sg.Column(test_building.createDisplay())]]
-    print(layout)
-    window = sg.Window("tmep",layout)
-    window.read()
-    window.close()
-    test_building = Building.Building(MASTER_GENERATOR)"""
-
 
 exit =1;
 layout=[[]]

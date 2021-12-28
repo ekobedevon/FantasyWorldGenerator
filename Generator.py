@@ -242,6 +242,9 @@ class generator(): # create a generator object
             case "Craftsmen":
                 building_name = self.generateBuildingName() + " " + rand.choice(self.building_types_names['Craftsmen'])
                 owner_proffesion = "Owner and Operator of " + building_name
+            case "Religious":
+                building_name = self.generateReligiousBuildingName()
+                owner_proffesion = "Member of " + building_name
 
         return building_name, owner_proffesion,building_type
             
