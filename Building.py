@@ -11,15 +11,21 @@ class Building():
     owner = NPC.NPC
     occupants:List[NPC.NPC] = []
     hooks = []
-    def __init__(self,gen: Generator.generator = None,dict_data = None):
+    def __init__(self,gen: Generator.generator = None,dict_data = None,Location:str = ""):
         self.owner =None
         self.owner = NPC.NPC(gen=gen)
         if dict_data == None:
-            building_name, building_owner, building_type = gen.generateBuilding()
+            building_name, building_owner, building_type = gen.generateBuilding(location=Location)
             self.building_type = building_type
             self.building_name = building_name
             if building_owner != "": #if the building is not a house
                 self.owner.profession = building_owner
+            if self.building_type == "Normal_Homes":
+                self.building_name += " of " + self.owner.name
+            elif self.building_type == "Notable_Housing":
+                self.building_name = gen.generateInterstingName(self.owner.name,self.building_name)    
+
+
             self.occupants = []
             for x in range(0,randint(0,4)): # generate some npcs for the building
                 temp_npc = NPC.NPC(gen=gen)
@@ -36,9 +42,9 @@ class Building():
                             name = npc_occupant.name # get the name of the occupant
                             hook = gen.generateHook(name)
                         else:
-                            hook ="On the local Quest Board: " + gen.generateHook(Q_type=1)
+                            hook ="On the nearby Quest Board: " + gen.generateHook(Q_type=1)
                     case 2:
-                        hook ="On the local Quest Board: " + gen.generateHook(Q_type=1)
+                        hook ="On the nearby Quest Board: " + gen.generateHook(Q_type=1)
                     case 3:
                         hook =gen.generateHook(Q_type=0)
                 self.hooks.append(hook)
@@ -87,8 +93,6 @@ class Building():
                 hooks.append([sg.Text(text)])
             Container = [sg.Column(hooks)]
             layout.append(Container)
-            
-            """layout.append(hooks)"""
 
         return layout
 

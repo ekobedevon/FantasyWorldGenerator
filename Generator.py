@@ -99,7 +99,15 @@ def intialize_location_details():
         location_details[file_name.removesuffix(".json")] = data
     return location_details
 
-
+def intialize_city_details():
+    os.chdir("Json_Files\Cities")
+    general_fileList = os.listdir("./")
+    city_details = {}
+    for file_name in general_fileList:
+        file = open(file_name)
+        data = js.load(file)
+        city_details[file_name.removesuffix(".json")] = data
+    return city_details
         
 
 def generateGender():
@@ -147,6 +155,8 @@ class generator(): # create a generator object
         self.location_details = intialize_location_details()
         os.chdir(base)
         self.quest_details = intialize_quest_details()
+        os.chdir(base)
+        self.city_details = intialize_city_details()
         os.chdir(base)
 
 
@@ -226,6 +236,7 @@ class generator(): # create a generator object
                 name = "The " + rand.choice(self.building_names["Adjectives"]) + " " + rand.choice(self.building_names["Bar_Titles"])
 
         return name
+
     def generateBuildingName(self):
         name = ""
         num = rand.randint(0,3)
@@ -244,9 +255,12 @@ class generator(): # create a generator object
         name = rand.choice(self.building_names["Worship_Titles"]) + " of [" + rand.choice(self.general_details["Domains"]) + "] God"
         return name
 
-    def generateBuilding(self,building_type: str = None):
+    def generateBuilding(self,building_type: str = None,location: str = ""):
         building_name = ""
         owner_proffesion = ""
+        suffix = ""
+        if location != "":
+            suffix = " of " + location 
         if building_type == None or building_type not in self.building_type: #if their is no building type or if the building type is not valid
             #print("No valid building type given, generating random building name")
             building_type = rand.choice(self.building_types) # generate a building type
@@ -258,13 +272,13 @@ class generator(): # create a generator object
                 building_name = self.generateTavernName()
                 owner_proffesion = "Owner and Operator of " + building_name
             case "Guild_Types":
-                building_name = rand.choice(self.building_types_names["Guild_Types"]) + " Guild"
+                building_name = rand.choice(self.building_types_names["Guild_Types"]) + " Guild Branch" + suffix
                 owner_proffesion = "Leader of local " + building_name
             case "Normal_Homes":
                 building_name = rand.choice(self.building_types_names["Normal_Homes"])
                 owner_proffesion = ""
             case "Government Building":
-                building_name = "Government Building"
+                building_name = "Government Building" + suffix
                 owner_proffesion = "Leader for local government"
             case "Notable_Housing":
                 building_name = rand.choice(self.building_types_names["Notable_Housing"])
@@ -320,7 +334,7 @@ class generator(): # create a generator object
             hook = "The Party " + party_verb + " a " + guide_item + " that leads them to " + location + ", the " + guide_item + " leads them to believe there is a " + reward + " located somewhere inside."
         return hook
             
-    def generateLOI(self,natural: bool = None):
+    def generateLOI(self,natural: bool = None,include_city: bool = True):
         """Generate a Location of interest"""
         if natural == None:
             natural = rand.randint(0,1)
@@ -330,8 +344,8 @@ class generator(): # create a generator object
         else:
             location_type = rand.choice(self.location_details["Locations_ManMade"])
         name = ""
-        
-        match(rand.randint(0,4)):
+        print("")
+        match(rand.randint(0,5)):
             case 0:
                 name = location_type + " of " + rand.choice(self.location_details["Adjectives"]) + " " + rand.choice(self.location_details["Noun"])
             case 1:
@@ -342,5 +356,39 @@ class generator(): # create a generator object
                 name = rand.choice(self.location_details["Adjectives"]) + " " + location_type
             case 4:
                 name = rand.choice(self.location_details["Adjectives"]) + " " + rand.choice(self.location_details["Noun"]) + " " + location_type
+            case 5:
+                if(include_city):
+                    name = "city of " + self.generateCityName()
+                else:
+                    match(rand.randint(0,3)):
+                        case 0:
+                            name = location_type + " of " + rand.choice(self.location_details["Adjectives"]) + " " + rand.choice(self.location_details["Noun"])
+                        case 1:
+                            name = location_type + " of " + rand.choice(self.location_details["Noun"])
+                        case 2:
+                            name = "The " + rand.choice(self.location_details["Adjectives"]) + " " + location_type
+                        case 3:
+                            name = rand.choice(self.location_details["Adjectives"]) + " " + location_type
+                    
 
-        return name                
+        return name
+
+    def generateInterstingName(self,owner: str,b_type:str):
+        name = ""
+        match(rand.randint(0,8)):
+            case 0:
+                name = b_type + " of " + rand.choice(self.location_details["Adjectives"]) + " " + rand.choice(self.location_details["Noun"])
+            case 1:
+                name = b_type + " of " + rand.choice(self.location_details["Noun"])
+            case 2:
+                name = "The " + rand.choice(self.location_details["Adjectives"]) + " " + b_type
+            case 3:
+                name = rand.choice(self.location_details["Adjectives"]) + " " + b_type
+            case 4:
+                name = rand.choice(self.location_details["Adjectives"]) + " " + rand.choice(self.location_details["Noun"]) + " " + b_type
+            case 5,6,7,8:
+                name = b_type+ " of " + owner
+        return name
+
+    def generateCityName(self):
+        return rand.choice(self.city_details["Name_Start"]) + rand.choice(self.city_details["Name_Endings"]).lower()

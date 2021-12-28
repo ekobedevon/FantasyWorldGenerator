@@ -2,11 +2,13 @@ import PySimpleGUI as sg
 import os
 import NPC
 import Building
+import City
 import Generator
 import OutputObsidian as OutOD
 sg.theme('DarkTeal9')
 BASE_PATH = os.getcwd()
 MASTER_GENERATOR =Generator.generator()
+
 
 #STYLE STUFF
 d_f_b = (10,1) #DEFAULT BUTTON SIZE
@@ -16,8 +18,9 @@ if "Export" not in os.listdir():
     os.mkdir("Export")
 
 current_displayed = None
-exit =1;
+exit =0;
 layout=[[]]
+
 
 while(exit): # loop until exit is changed
     button_layout = [[sg.Button("New NPC",key="--NewNPC--",size=d_f_b)],[sg.Button("New Building",key="--NewBuild--",size=d_f_b)],[sg.Button("Exit",key="--EXIT--",size=d_f_b)]]
