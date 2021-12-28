@@ -1,8 +1,15 @@
 import os
+from random import randint
 import Building
 import NPC
 
 """NOTE: Obsidian uses paths to distinguish unique names, so in the future as world gen gets bigger, it might be needed to add a process that ensures all names are unique before exporting"""
+
+def GenerateUniqueName(file_name: str,file_set: set,file_extension: str = ""):
+    while len({file_name + file_extension}.intersection(file_set)):
+        file_name += hex(randint(0,15)).removeprefix("0x")#keeps adding hex values to file name unitl it is unique
+    return file_name
+
 
 def export(item):
     if type(item) == Building.Building:
@@ -11,10 +18,11 @@ def export(item):
         exportNPC(item)
 
 
-
-
 def exportNPC(npc: NPC.NPC):
-    file = open(npc.name + ".MD", 'w')
+    file_set = set(os.listdir())
+    file_name =GenerateUniqueName(npc.name,file_set,".MD")
+
+    file = open(file_name, 'w')
     file.write("**Name:** %s<br>\n" % npc.name)
     file.write("**Race:** %s<br>\n" % npc.race)
     file.write("**Sex:** %s<br>\n" % npc.sex)
@@ -23,8 +31,11 @@ def exportNPC(npc: NPC.NPC):
     file.close()
 
 def exportBuilding(building: Building.Building, parentfolder = ""):
-    os.mkdir(building.building_name) #create a folder just for the building name
-    os.chdir("./"+building.building_name) #enter that folder
+    file_set = set(os.listdir())
+    folder_name = building.building_name
+    folder_name = GenerateUniqueName(folder_name,file_set)
+    os.mkdir(folder_name) #create a folder just for the building name
+    os.chdir("./"+folder_name) #enter that folder
     os.mkdir("Occupants")
     file = open(building.building_name + ".MD", 'w')
     file.write("## General Info <br>\n")

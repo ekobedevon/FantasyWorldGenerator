@@ -10,30 +10,29 @@ MASTER_GENERATOR =Generator.generator()
 
 
 current_displayed = None
-
 exit =1;
 layout=[[]]
 
-while(exit):
+while(exit): # loop until exit is changed
     button_layout = [[sg.Button("New NPC",key="--NewNPC--")],[sg.Button("New Building",key="--NewBuild--")],[sg.Button("Exit",key="--EXIT--")]]
     if current_displayed != None:
         button_layout.append([sg.Button("Export",key="--Export--")])
     layout= [[sg.Column(layout),sg.Column(button_layout)]]
     window = sg.Window("Abnormal World Generator",layout)
     events,values = window.read()
-    if events != None:
-        if "--EXIT--" in events:
+    match(events):
+        case "--EXIT--": # exit program
             exit = 0
             window.close()
-        elif "--NewNPC--" in events:
+        case "--NewNPC--": # generate a new NPC
             current_displayed = NPC.NPC(MASTER_GENERATOR)
             layout = current_displayed .createDisplay()
             window.close()
-        elif "--NewBuild--" in events:
+        case "--NewBuild--": # generate a new building
             current_displayed  = Building.Building(MASTER_GENERATOR)
             layout = current_displayed .createDisplay();
             window.close()
-        elif "--Export--" in events: #export the currently displayed information
+        case "--Export--": #export the currently displayed information
             os.chdir("./Export")
             path = os.getcwd()
             OutOD.export(current_displayed) # export the displayer info
@@ -45,7 +44,7 @@ while(exit):
             layout = [[]]
             current_displayed = None
             os.chdir(BASE_PATH)
-    else:
+    if events == None:
         exit = 0
         window.close()
 
