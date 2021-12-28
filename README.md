@@ -7,6 +7,12 @@ The program is compiled using [psgcompiler](https://pypi.org/project/psgcompiler
 
 ## Patch Notes:
 
+### Version 0.2.0:
+1. Building Generation
+2. Macguffin Generation
+3. Hook Generation
+4. GUI Menu for NPC and Building Generation
+
 ### Version 0.1.0:
 1. NPC Generation
 2. Dynamic File Based Generation
