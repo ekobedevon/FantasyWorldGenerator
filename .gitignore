@@ -4,3 +4,4 @@
 *.pyo
 __pycache__/
 *.py[cod]
+Export/

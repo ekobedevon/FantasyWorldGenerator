@@ -78,6 +78,26 @@ def intialize_item_details():
         data = js.load(file)
         item_details[file_name.removesuffix(".json")] = data
     return item_details
+
+def intialize_quest_details():
+    os.chdir("Json_Files\Quest_Details")
+    general_fileList = os.listdir("./")
+    quest_details = {}
+    for file_name in general_fileList:
+        file = open(file_name)
+        data = js.load(file)
+        quest_details[file_name.removesuffix(".json")] = data
+    return quest_details
+
+def intialize_location_details():
+    os.chdir("Json_Files\Location")
+    general_fileList = os.listdir("./")
+    location_details = {}
+    for file_name in general_fileList:
+        file = open(file_name)
+        data = js.load(file)
+        location_details[file_name.removesuffix(".json")] = data
+    return location_details
         
 
 def generateGender():
@@ -97,6 +117,8 @@ class generator(): # create a generator object
     building_types_names  = {}
     general_details = {} #details that might be used between multiple generators
     item_details = {} #details used for item generation
+    location_details = {}
+    quest_details = {}
     #create a generator object that stores all the data at the start
     def __init__(self):
         base = os.getcwd()
@@ -118,6 +140,12 @@ class generator(): # create a generator object
         self.building_types, self.building_types_names = intialize_building_types()
         os.chdir(base)
         self.item_details = intialize_item_details()
+        os.chdir(base)
+        self.location_details = intialize_location_details()
+        os.chdir(base)
+        self.quest_details = intialize_quest_details()
+        os.chdir(base)
+
 
 
     def generateRace(self):
@@ -125,7 +153,6 @@ class generator(): # create a generator object
             list_keys = list(self.race_list.keys())
             return rand.choice(list_keys)
 
-    
 
     def generateName(self,race: str, sex: str = ""):
         """Given a string, generate a name based of settings"""
@@ -242,6 +269,9 @@ class generator(): # create a generator object
             case "Craftsmen":
                 building_name = self.generateBuildingName() + " " + rand.choice(self.building_types_names['Craftsmen'])
                 owner_proffesion = "Owner and Operator of " + building_name
+            case "Religious":
+                building_name = self.generateReligiousBuildingName()
+                owner_proffesion = "Member of " + building_name
 
         return building_name, owner_proffesion,building_type
             
@@ -270,22 +300,44 @@ class generator(): # create a generator object
             if(rand.randint(0,1)):
                 reward = "level appropriate gold amount"
             else:
-                reward = self.generateMacguffin() + "and level appropriate gold amount"
+                reward = self.generateMacguffin() + " and level appropriate gold amount"
         if location == None:
-            location = "[NAME TBD]" #Implement location name generator later after building
+            location = self.generateLOI()
         
         if rand.randint(0,1) and Q_type == 1:
-            party_verb = rand.choice(self.general_details["Kill_Synonyms"])
+            party_verb = rand.choice(self.quest_details["Kill_Synonyms"])
             if target == None: # if no target given, generate a monster to target
                 target = rand.choice(self.general_details["Monsters"]) + "(s)"
-            objective_verb = rand.choice(self.general_details["Oppresive_synonyms"])
-            hook = quest_giver + " wants to hire the party to " + party_verb + " the " + target + " that has been " + objective_verb + " the " + location + " and will pay them with a " + reward + "."
+            objective_verb = rand.choice(self.quest_details["Oppresive_synonyms"])
+            hook = quest_giver + " wants to hire the party to " + party_verb + " the " + target + " that have been " + objective_verb + " the " + location + " and will pay them with a " + reward + "."
         else:
-            party_verb = rand.choice(self.general_details["Find_Synonyms"])
-            guide_item = rand.choice(self.general_details["Map_Alternates"])
+            party_verb = rand.choice(self.quest_details["Find_Synonyms"])
+            guide_item = rand.choice(self.quest_details["Map_Alternates"])
             
             hook = "The Party " + party_verb + " a " + guide_item + " that leads them to " + location + ", the " + guide_item + " leads them to believe there is a " + reward + " located somewhere inside."
         return hook
             
-                             
-                   
+    def generateLOI(self,natural: bool = None):
+        """Generate a Location of interest"""
+        if natural == None:
+            natural = rand.randint(0,1)
+        location_type = ""
+        if natural:
+            location_type = rand.choice(self.location_details["Locations_Natural"])
+        else:
+            location_type = rand.choice(self.location_details["Locations_ManMade"])
+        name = ""
+        
+        match(rand.randint(0,4)):
+            case 0:
+                name = location_type + " of " + rand.choice(self.location_details["Adjectives"]) + " " + rand.choice(self.location_details["Noun"])
+            case 1:
+                name = location_type + " of " + rand.choice(self.location_details["Noun"])
+            case 2:
+                name = "The " + rand.choice(self.location_details["Adjectives"]) + " " + location_type
+            case 3:
+                name = rand.choice(self.location_details["Adjectives"]) + " " + location_type
+            case 4:
+                name = rand.choice(self.location_details["Adjectives"]) + " " + rand.choice(self.location_details["Noun"]) + " " + location_type
+
+        return name                

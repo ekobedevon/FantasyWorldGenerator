@@ -26,14 +26,13 @@ class NPC():
 
     def createDisplay(self):
         profession_text = textwrap.wrap("Profession: " + self.profession,30)
-        layout =[[sg.Text('NPC TEXT')],
-            [sg.Text("Name: " + self.name)],
-            [sg.Text("Race: " +self.race)],
+        layout =[[sg.Text("Race: " +self.race)],
             [sg.Text("Sex: " +self.sex)],
             [sg.Text("Age: " +str(self.age))]]
         for text in profession_text:
             layout.append([sg.Text(text)])
-             
+        
+        layout = [[sg.Frame("NPC: " + self.name,layout)]]
 
         return layout
 

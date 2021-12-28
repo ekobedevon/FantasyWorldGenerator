@@ -1,7 +1,5 @@
 from random import choice, randint
-from tkinter import font
-from tkinter.font import BOLD
-from typing import Container
+from typing import List
 import NPC
 import Generator
 import PySimpleGUI as sg 
@@ -10,8 +8,8 @@ import PySimpleGUI as sg
 class Building():
     building_type = ""
     building_name = ""
-    owner = None
-    occupants = []
+    owner = NPC.NPC
+    occupants:List[NPC.NPC] = []
     hooks = []
     def __init__(self,gen: Generator.generator = None,dict_data = None):
         self.owner =None
@@ -33,11 +31,14 @@ class Building():
                     case 0:
                         hook = gen.generateHook(self.owner.name) # generate a quest given by the building owner
                     case 1:
-                        npc_occupant = choice(self.occupants)
-                        name = npc_occupant.name # get the name of the occupant
-                        hook = gen.generateHook(name)
+                        if(len(self.occupants) != 0): # if theri are no occupants besides the owner
+                            npc_occupant = choice(self.occupants)
+                            name = npc_occupant.name # get the name of the occupant
+                            hook = gen.generateHook(name)
+                        else:
+                            hook ="On the local Quest Board: " + gen.generateHook(Q_type=1)
                     case 2:
-                        hook ="On the Quest Board: " + gen.generateHook(Q_type=1)
+                        hook ="On the local Quest Board: " + gen.generateHook(Q_type=1)
                     case 3:
                         hook =gen.generateHook(Q_type=0)
                 self.hooks.append(hook)
