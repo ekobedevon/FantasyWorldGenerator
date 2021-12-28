@@ -7,9 +7,7 @@ import OutputObsidian as OutOD
 sg.theme('DarkTeal9')
 BASE_PATH = os.getcwd()
 MASTER_GENERATOR =Generator.generator()
-"""os.chdir("./Export")
-temp  = Building.Building(MASTER_GENERATOR)
-OutOD.export(temp)"""
+
 
 current_displayed = None
 
