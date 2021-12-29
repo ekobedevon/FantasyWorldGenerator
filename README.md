@@ -13,7 +13,7 @@ The program is compiled using [psgcompiler](https://pypi.org/project/psgcompiler
 3. Added City Export
 4. Added Markdown Export
 5. Added Plain Text Export
-6. Fixed Obisian Export Naming Issues
+6. Fixed Obsidian Export Naming Issues
 
 ### Version 0.2.1
 1. Added Obsidian Export
