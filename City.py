@@ -80,9 +80,7 @@ class City():
                 temp_col = []
             temp_col.append(sg.Column(npcs.createDisplay(),vertical_alignment="top"))
         npc_cols.append(temp_col)
-        print(npc_cols)
         Container = [sg.Column(npc_cols)]
-        print("Wandering NPCS")
         layout.append(Container)
 
         layout.append([sg.Text("Nearby Locations of Interest",font="bold")])
@@ -94,7 +92,6 @@ class City():
                  temp_col =[]
             temp_col.append(sg.Text(locaiton))
         LOI.append(temp_col)
-        print("\nLOI")
         Container = [sg.Column(LOI)]
         layout.append(Container)
 

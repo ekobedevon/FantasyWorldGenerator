@@ -5,11 +5,13 @@ import NPC
 import Building
 import City
 import Generator
+import random
+import time
 import OutputObsidian as OutOD
 sg.theme('DarkTeal9')
 BASE_PATH = os.getcwd()
 MASTER_GENERATOR =Generator.generator()
-
+random.seed(time.time())
 
 
 
@@ -89,7 +91,7 @@ while(exit): # loop until exit is changed
                 window.read()
                 window.close()
                 current_displayed = None
-                is_visible = True
+                is_visible = True # set return button as visible
                 os.chdir(BASE_PATH)
     else:
         if "_city" in events:
