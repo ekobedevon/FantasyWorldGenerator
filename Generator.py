@@ -262,7 +262,6 @@ class generator(): # create a generator object
         if location != "":
             suffix = " of " + location 
         if building_type == None or building_type not in self.building_type: #if their is no building type or if the building type is not valid
-            #print("No valid building type given, generating random building name")
             building_type = rand.choice(self.building_types) # generate a building type
         match(building_type):
             case "Shops":
@@ -344,7 +343,6 @@ class generator(): # create a generator object
         else:
             location_type = rand.choice(self.location_details["Locations_ManMade"])
         name = ""
-        print("")
         match(rand.randint(0,5)):
             case 0:
                 name = location_type + " of " + rand.choice(self.location_details["Adjectives"]) + " " + rand.choice(self.location_details["Noun"])
@@ -375,7 +373,7 @@ class generator(): # create a generator object
 
     def generateInterstingName(self,owner: str,b_type:str):
         name = ""
-        match(rand.randint(0,8)):
+        match(rand.randint(0,5)):
             case 0:
                 name = b_type + " of " + rand.choice(self.location_details["Adjectives"]) + " " + rand.choice(self.location_details["Noun"])
             case 1:
@@ -386,7 +384,7 @@ class generator(): # create a generator object
                 name = rand.choice(self.location_details["Adjectives"]) + " " + b_type
             case 4:
                 name = rand.choice(self.location_details["Adjectives"]) + " " + rand.choice(self.location_details["Noun"]) + " " + b_type
-            case 5,6,7,8:
+            case 5:
                 name = b_type+ " of " + owner
         return name
 
