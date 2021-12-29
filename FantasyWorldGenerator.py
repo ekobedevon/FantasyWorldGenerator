@@ -8,6 +8,7 @@ import Generator
 import random
 import time
 import OutputObsidian as OutOD
+import OutputPlain as OutP
 sg.theme('DarkTeal9')
 BASE_PATH = os.getcwd()
 MASTER_GENERATOR =Generator.generator()
@@ -35,7 +36,8 @@ while(exit): # loop until exit is changed
         case 2:
             button_layout = [[sg.Button("Return",key="--Return--",size=d_f_b)],[sg.Button("Exit",key="--EXIT--",size=d_f_b)],[sg.Button("Main Menu",key="--Main--",size=d_f_b,visible=is_visible)]]
     if current_displayed != None:
-        button_layout.append([sg.Button("Export",key="--Export--",size = d_f_b)])
+        button_layout.append([sg.Button("Obsidian",key="--ExportOBS--",size = d_f_b)])
+        button_layout.append([sg.Button("Plain Text",key="--ExportPlain--",size = d_f_b)])
         layout = current_displayed.createDisplay()
     else:
         layout = [[]]
@@ -64,12 +66,30 @@ while(exit): # loop until exit is changed
                 case "--Main--":
                     displayed_stack = []
                     window.close()
-                case "--Export--": #export the currently displayed information
+                case "--ExportOBS--": #export the currently displayed information
                     os.chdir("./Export")
+                    if "Obsidian" not in os.listdir():
+                        os.mkdir("Obsidian")
+                    os.chdir("./Obsidian")
                     OutOD.export(current_displayed) # export the displayer info
                     window.close()
                     path_current = os.getcwd()
                     layout = [[sg.Text("Exported to " + path_current,justification="center",size=(50,1))],[sg.Text("Returning to main menu...",justification="center",size=(50,1))],[sg.Column([[sg.Button("OK",size=d_f_b)]],justification='center')]]
+                    window = sg.Window("Abnormal World Generator",layout)
+                    window.read()
+                    window.close()
+                    current_displayed = None
+                    is_visible = True # set return button as visible
+                    os.chdir(BASE_PATH)
+                case "--ExportPlain--": #export the currently displayed information
+                    os.chdir("./Export")
+                    if "Plain Text" not in os.listdir():
+                        os.mkdir("Plain Text")
+                    os.chdir("./Plain Text")
+                    OutP.export(current_displayed) # export the displayer info
+                    window.close()
+                    path_current = os.getcwd()
+                    layout = [[sg.Text("Exported to " + path_current,justification="center",size=(60,1))],[sg.Text("Returning to main menu...",justification="center",size=(50,1))],[sg.Column([[sg.Button("OK",size=d_f_b)]],justification='center')]]
                     window = sg.Window("Abnormal World Generator",layout)
                     window.read()
                     window.close()
