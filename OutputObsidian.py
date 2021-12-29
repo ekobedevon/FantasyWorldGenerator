@@ -41,7 +41,6 @@ def exportBuilding(building: Building.Building):
     file_set = set(os.listdir()) #get all files in director
     folder_name = building.building_name #get potential name
     folder_name = GenerateUniqueName(tags["b"]+folder_name,file_set,"") #generate unique name  for this building
-    print(folder_name)
     os.mkdir(folder_name) #create a folder just for the building name
     os.chdir("./"+folder_name) #enter that folder
     os.mkdir("Occupants") #create occupants folder
