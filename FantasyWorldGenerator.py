@@ -8,6 +8,8 @@ import Generator
 import random
 import time
 import OutputObsidian as OutOD
+import OutputPlain as OutP
+import OutputMarkdown as OutMD
 sg.theme('DarkTeal9')
 BASE_PATH = os.getcwd()
 MASTER_GENERATOR =Generator.generator()
@@ -18,6 +20,7 @@ random.seed(time.time())
 
 #STYLE STUFF
 d_f_b = (10,1) #DEFAULT BUTTON SIZE
+export_text = (80,1)
 
 #create Export Folder if not already existing
 if "Export" not in os.listdir():
@@ -29,16 +32,20 @@ button_menu = 1
 is_visible = False
 exit =1;
 while(exit): # loop until exit is changed
-    match(button_menu): #display differen't menus based on what is being veiwed
-        case 1:
-            button_layout = [[sg.Button("New NPC",key="--NewNPC--",size=d_f_b)],[sg.Button("New Building",key="--NewBuild--",size=d_f_b)],[sg.Button("New City",key="--NewCity--",size=d_f_b)],[sg.Button("Exit",key="--EXIT--",size=d_f_b)]]
-        case 2:
-            button_layout = [[sg.Button("Return",key="--Return--",size=d_f_b)],[sg.Button("Exit",key="--EXIT--",size=d_f_b)],[sg.Button("Main Menu",key="--Main--",size=d_f_b,visible=is_visible)]]
+    button_layout = [[]]
+    general_buttons = [[]]
     if current_displayed != None:
-        button_layout.append([sg.Button("Export",key="--Export--",size = d_f_b)])
+        export_layout = [[sg.Button("Obsidian",key="--ExportOBS--",size = d_f_b)],[sg.Button("Plain Text",key="--ExportPlain--",size = d_f_b)],[sg.Button("Markdown",key="--ExportMD--",size = d_f_b)]]
+        button_layout = [[sg.Frame("Export",export_layout)]]
         layout = current_displayed.createDisplay()
     else:
         layout = [[]]
+    match(button_menu): #display differen't menus based on what is being veiwed
+        case 1:
+            general_buttons = [[sg.Button("New NPC",key="--NewNPC--",size=d_f_b)],[sg.Button("New Building",key="--NewBuild--",size=d_f_b)],[sg.Button("New City",key="--NewCity--",size=d_f_b)],[sg.Button("Exit",key="--EXIT--",size=d_f_b)]]
+        case 2:
+            general_buttons = [[sg.Button("Return",key="--Return--",size=d_f_b)],[sg.Button("Exit",key="--EXIT--",size=d_f_b)],[sg.Button("Main Menu",key="--Main--",size=d_f_b,visible=is_visible)]]
+    button_layout.append([sg.Frame("General",general_buttons)])
     layout= [[sg.Column(layout),sg.Column(button_layout)]]
     window = sg.Window("Abnormal World Generator",layout)
     events,values = window.read()
@@ -64,12 +71,45 @@ while(exit): # loop until exit is changed
                 case "--Main--":
                     displayed_stack = []
                     window.close()
-                case "--Export--": #export the currently displayed information
+                case "--ExportOBS--": #export the currently displayed information
                     os.chdir("./Export")
+                    if "Obsidian" not in os.listdir():
+                        os.mkdir("Obsidian")
+                    os.chdir("./Obsidian")
                     OutOD.export(current_displayed) # export the displayer info
                     window.close()
                     path_current = os.getcwd()
-                    layout = [[sg.Text("Exported to " + path_current,justification="center",size=(50,1))],[sg.Text("Returning to main menu...",justification="center",size=(50,1))],[sg.Column([[sg.Button("OK",size=d_f_b)]],justification='center')]]
+                    layout = [[sg.Text("Exported to " + path_current,justification="center",size=export_text)],[sg.Text("Returning to main menu...",justification="center",size=export_text)],[sg.Column([[sg.Button("OK",size=d_f_b)]],justification='center')]]
+                    window = sg.Window("Abnormal World Generator",layout)
+                    window.read()
+                    window.close()
+                    current_displayed = None
+                    is_visible = True # set return button as visible
+                    os.chdir(BASE_PATH)
+                case "--ExportPlain--": #export the currently displayed information
+                    os.chdir("./Export")
+                    if "Plain Text" not in os.listdir():
+                        os.mkdir("Plain Text")
+                    os.chdir("./Plain Text")
+                    OutP.export(current_displayed) # export the displayer info
+                    window.close()
+                    path_current = os.getcwd()
+                    layout = [[sg.Text("Exported to " + path_current,justification="center",size=export_text)],[sg.Text("Returning to main menu...",justification="center",size=export_text)],[sg.Column([[sg.Button("OK",size=d_f_b)]],justification='center')]]
+                    window = sg.Window("Abnormal World Generator",layout)
+                    window.read()
+                    window.close()
+                    current_displayed = None
+                    is_visible = True # set return button as visible
+                    os.chdir(BASE_PATH)
+                case "--ExportMD--": #export the currently displayed information
+                    os.chdir("./Export")
+                    if "Mark Down" not in os.listdir():
+                        os.mkdir("Mark Down")
+                    os.chdir("./Mark Down")
+                    OutMD.export(current_displayed) # export the displayer info
+                    window.close()
+                    path_current = os.getcwd()
+                    layout = [[sg.Text("Exported to " + path_current,justification="center",size=export_text)],[sg.Text("Returning to main menu...",justification="center",size=export_text)],[sg.Column([[sg.Button("OK",size=d_f_b)]],justification='center')]]
                     window = sg.Window("Abnormal World Generator",layout)
                     window.read()
                     window.close()

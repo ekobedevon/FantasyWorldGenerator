@@ -48,10 +48,10 @@ def exportBuilding(building: Building.Building):
     file.write("## General Info <br>\n")
     file.write("**Name:** %s<br>\n" % building.building_name)
     file.write("**Building Type:** %s<br>\n" % building.building_type)
-    file.write("**Owner:**  [[%s]] <br>\n" % building.owner.name ) 
+    file.write("**Owner:**  %s <br>\n" % building.owner.name ) 
     file.write("### Occupants <br>\n")
     for occupant in building.occupants:
-        file.write(" [[%s]] <br>\n" % occupant.name)
+        file.write(" %s <br>\n" % occupant.name)
     file.write("### Hooks <br>\n")
     for hook in building.hooks:
         file.write("%s <br>\n" % hook)
@@ -74,13 +74,13 @@ def exportCity(city:City.City):
     file.write("## General Info <br>\n")
     file.write("**Name:** %s<br>\n" % city.city_name)
     file.write("**City Population**: %s<br> \n" % str(city.city_pop))
-    file.write("**Local Leader:**  [[%s]] <br>\n" % city.city_leader.name) 
+    file.write("**Local Leader:**  %s <br>\n" % city.city_leader.name) 
     file.write("### Buildings <br>\n")
     for building in city.buildings_list:
-        file.write(" [[%s]] <br>\n" % building.building_name)
+        file.write(" %s <br>\n" % building.building_name)
     file.write("### Wandering NPCs <br>\n")
     for npc in city.wandering_npcs:
-        file.write(" [[%s]] <br>\n" % npc.name)
+        file.write(" %s <br>\n" % npc.name)
     file.write("### Nearby Locations of Interest <br>\n")
     for loi in city.LOI:
         file.write("%s <br>\n" % loi)
