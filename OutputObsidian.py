@@ -4,6 +4,10 @@ import Building
 import City
 import NPC
 extra = ""
+tags = {}
+tags["c"] = "[City]"
+tags["b"] = "[Building]"
+
 
 """NOTE: Obsidian uses paths to distinguish unique names, so in the future as world gen gets bigger, it might be needed to add a process that ensures all names are unique before exporting"""
 
@@ -36,11 +40,11 @@ def exportNPC(npc: NPC.NPC):
 def exportBuilding(building: Building.Building):
     file_set = set(os.listdir()) #get all files in director
     folder_name = building.building_name #get potential name
-    folder_name = GenerateUniqueName(folder_name,file_set,".MD") #generate unique name  for this building
+    folder_name = GenerateUniqueName(tags["b"]+folder_name,file_set,".MD") #generate unique name  for this building
     os.mkdir(folder_name.removesuffix(".MD")) #create a folder just for the building name
     os.chdir("./"+(folder_name.removesuffix(".MD"))) #enter that folder
     os.mkdir("Occupants") #create occupants folder
-    file = open(folder_name, 'w')
+    file = open(folder_name.removeprefix(tags["b"]), 'w')
     file.write("## General Info <br>\n")
     file.write("**Name:** %s<br>\n" % building.building_name)
     file.write("**Building Type:** %s<br>\n" % building.building_type)
@@ -61,12 +65,12 @@ def exportBuilding(building: Building.Building):
 def exportCity(city:City.City):
     file_set = set(os.listdir()) #get all files in director
     folder_name = city.city_name #get potential name
-    folder_name = GenerateUniqueName(folder_name,file_set) #generate unique name  for this building
+    folder_name = GenerateUniqueName(tags["c"] +folder_name,file_set) #generate unique name  for this building
     os.mkdir(folder_name) #create a folder just for the building name
     os.chdir("./"+folder_name) #enter that folder
     os.mkdir("Buildings") #create buildings folder
     os.mkdir("Wandering NPCs")
-    file = open(folder_name + ".MD", 'w')
+    file = open((folder_name + ".MD").removeprefix(tags["c"]), 'w')
     file.write("## General Info <br>\n")
     file.write("**Name:** %s<br>\n" % city.city_name)
     file.write("**City Population**: %s<br> \n" % str(city.city_pop))
