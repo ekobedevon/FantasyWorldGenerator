@@ -16,8 +16,8 @@ The program is compiled using [psgcompiler](https://pypi.org/project/psgcompiler
 6. Fixed Obisian Export Naming Issues
 
 ### Version 0.2.1
-1.Added Obsidian Export
-2.Standardized Gui
+1. Added Obsidian Export
+2. Standardized Gui
 
 ### Version 0.2.0:
 1. Building Generation
