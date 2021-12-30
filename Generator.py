@@ -108,6 +108,31 @@ def intialize_city_details():
         data = js.load(file)
         city_details[file_name.removesuffix(".json")] = data
     return city_details
+
+def intialize_backgrounds():
+    os.chdir("Json_Files\Backgrounds") # enter background folder
+    background_list  = os.listdir("./") # get all list of backgrounds
+    base = os.getcwd() # get base directory
+    background_details = {} # create dictionary
+    for folder in background_list:
+        os.chdir("./"+folder) # got into the folder of each background
+        details = os.listdir("./") #get all directories in this folders
+        if len(details) == 4: # if there are not exactly 4 files
+            print("GOING TO FOLDER: " + folder)
+            background_details[folder] = {} # create a sub dictionary
+            for file_name in details: # for each file in the specific folder
+                print("IN FILE " + file_name)
+                file = open(file_name) 
+                data = js.load(file)
+                background_details[folder][file_name.removesuffix(".json")] = data
+        else:
+            print("Invalid Parameters")
+        os.chdir(base)
+
+    for name in list(background_details.keys()):
+        print("-----------------------------")
+        print(background_details[name])
+        
         
 
 def generateGender():
@@ -157,6 +182,8 @@ class generator(): # create a generator object
         self.quest_details = intialize_quest_details()
         os.chdir(base)
         self.city_details = intialize_city_details()
+        os.chdir(base)
+        intialize_backgrounds()
         os.chdir(base)
 
 
