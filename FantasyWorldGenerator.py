@@ -4,6 +4,7 @@ import os
 import NPC
 import Building
 import City
+import Region
 import Generator
 import random
 import time
@@ -15,6 +16,16 @@ sg.theme('DarkTeal9')
 BASE_PATH = os.getcwd()
 MASTER_GENERATOR =Generator.generator()
 random.seed(time.time())
+
+
+region = Region.Region(MASTER_GENERATOR)
+
+
+
+
+
+
+
 #STYLE STUFF
 d_f_b = (10,1) #DEFAULT BUTTON SIZE
 export_text = (80,1)
@@ -27,7 +38,7 @@ current_displayed = None #used to hold the currently displayed element
 displayed_stack = [] #used to store in order, the parent elements in order to allow layers in menu
 button_menu = 1
 is_visible = False
-exit =1;
+exit =0;
 while(exit): # loop until exit is changed
     button_layout = [[]]
     general_buttons = [[]]

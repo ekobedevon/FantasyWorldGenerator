@@ -331,7 +331,7 @@ class generator(): # create a generator object
             name = name + " of " + rand.choice(self.item_details["Item_Preffix"]) + " " + rand.choice(self.item_details["Item_Suffix"])
         return name # return name
 
-    def generateHook(self,quest_giver: str = None,target: str = None,location: str = None, reward: str = None,Q_type: int = 1):
+    def generateHook(self,quest_giver: str = None,target: str = None,location: str = None,location_list = [] ,reward: str = None,Q_type: int = 1):
         hook = None
         if quest_giver == None: #generate quest giver name if not given one
             quest_giver = self.generateName(self.generateRace(),generateGender())
@@ -343,6 +343,8 @@ class generator(): # create a generator object
                 reward = self.generateMacguffin() + " and level appropriate gold amount"
         if location == None:
             location = self.generateLOI()
+        if len(location_list) != 0: #if given a list of locations, generate from that list
+            location = rand.choice(location_list)
         
         if rand.randint(0,1) and Q_type == 1:
             party_verb = rand.choice(self.quest_details["Kill_Synonyms"])
