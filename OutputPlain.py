@@ -30,11 +30,20 @@ def exportNPC(npc: NPC.NPC):
     file_set = set(os.listdir())
     file_name =GenerateUniqueName(npc.name,file_set,".txt")
     file = open(file_name, 'w')
+    file.write("General Details:\n")
     file.write("Name: %s\n" % npc.name)
     file.write("Race: %s\n" % npc.race)
     file.write("Sex: %s\n" % npc.sex)
     file.write("Age: %s\n" % npc.age)
     file.write("Profession: %s\n" % npc.profession)
+    file.write("\nPersonality:\n")
+    for detail in npc.background_details:
+        file.write("%s:" % detail)
+        file.write("%s\n" % npc.background_details[detail])
+    if npc.goals != "":
+        file.write("\nGoals:\n")
+        file.write("%s<br>\n" % npc.goals)
+
     file.close()
  
 
