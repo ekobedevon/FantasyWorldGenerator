@@ -75,7 +75,7 @@ class Building():
         if(self.building_type == "Normal_Homes" or self.building_type == "Notable_Housing"): # get the title
             colDetails=[[sg.Text("Housing",font='Helvitic 12')],[sg.Text(self.building_name + " of "+ self.owner.name,font='Helvitic 12') ],[sg.Text(self.owner.name,font='Helvitic 12')]]
         else:
-            colDetails=[[sg.Text(self.building_type.replace("_"," "))],[sg.Text(self.building_name) ],[sg.Text(self.owner.name)]]
+            colDetails=[[sg.Text(self.building_type.replace("_"," "),font='Helvitic 12')],[sg.Text(self.building_name,font='Helvitic 12') ],[sg.Text(self.owner.name,font='Helvitic 12')]]
         
         layout = [[sg.Column(colTitle),sg.Column(colDetails)]] # add the title
     
@@ -83,7 +83,7 @@ class Building():
         for value,npc in enumerate(self.occupants):
             npc_cols.append(sg.Column([[sg.Button(npc.name + "\n"+ npc.profession,size=npc_button_size,key=str(value)+"_building")]],vertical_alignment="top"))
         
-        layout.append(npc_cols)
+        layout.append([sg.Frame("Occupants",[npc_cols])])
         if len(self.hooks) != 0:
             layout.append([sg.Text("Hooks",font='Helvitic 12 bold')])
             hooks = []

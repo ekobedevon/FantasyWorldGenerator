@@ -44,6 +44,8 @@ class NPC():
         layout.append([sg.Text("Background: "+self.background)])
         for key in self.background_details:
             layout.append([sg.Text(key+": "+self.background_details[key])])
+        if self.goals != "":
+            layout.append([sg.Text("Personal Goal",font='Helvitic 12 bold')])
         
         layout = [[sg.Frame("NPC: " + self.name,layout)]]
 

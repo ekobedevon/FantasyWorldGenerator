@@ -354,7 +354,7 @@ class generator(): # create a generator object
             party_verb = rand.choice(self.quest_details["Find_Synonyms"])
             guide_item = rand.choice(self.quest_details["Map_Alternates"])
             
-            hook = "The Party " + party_verb + " a " + guide_item + " that leads them to " + location + ", the " + guide_item + " leads them to believe there is a " + reward + " located somewhere inside."
+            hook = "The Party " + party_verb + " a " + guide_item + " that leads them to the " + location + ", the " + guide_item + " leads them to believe there is a " + reward + " located somewhere inside."
         return hook
             
     def generateLOI(self,natural: bool = None,include_city: bool = True):
