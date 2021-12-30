@@ -12,7 +12,6 @@ import OutputPlain as OutP
 import OutputMarkdown as OutMD
 import Style as s
 sg.theme('DarkTeal9')
-print(s.Title_Font_Size+" "+s.FONT+ ' bold')
 BASE_PATH = os.getcwd()
 MASTER_GENERATOR =Generator.generator()
 random.seed(time.time())
