@@ -4,6 +4,7 @@ import Building
 import random as rand
 import Generator
 import PySimpleGUI as sg
+import Style as s
 from typing import List
 
 
@@ -53,8 +54,8 @@ class City():
 
     def createDisplay(self):
         layout =[[]]
-        colTitle = [[sg.Text("City Name:",font='Helvitic 12 bold')],[sg.Text("City Population: ",font='Helvitic 12 bold')],[sg.Text("Local Leader:",font='Helvitic 12 bold')]]
-        colDetails = [[sg.Text(self.city_name,font='Helvitic 12')],[sg.Text(self.city_pop,font='Helvitic 12')],[sg.Text(self.city_leader.name,font='Helvitic 12')]]
+        colTitle = [[sg.Text("City Name:",font=s.Title_Style)],[sg.Text("City Population: ",font=s.Title_Style)],[sg.Text("Local Leader:",font=s.Title_Style)]]
+        colDetails = [[sg.Text(self.city_name,font=s.Title_Size_Style)],[sg.Text(self.city_pop,font=s.Title_Size_Style)],[sg.Text(self.city_leader.name,font=s.Title_Size_Style)]]
         layout=[[sg.Column(colTitle),sg.Column(colDetails)]]
         
         button_size = (30,3) # default button size for buttons
@@ -83,7 +84,7 @@ class City():
         Container = [sg.Frame("Wandering NPCs",layout=npc_cols)]
         layout.append(Container)
 
-        layout.append([sg.Text("Nearby Locations of Interest",font='Helvitic 12 bold')])
+        layout.append([sg.Text("Nearby Locations of Interest",font=s.Title_Style)])
         LOI = []
         temp_col = []
         for value,locaiton in enumerate(self.LOI):
@@ -95,7 +96,7 @@ class City():
         Container = [sg.Column(LOI)]
         layout.append(Container)
 
-        layout.append([sg.Text("Local Hooks",font='Helvitic 12 bold')])
+        layout.append([sg.Text("Local Hooks",font=s.Title_Style)])
         hooks = []
         for hook in self.hooks:
             hooks.append([sg.Text(hook)])

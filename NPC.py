@@ -1,5 +1,6 @@
 import textwrap
 import Generator
+import Style as s
 import PySimpleGUI as sg
 class NPC():
     race = ""
@@ -33,19 +34,19 @@ class NPC():
     def createDisplay(self):
         profession_text = textwrap.wrap("Profession: " + self.profession,30)
    
-        layout =[[sg.Text("General Details",font='Helvitic 12 bold')],
+        layout =[[sg.Text("General Details",font=s.Title_Style)],
             [sg.Text("Name: "+self.name)],
             [sg.Text("Race: " +self.race)],
             [sg.Text("Sex: " +self.sex)],
             [sg.Text("Age: " +str(self.age))]]
         for text in profession_text:
             layout.append([sg.Text(text)])
-        layout.append([sg.Text("Personality",font='Helvitic 12 bold')])
+        layout.append([sg.Text("Personality",font=s.Title_Style)])
         layout.append([sg.Text("Background: "+self.background)])
         for key in self.background_details:
             layout.append([sg.Text(key+": "+self.background_details[key])])
         if self.goals != "":
-            layout.append([sg.Text("Personal Goal",font='Helvitic 12 bold')])
+            layout.append([sg.Text("Personal Goal",font=s.Title_Style)])
         
         layout = [[sg.Frame("NPC: " + self.name,layout)]]
 

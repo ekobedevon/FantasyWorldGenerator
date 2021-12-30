@@ -3,6 +3,7 @@ from typing import List
 import NPC
 import Generator
 import PySimpleGUI as sg
+import Style as s
 npc_button_size = (24,3)
 
 
@@ -69,13 +70,13 @@ class Building():
     
     def createDisplay(self):
         layout = [[]]
-        colTitle = [[sg.Text("Building Type:",font='Helvitic 12 bold')],[sg.Text("Building Name: ",font='Helvitic 12 bold')],[sg.Text("Owner:",font='Helvitic 12 bold')]]
+        colTitle = [[sg.Text("Building Type:",font=s.Title_Style)],[sg.Text("Building Name: ",font=s.Title_Style)],[sg.Text("Owner:",font=s.Title_Style)]]
         colDetails = [[]]
 
         if(self.building_type == "Normal_Homes" or self.building_type == "Notable_Housing"): # get the title
-            colDetails=[[sg.Text("Housing",font='Helvitic 12')],[sg.Text(self.building_name + " of "+ self.owner.name,font='Helvitic 12') ],[sg.Text(self.owner.name,font='Helvitic 12')]]
+            colDetails=[[sg.Text("Housing",font=s.Title_Size_Style)],[sg.Text(self.building_name + " of "+ self.owner.name,font=s.Title_Size_Style) ],[sg.Text(self.owner.name,font=s.Title_Size_Style)]]
         else:
-            colDetails=[[sg.Text(self.building_type.replace("_"," "),font='Helvitic 12')],[sg.Text(self.building_name,font='Helvitic 12') ],[sg.Text(self.owner.name,font='Helvitic 12')]]
+            colDetails=[[sg.Text(self.building_type.replace("_"," "),font=s.Title_Size_Style)],[sg.Text(self.building_name,font=s.Title_Size_Style) ],[sg.Text(self.owner.name,font=s.Title_Size_Style)]]
         
         layout = [[sg.Column(colTitle),sg.Column(colDetails)]] # add the title
     
