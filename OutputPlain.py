@@ -49,7 +49,7 @@ def exportNPC(npc: NPC.NPC):
         file.write("%s\n" % npc.origin_details[detail])
     if npc.goals != "":
         file.write("\nGoals:\n")
-        file.write("%s<br>\n" % npc.goals)
+        file.write("%s\n" % npc.goals)
 
     file.close()
  
@@ -128,27 +128,28 @@ def exportRegion(region:Region.Region):
     os.mkdir("Cities") #create buildings folder
     os.mkdir("Regional Powers")
     file = open((folder_name + ".MD").removeprefix(tags["r"]), 'w')
-    file.write("General Info <br>\n")
-    file.write("Name: %s<br>\n" % region.region_name)
+    file.write("General Info \n")
+    file.write("Name: %s\n" % region.region_name)
+    file.write("Population: %s\n" % int(region.population))
     if region.capital != None:
-        file.write("Political System: %s<br>\n" % region.political_system)
-        file.write("Capital: %s<br>\n" % region.capital.city_name)
-        file.write("Regional Leader Leader:  %s <br>\n" % region.political_leader.name)
-    file.write("Regional Cities<br>\n")
+        file.write("Political System: %s\n" % region.political_system)
+        file.write("Capital: %s\n" % region.capital.city_name)
+        file.write("Regional Leader Leader:  %s \n" % region.political_leader.name)
+    file.write("Regional Cities\n")
     for cities in region.cities:
-        file.write("%s <br>\n" % cities.city_name)
-    file.write("Regional Powers<br>\n")
+        file.write("%s \n" % cities.city_name)
+    file.write("Regional Powers\n")
     for npc in region.region_powers:
-        file.write("%s <br>\n" % npc.name)
-    file.write("Major Locations of Interest <br>\n")
+        file.write("%s \n" % npc.name)
+    file.write("Major Locations of Interest \n")
     for loi in region.major_LOI:
-        file.write("%s <br>\n" % loi)
-    file.write("Minor Locations of Interest <br>\n")
+        file.write("%s \n" % loi)
+    file.write("Minor Locations of Interest \n")
     for loi in region.minor_LOI:
-        file.write("%s <br>\n" % loi)
-    file.write("Regional Hooks <br>\n")
+        file.write("%s \n" % loi)
+    file.write("Regional Hooks \n")
     for hooks in region.hooks:
-        file.write("%s <br>\n" % hooks)
+        file.write("%s \n" % hooks)
 
     base = os.getcwd() #base working directory
     os.chdir("./Cities")

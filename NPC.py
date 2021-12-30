@@ -44,7 +44,7 @@ class NPC():
         for text in profession_text:
             layout.append([sg.Text(text)])
         layout.append([sg.Text("Personality",font=s.Title_Style)])
-        layout.append([sg.Text("origin: "+self.origin)])
+        layout.append([sg.Text("Origin: "+self.origin)])
         for key in self.origin_details:
             layout.append([sg.Text(key+": "+self.origin_details[key])])
         if self.goals != "":

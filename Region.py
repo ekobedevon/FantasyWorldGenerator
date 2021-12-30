@@ -16,6 +16,7 @@ class Region():
     political_united = True #if the area has a majority ruled by one group/perosn
     political_system = "TBD" # what system they are under
     political_leader = NPC.NPC # who is leading
+    population = 0
     capital = City.City # the main city
     region_powers:List[NPC.NPC] = [] # the major threats to the are
     cities:List[City.City] = [] # the major
@@ -69,6 +70,7 @@ class Region():
         city_list = [] # used for goal generation
         for city in self.cities:
             city_list.append(city.city_name)
+            self.population += city.city_pop # get total popoulation
             for c_npc in city.wandering_npcs:
                 npc_list.append(c_npc.name)
             for building in city.buildings_list:
@@ -87,8 +89,8 @@ class Region():
     def createDisplay(self):
         button_size = (30,3)
         layout =[[]]
-        colTitle = [[sg.Text("Region Name:",font=s.Title_Style)],[sg.Text("Political System:",font=s.Title_Style)]]
-        colDetails = [[sg.Text(self.region_name,font=s.Title_Size_Style)],[sg.Text(self.political_system,font=s.Title_Size_Style)]]
+        colTitle = [[sg.Text("Region Name:",font=s.Title_Style)],[sg.Text("Region Pop:",font=s.Title_Style)],[sg.Text("Political System:",font=s.Title_Style)]]
+        colDetails = [[sg.Text(self.region_name,font=s.Title_Size_Style)],[sg.Text(self.population,font=s.Title_Size_Style)],[sg.Text(self.political_system,font=s.Title_Size_Style)]]
         if self.political_leader != None:
             colTitle.append([sg.Text("Region Leader:",font=s.Title_Style)])
             colDetails.append([sg.Text(self.political_leader.name + " in " + self.capital.city_name,font=s.Title_Size_Style)])

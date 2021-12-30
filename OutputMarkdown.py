@@ -127,6 +127,7 @@ def exportRegion(region:Region.Region):
     file = open((folder_name + ".MD").removeprefix(tags["r"]), 'w')
     file.write("## General Info <br>\n")
     file.write("**Name:** %s<br>\n" % region.region_name)
+    file.write("**Population:** %s<br>\n" % int(region.population))
     if region.capital != None:
         file.write("**Political System:** %s<br>\n" % region.political_system)
         file.write("**Capital:** %s<br>\n" % region.capital.city_name)

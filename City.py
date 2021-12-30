@@ -5,6 +5,7 @@ import random as rand
 import Generator
 import PySimpleGUI as sg
 import Style as s
+import math
 from typing import List
 
 
@@ -16,9 +17,12 @@ class City():
     wandering_npcs:List[NPC.NPC] = []
     hooks = []
     LOI = []
-    def __init__(self,gen:Generator.generator = None,dict_data = None,multiplier:int = 1):
+    def __init__(self,gen:Generator.generator = None,dict_data = None,multiplier:int = 1,pop_cap:int = 30000):
         self.city_leader = None
         self.city_leader = NPC.NPC(gen)
+        self.city_pop = rand.randint(10,pop_cap)
+        if multiplier == 1:
+            multiplier = math.floor(math.log10(self.city_pop))
         if dict_data == None:
             self.city_name = gen.generateCityName()
             self.city_leader = NPC.NPC(gen)
@@ -27,14 +31,14 @@ class City():
             self.wandering_npcs = []
             self.hooks = []
             self.LOI = []
-            for x in range(0,10*multiplier): # generate buildings
+            for x in range(0,5*multiplier): # generate buildings
                 self.buildings_list.append(Building.Building(gen,Location=self.city_name))
-            for x in range(0,10*multiplier-1):
+            for x in range(0,5*multiplier-1):
                 self.wandering_npcs.append(NPC.NPC(gen))
-            for x in range(0,10*multiplier):
+            for x in range(0,10):
                 self.LOI.append(gen.generateLOI(natural=rand.randint(0,1),include_city=False))
             
-            for x in range(0+multiplier,5*multiplier):
+            for x in range(0+multiplier,3*multiplier):
                 choice = rand.randint(0,3)
                 hook = None
                 location = rand.choice(self.LOI)
