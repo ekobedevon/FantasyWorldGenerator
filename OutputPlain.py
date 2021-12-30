@@ -35,11 +35,12 @@ def exportNPC(npc: NPC.NPC):
     file.write("Race: %s\n" % npc.race)
     file.write("Sex: %s\n" % npc.sex)
     file.write("Age: %s\n" % npc.age)
+    file.write("Origin: %s<\n" % npc.origin)
     file.write("Profession: %s\n" % npc.profession)
     file.write("\nPersonality:\n")
-    for detail in npc.background_details:
+    for detail in npc.origin_details:
         file.write("%s:" % detail)
-        file.write("%s\n" % npc.background_details[detail])
+        file.write("%s\n" % npc.origin_details[detail])
     if npc.goals != "":
         file.write("\nGoals:\n")
         file.write("%s<br>\n" % npc.goals)

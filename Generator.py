@@ -109,25 +109,25 @@ def intialize_city_details():
         city_details[file_name.removesuffix(".json")] = data
     return city_details
 
-def intialize_backgrounds():
-    os.chdir("Json_Files\Backgrounds") # enter background folder
-    background_list  = os.listdir("./") # get all list of backgrounds
+def intialize_origins():
+    os.chdir("Json_Files\Origins") # enter origin folder
+    origin_list  = os.listdir("./") # get all list of origins
     base = os.getcwd() # get base directory
-    background_details = {} # create dictionary
-    for folder in background_list:
-        os.chdir("./"+folder) # got into the folder of each background
+    origin_details = {} # create dictionary
+    for folder in origin_list:
+        os.chdir("./"+folder) # got into the folder of each origin
         details = os.listdir("./") #get all directories in this folders
         if len(details) == 4: # if there are not exactly 4 files
-            background_details[folder] = {} # create a sub dictionary
+            origin_details[folder] = {} # create a sub dictionary
             for file_name in details: # for each file in the specific folder
                 file = open(file_name) 
                 data = js.load(file)
-                background_details[folder][file_name.removesuffix(".json")] = data
+                origin_details[folder][file_name.removesuffix(".json")] = data
         else:
             print("Invalid Parameters")
         os.chdir(base)
 
-    return background_details
+    return origin_details
         
         
 
@@ -151,7 +151,7 @@ class generator(): # create a generator object
     location_details = {}
     quest_details = {}
     city_details = {}
-    background_details = {}
+    origin_details = {}
     #create a generator object that stores all the data at the start
     def __init__(self):
         base = os.getcwd()
@@ -180,7 +180,7 @@ class generator(): # create a generator object
         os.chdir(base)
         self.city_details = intialize_city_details()
         os.chdir(base)
-        self.background_details = intialize_backgrounds()
+        self.origin_details = intialize_origins()
         os.chdir(base)
 
 
@@ -416,11 +416,11 @@ class generator(): # create a generator object
         return rand.choice(self.city_details["Name_Start"]) + rand.choice(self.city_details["Name_Endings"]).lower()
 
 
-    def generateBackground(self,Background: str = ""):
-        if Background == "":
-            Backgrounds = list(self.background_details.keys())
-            Background = rand.choice(Backgrounds)
-        Background_Details = {}
-        for detail in self.background_details[Background]:
-            Background_Details[detail] = rand.choice(self.background_details[Background][detail])
-        return Background,Background_Details
+    def generateOrigin(self,origin: str = ""):
+        if origin == "":
+            origins = list(self.origin_details.keys())
+            origin = rand.choice(origins)
+        origin_Details = {}
+        for detail in self.origin_details[origin]:
+            origin_Details[detail] = rand.choice(self.origin_details[origin][detail])
+        return origin,origin_Details

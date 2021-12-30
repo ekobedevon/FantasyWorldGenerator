@@ -106,7 +106,7 @@ while(exit): # loop until exit is changed
                     OutMD.export(current_displayed) # export the displayer info
                     window.close()
                     path_current = os.getcwd()
-                    layout = [[sg.Text("Exported to " + path_current,justification="center",size=export_text,font=export_text)],[sg.Text("Returning to main menu...",justification="center",size=export_text,font=export_text)],[sg.Column([[sg.Button("OK",size=d_f_b)]],justification='center')]]
+                    layout = [[sg.Text("Exported to " + path_current,justification="center",size=export_text)],[sg.Text("Returning to main menu...",justification="center",size=export_text)],[sg.Column([[sg.Button("OK",size=d_f_b)]],justification='center')]]
                     window = sg.Window("Abnormal World Generator",layout)
                     window.read()
                     window.close()

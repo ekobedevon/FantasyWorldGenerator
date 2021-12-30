@@ -8,18 +8,18 @@ class NPC():
     sex = ""
     age = 0
     profession = ""
-    background = ""
+    origin = ""
     goals = ""
-    background_details = {}
+    origin_details = {}
     def __init__(self,gen: Generator.generator = None,dict_data = None, isAdult:bool = True,goals:str = ""):
-        self.background_details = {}
+        self.origin_details = {}
         if dict_data == None:
             self.race = gen.generateRace()
             self.sex = Generator.generateGender()
             self.name = gen.generateName(self.race,self.sex)
             self.age = gen.generateAge(self.race,isAdult)
             self.profession = gen.generateProfession()
-            self.background, self.background_details = gen.generateBackground()
+            self.origin, self.origin_details = gen.generateOrigin()
             self.goals = goals
         else:
             self.name = dict_data['name']
@@ -42,9 +42,9 @@ class NPC():
         for text in profession_text:
             layout.append([sg.Text(text)])
         layout.append([sg.Text("Personality",font=s.Title_Style)])
-        layout.append([sg.Text("Background: "+self.background)])
-        for key in self.background_details:
-            layout.append([sg.Text(key+": "+self.background_details[key])])
+        layout.append([sg.Text("origin: "+self.origin)])
+        for key in self.origin_details:
+            layout.append([sg.Text(key+": "+self.origin_details[key])])
         if self.goals != "":
             layout.append([sg.Text("Personal Goal",font=s.Title_Style)])
         
