@@ -1,4 +1,3 @@
-from tkinter.constants import TRUE
 import NPC
 import Building
 import City
@@ -65,7 +64,22 @@ class Region():
             lair_location = rand.choice(self.minor_LOI)
             while lair_location in self.RP_lairs.values():
                 lair_location = rand.choice(self.minor_LOI)
-            power.lair = rand.choice(self.minor_LOI) # set villan lair
+            power.lair = rand.choice(self.minor_LOI) # set villan lairs
+        
+        npc_list = []
+        city_list = []
+        for city in self.cities:
+            city_list.append(city.city_name)
+            for c_npc in city.wandering_npcs:
+                npc_list.append(c_npc.name)
+            for building in city.buildings_list:
+                for b_npc in building.occupants:
+                    npc_list.append(b_npc.name)
+        
+
+
+        
+            
 
         
 

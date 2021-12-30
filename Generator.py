@@ -2,6 +2,8 @@ import json as js
 import os
 import random as rand
 import math
+from typing import List
+
 
 def initialize_race(race: str):
     """Used to get all the information for each race in the Json File folder for races"""
@@ -426,3 +428,184 @@ class generator(): # create a generator object
         for detail in self.origin_details[origin]:
             origin_Details[detail] = rand.choice(self.origin_details[origin][detail])
         return origin,origin_Details
+
+    def generatePowerGoal(self,minor_locations ,npcs ,major_locations,area_name,local_leader,cities):
+        if local_leader == "":
+            local_leader = self.generateName(self.generateRace(),generateGender())
+        Goal = ""
+        Avaiable_actions = []
+        match(rand.randint(1,6)):
+            case 1: #REVENGE
+                match(rand.randint(1,4)): #type of revenge
+                    case 1:
+                        Goal = "Revenge on " + (rand.choice(npcs)) #revenge on a person
+                    case 2:
+                        Goal = "Revenge on " + (rand.choice(npcs)) + "'s ancestors" #revenge on a blood line
+                    case 3:
+                        Goal = "Revenge on all" + (rand.choice(list(self.race_list.keys()))) #Revenge on a race
+                    case 4:
+                        Goal = "Revenge on all inhabitants of " + (rand.choice(major_locations))
+            case 2: #DOMINATION
+                match(rand.randint(1,3)):
+                    case 1:
+                        Goal = "Rule over " + rand.choice(minor_locations) # rule over a non city place
+                    case 2:
+                        Goal = "Rule over " + rand.choice(cities) # rule over a city
+                    case 3:
+                        Goal = "Complete Rule over " + area_name
+            case 3: # ACQUISITON Of X
+                match(rand.randint(1,6)):
+                    case 1:
+                        Goal = "To acquire " + self.generateMacguffin() #to get an item
+                    case 2:
+                        Goal = "To get " + self.generateMacguffin() + " back from " + rand.choice(npcs) # to get an item back from someone
+                    case 3:
+                        Goal = "To get " + self.generateMacguffin() + " back from " + rand.choice(minor_locations + major_locations) # to get an item back from somewhere
+                    case 4:
+                        Goal = "To get/steal the affection of " + rand.choice(npcs) # to steal someones love
+                    case 5:
+                        Goal = "To steal the title of " + rand.choice(npcs) # to steal the title from someone
+                    case 6:
+                        Goal = "To steal the birthwright of " + rand.choice(npcs) # to steal someone's birthwrite
+            case 4: #Life or death
+                match(rand.randint(1,4)):
+                    case 1: 
+                        Goal = "To achieve Lichdom"
+                    case 2:
+                        Goal = "To achieve Immortality"
+                    case 3:
+                        Goal = "To escape Immortality and truly die"
+                    case 4:
+                        Goal = "To resurect someone their true love"
+            case 5: # A power beyond
+                match(rand.randint(1,4)):
+                    case 1:
+                        Goal = "To ascend to godhood"
+                    case 2:
+                        Goal = "To kill a god"
+                    case 3:
+                        Goal = "To summon a god"
+                    case 4:
+                        Goal = "To open a portal to another plane/world"
+            case 6: #to amass power
+                match(rand.randint(1,2)):
+                    case 1:
+                        Goal = "To become insanely wealthy"
+                    case 2:
+                        Goal = "To become insanely powerful"
+                
+        means_of_action = ""
+
+        match(1): 
+            case 1: # TO STEAL SOMETHING
+                match(rand.randint(1,2)):
+                    case 1: # TO STEAL A ITEM
+                        match(rand.randint(1,4)): 
+                            case 1:
+                                means_of_action = "by stealing '" + self.generateMacguffin() + "' from " + rand.choice(cities+major_locations+ minor_locations)
+                            case 2:
+                                means_of_action = "by stealing '" + self.generateMacguffin() + "' from " + rand.choice(npcs)
+                            case 3:
+                                means_of_action = "by stealing '" + self.generateMacguffin() + "' from " + local_leader
+                            case 4:
+                                means_of_action = "by stealing '" + self.generateMacguffin() + "' from the " + rand.choice(list(self.race_list.keys()))
+                    case 2: #To steal people
+                        match(rand.randint(1,6)):
+                            case 1:
+                                means_of_action = "by kidnaping people"
+                            case 2:
+                                means_of_action = "by kidnaping people from " + rand.choice(cities)
+                            case 3:
+                                means_of_action = "by kidnaping people from " + rand.choice(minor_locations)
+                            case 4:
+                                means_of_action = "by kidnaping " + rand.choice(npcs)
+                            case 5:
+                                means_of_action = "by kidnaping leader of " + rand.choice(cities)
+                            case 6:
+                                means_of_action = "by kidnaping leader of " + rand.choice(minor_locations)
+                    
+            case 2: #TO KILL/SACRIFICE
+                match(rand.randint(1,2)):
+                    case 1: #KILL
+                        match(rand.randint(1,6)):
+                            case 1:
+                                means_of_action = "by killing all " + rand.choice(list(self.race_list.keys()))
+                            case 2:
+                                means_of_action = "by killing all inhabitants of " + rand.choice(cities+major_locations+ minor_locations)
+                            case 3:
+                                means_of_action = "by killing " + (rand.choice(npcs))
+                            case 4:
+                                means_of_action = "by killing a god"
+                            case 5:
+                                means_of_action = "by killing the legendary " + rand.choice(self.general_details["Monsters"]) + "(s)"
+                            case 6:
+                                means_of_action = "by killing all inhabitants of " + area_name
+                    case 2: #sacrifice
+                        match(rand.randint(1,7)):
+                            case 1:
+                                means_of_action = "by sacrificing all " + rand.choice(list(self.race_list.keys()))
+                            case 2:
+                                means_of_action = "by sacrificing all inhabitants of " + rand.choice(cities+major_locations+ minor_locations)
+                            case 3:
+                                means_of_action = "by killing all inhabitants of " + area_name
+                            case 4:
+                                means_of_action = "by sacrificing " + (rand.choice(npcs))
+                            case 5:
+                                means_of_action = "by sacrificing a god"
+                            case 6:
+                                means_of_action = "by sacrificing the legendary " + rand.choice(self.general_details["Monsters"]) + "(s)"
+                            case 7:
+                                means_of_action = "by sacrificing the legendary " + self.generateMacguffin()
+            case 3: #Conquer/Invade
+                match(rand.randint(1,2)):
+                    case 1: #Conquer
+                        match(rand.randint(1,2)):
+                            case 1:
+                                means_of_action = "by conquering " + area_name
+                            case 2:
+                                means_of_action = "by conquering " + rand.choice(cities+major_locations+ minor_locations)
+                    case 2: #Invade
+                        match(rand.randint(1,2)):
+                            case 1:
+                                means_of_action = "by invading neighboring region/nation" 
+                            case 2:
+                                means_of_action = "by invading " + rand.choice(cities+major_locations+ minor_locations)
+            case 3: #Destroy
+                match(rand.randint(1,4)):
+                    case 1:
+                        means_of_action = "by spreading Plague across the lands"
+                    case 2:
+                        means_of_action = "by driving out all residents out of " + area_name + " through action"
+                    case 2:
+                        means_of_action = "by driving out all residents out of " + rand.choice(cities+major_locations+ minor_locations) + " through action"
+                    case 4:
+                        means_of_action = "by reducing " + area_name + " to rubble"
+                    case 5:
+                        means_of_action = "by reducing " + rand.choice(cities+major_locations+ minor_locations) + " to rubble"
+            case 4: #To subvert
+                match(rand.randint(1,3)):
+                    case 1:
+                        means_of_action = "by subverting the hierachy of " +area_name
+                    case 2:
+                        means_of_action = "by subverting the hierachy of " +rand.choice(cities+major_locations+ minor_locations)
+                    case 3:
+                        means_of_action = "by subverting a religious hierachy"
+            case 5: #Politics
+                match(rand.randint(1,6)):
+                    case 1:
+                        means_of_action = "by betraying the leader of " +area_name
+                    case 2:
+                        means_of_action = "by betraying the leader of " +rand.choice(cities+major_locations+ minor_locations)
+                    case 3:
+                        means_of_action = "by starting a rebellion/revolution in " + area_name
+                    case 4:
+                        means_of_action = "by starting a rebellion/revolution in " + rand.choice(cities+major_locations+ minor_locations)
+                    case 5:
+                        means_of_action = "by starting a commiting acts of terrorism in " + area_name
+                    case 6:
+                        means_of_action = "by starting a commiting acts of terrorism in " + rand.choice(cities+major_locations+ minor_locations)
+
+        
+        return Goal + " " +  means_of_action       
+
+
