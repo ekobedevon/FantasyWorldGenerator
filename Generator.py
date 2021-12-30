@@ -428,6 +428,13 @@ class generator(): # create a generator object
         for detail in self.origin_details[origin]:
             origin_Details[detail] = rand.choice(self.origin_details[origin][detail])
         return origin,origin_Details
+    
+    def generateRegionName(self,region_name: str = ""):
+        location_type = rand.choice(self.location_details["Locations_Natural"])
+        if region_name != "":
+            return location_type + " " + region_name
+        else:
+            return rand.choice(self.location_details["Adjectives"]) + " " + location_type
 
     def generatePowerGoal(self,minor_locations ,npcs ,major_locations,area_name,local_leader,cities):
         if local_leader == "":

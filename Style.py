@@ -1,6 +1,6 @@
 FONT = "Helvitic" #global font value
 Title_Font_Size = "12" 
-Normal_Font_Size = "11"
+Normal_Font_Size = "10"
 
 #Style format = 'Font Font_Size (bold or underline)'
 Title_Style=FONT+' '+ Title_Font_Size+' bold' # any thing that should be emphasized

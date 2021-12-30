@@ -78,9 +78,6 @@ class City():
                 temp_col = []
             temp_col.append(sg.Button(npc.name + "\n"+ npc.profession,size=button_size,key=str(value) + "_npc_city"))
         npc_cols.append(temp_col)
-
-
-
         Container = [sg.Frame("Wandering NPCs",layout=npc_cols)]
         layout.append(Container)
 

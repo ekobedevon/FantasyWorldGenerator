@@ -16,15 +16,6 @@ BASE_PATH = os.getcwd()
 MASTER_GENERATOR =Generator.generator()
 random.seed(time.time())
 
-
-region = Region.Region(MASTER_GENERATOR)
-
-
-
-
-
-
-
 #STYLE STUFF
 d_f_b = (10,1) #DEFAULT BUTTON SIZE
 export_text = (80,1)
@@ -37,7 +28,7 @@ current_displayed = None #used to hold the currently displayed element
 displayed_stack = [] #used to store in order, the parent elements in order to allow layers in menu
 button_menu = 1
 is_visible = False
-exit =0;
+exit =1;
 while(exit): # loop until exit is changed
     button_layout = [[]]
     general_buttons = [[]]
@@ -49,7 +40,11 @@ while(exit): # loop until exit is changed
         layout = [[]]
     match(button_menu): #display differen't menus based on what is being veiwed
         case 1:
-            general_buttons = [[sg.Button("New NPC",key="--NewNPC--",size=d_f_b)],[sg.Button("New Building",key="--NewBuild--",size=d_f_b)],[sg.Button("New City",key="--NewCity--",size=d_f_b)],[sg.Button("Exit",key="--EXIT--",size=d_f_b)]]
+            general_buttons = [[sg.Button("New NPC",key="--NewNPC--",size=d_f_b)],
+                                [sg.Button("New Building",key="--NewBuild--",size=d_f_b)],
+                                [sg.Button("New City",key="--NewCity--",size=d_f_b)],
+                                [sg.Button("New Region",key="--NewRegion--",size=d_f_b)],
+                                [sg.Button("Exit",key="--EXIT--",size=d_f_b)]]
         case 2:
             general_buttons = [[sg.Button("Return",key="--Return--",size=d_f_b)],[sg.Button("Exit",key="--EXIT--",size=d_f_b)],[sg.Button("Main Menu",key="--Main--",size=d_f_b,visible=is_visible)]]
     button_layout.append([sg.Frame("General",general_buttons)])
@@ -71,6 +66,9 @@ while(exit): # loop until exit is changed
                     window.close()
                 case "--NewCity--": #generate a new city
                     current_displayed = City.City(MASTER_GENERATOR)
+                    window.close()
+                case "--NewRegion--":
+                    current_displayed = Region.Region(MASTER_GENERATOR)
                     window.close()
                 case "--Return--": #go up one layer
                     current_displayed = displayed_stack.pop() # pop last display of stack
@@ -124,7 +122,18 @@ while(exit): # loop until exit is changed
                     is_visible = True # set return button as visible
                     os.chdir(BASE_PATH)
         else:
-            if "_city" in events:
+            if "_region" in events:
+                b_index = (events.removesuffix("_region"))
+                if "_city" in events:
+                    b_index = int(b_index.removesuffix("_city")) # the int of the building clicked
+                    displayed_stack.append(current_displayed)
+                    current_displayed = current_displayed.cities[b_index]
+                else:
+                    b_index = int(b_index.removesuffix("_npc"))
+                    displayed_stack.append(current_displayed)
+                    current_displayed = current_displayed.region_powers[b_index]
+                window.close()
+            elif "_city" in events:
                 b_index = (events.removesuffix("_city")) # the int of the building clicked
                 displayed_stack.append(current_displayed) # push displayed onto stack
                 if "_building" in events:
@@ -139,6 +148,7 @@ while(exit): # loop until exit is changed
                 b_index = int(events.removesuffix("_building"))
                 current_displayed = current_displayed.occupants[b_index]
                 window.close()
+            
 
 
     if len(displayed_stack) != 0:

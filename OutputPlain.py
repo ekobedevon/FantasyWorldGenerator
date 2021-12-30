@@ -3,10 +3,12 @@ from random import randint
 import Building
 import City
 import NPC
+import Region
 extra = ""
 tags = {}
 tags["c"] = "[City]"
 tags["b"] = "[Building]"
+tags["r"] = "[Region]"
 
 
 """NOTE: Obsidian uses paths to distinguish unique names, so in the future as world gen gets bigger, it might be needed to add a process that ensures all names are unique before exporting"""
@@ -18,7 +20,9 @@ def GenerateUniqueName(file_name: str,file_set: set,file_extension: str = ""):
 
 
 def export(item): #generic export to be used when item type is not stricly defined
-    if type(item) == City.City:
+    if type(item) == Region.Region:
+        exportRegion(item)
+    elif type(item) == City.City:
         exportCity(item)
     elif type(item) == Building.Building:
         exportBuilding(item)
@@ -38,6 +42,8 @@ def exportNPC(npc: NPC.NPC):
     file.write("Origin: %s<\n" % npc.origin)
     file.write("Profession: %s\n" % npc.profession)
     file.write("\nPersonality:\n")
+    if npc.goals != "":
+        file.write("Lair: %s\n" % npc.lair)
     for detail in npc.origin_details:
         file.write("%s:" % detail)
         file.write("%s\n" % npc.origin_details[detail])
@@ -100,19 +106,61 @@ def exportCity(city:City.City):
     for hooks in city.hooks:
         file.write("%s \n" % hooks)
 
-    base = os.getcwd() # base working directory
+    base = os.getcwd() #base working directory
     os.chdir("./Buildings")
     curDirectory = os.getcwd()
     for building in city.buildings_list:
         os.chdir(curDirectory)
         exportBuilding(building)
 
-    os.chdir(base) # return to proper directory
+    os.chdir(base) #return to proper directory
     os.chdir("./Wandering NPCs")
     exportNPC(city.city_leader)
     for npc in city.wandering_npcs:
         exportNPC(npc)
-    
+
+def exportRegion(region:Region.Region):
+    file_set = set(os.listdir()) #get all files in director
+    folder_name = region.region_name #get potential name
+    folder_name = GenerateUniqueName(tags["r"] +folder_name,file_set) #generate unique name  for this building
+    os.mkdir(folder_name) #create a folder just for the building name
+    os.chdir("./"+folder_name) #enter that folder
+    os.mkdir("Cities") #create buildings folder
+    os.mkdir("Regional Powers")
+    file = open((folder_name + ".MD").removeprefix(tags["r"]), 'w')
+    file.write("General Info <br>\n")
+    file.write("Name: %s<br>\n" % region.region_name)
+    if region.capital != None:
+        file.write("Political System: %s<br>\n" % region.political_system)
+        file.write("Capital: %s<br>\n" % region.capital.city_name)
+        file.write("Regional Leader Leader:  %s <br>\n" % region.political_leader.name)
+    file.write("Regional Cities<br>\n")
+    for cities in region.cities:
+        file.write("%s <br>\n" % cities.city_name)
+    file.write("Regional Powers<br>\n")
+    for npc in region.region_powers:
+        file.write("%s <br>\n" % npc.name)
+    file.write("Major Locations of Interest <br>\n")
+    for loi in region.major_LOI:
+        file.write("%s <br>\n" % loi)
+    file.write("Minor Locations of Interest <br>\n")
+    for loi in region.minor_LOI:
+        file.write("%s <br>\n" % loi)
+    file.write("Regional Hooks <br>\n")
+    for hooks in region.hooks:
+        file.write("%s <br>\n" % hooks)
+
+    base = os.getcwd() #base working directory
+    os.chdir("./Cities")
+    curDirectory = os.getcwd()
+    for cities in region.cities:
+        os.chdir(curDirectory)
+        exportCity(cities)
+
+    os.chdir(base) #return to proper directory
+    os.chdir("./Regional Powers")
+    for npc in region.region_powers:
+        exportNPC(npc)
     
 
 
