@@ -32,6 +32,7 @@ class Region():
         self.minor_LOI = []
         self.major_LOI = []
         named_location_list = []
+        system,title,home = gen.generatePoliticalSystem()
         if self.political_united == None:
             self.political_united = rand.randint(0,1) #50/50 if the area is politically united
         if(self.political_united):
@@ -39,6 +40,10 @@ class Region():
             self.region_name = gen.generateRegionName(self.capital.city_name)
             self.political_leader = self.capital.city_leader
             named_location_list.append(self.capital.city_name)
+                    
+                
+
+
         else:
             self.region_name = gen.generateRegionName("")
             self.capital = None
@@ -83,7 +88,21 @@ class Region():
         if self.capital == None: # even out cities
             self.cities.append(City.City(gen))
         else:
-            self.cities.append(self.capital)
+            self.political_system = system
+            self.political_leader.profession = title
+            if home != "":
+                leader_building  = Building.Building(gen)
+                leader_building.building_name = home
+                leader_building.owner = self.political_leader
+                leader_building.hooks = []
+                leader_building.occupants[0] = self.political_leader
+                npc_list = []
+                for npc in leader_building.occupants:
+                    npc_list.append(npc.name)
+                for x in range(0,3):
+                    leader_building.hooks.append(gen.generateHook(rand.choice(npc_list),location_list=self.major_LOI + self.minor_LOI))
+                self.capital.buildings_list[0] = leader_building
+            self.cities.insert(0,self.capital)
 
 
     def createDisplay(self):

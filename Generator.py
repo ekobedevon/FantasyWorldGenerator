@@ -154,6 +154,7 @@ class generator(): # create a generator object
     quest_details = {}
     city_details = {}
     origin_details = {}
+    pantheon = {} #list to hold all gods
     #create a generator object that stores all the data at the start
     def __init__(self):
         base = os.getcwd()
@@ -185,6 +186,9 @@ class generator(): # create a generator object
         self.origin_details = intialize_origins()
         os.chdir(base)
 
+        for domain in self.general_details["Domains"]:
+            self.pantheon[domain] = self.generateGodName(domain=domain)
+
 
 
     def generateRace(self):
@@ -213,6 +217,15 @@ class generator(): # create a generator object
                     name = rand.choice(self.race_list[race][race+"_"+sex])
                 name = name + " of " + rand.choice(self.race_list[race][race+"_Pre"])  + " " + rand.choice(self.race_list[race][race+"_Post"])
         return name
+
+    def generateGodName(self,race:str = "",sex: str= "",domain:str = ""): # seperate method in order to allow easier change down the line
+        if race == "":
+            race =self.generateRace()
+        if sex == "":
+            sex = generateGender()
+        if domain == "":
+            domain = rand.choice(self.general_details["Domains"])
+        return self.generateName(race,sex) +", Diety of the "+ domain + " domain"
 
     def generateProfession(self,category: str = ""):
         job = ""
@@ -277,17 +290,19 @@ class generator(): # create a generator object
                 name = "The " + rand.choice(self.building_names["Nouns"]) + " & " + rand.choice(self.building_names["Nouns"])
         return name
 
-    def generateReligiousBuildingName(self):
-        name = rand.choice(self.building_names["Worship_Titles"]) + " of [" + rand.choice(self.general_details["Domains"]) + "] God"
+    def generateReligiousBuildingName(self,diety:str = ""):
+        if diety == "":
+            diety =rand.choice(list(self.pantheon.values()))
+        name = rand.choice(self.building_names["Worship_Titles"]) + " of " + diety
         return name
 
-    def generateBuilding(self,building_type: str = None,location: str = ""):
+    def generateBuilding(self,building_type: str = "",location: str = ""):
         building_name = ""
         owner_proffesion = ""
         suffix = ""
         if location != "":
             suffix = " of " + location 
-        if building_type == None or building_type not in self.building_type: #if their is no building type or if the building type is not valid
+        if building_type == "" or building_type not in self.building_types: #if their is no building type or if the building type is not valid
             building_type = rand.choice(self.building_types) # generate a building type
         match(building_type):
             case "Shops":
@@ -313,7 +328,8 @@ class generator(): # create a generator object
                 owner_proffesion = "Owner of " + building_name
             case "Religious":
                 building_name = self.generateReligiousBuildingName()
-                owner_proffesion = "Member of " + building_name
+                diety_name = building_name.partition(" of ")
+                owner_proffesion = "Follower of " + diety_name[2]
 
         return building_name, owner_proffesion,building_type
             
@@ -614,5 +630,51 @@ class generator(): # create a generator object
 
         
         return Goal + " " +  means_of_action       
+
+    def generatePoliticalSystem(self):
+        system = ""
+        title = ""
+        home = ""
+        choice = rand.randint(1,6)
+        options = []
+        match(choice):
+            case 1:
+                system = "Authoritarian/Dictator"
+                royal_option = rand.choice(["King/Queen","Prince/Princess","Duke/Duchess","Marquess/Marchioness","Earl/Countess","Viscount/Viscountess","Baron,Baroness"])
+                options.append(royal_option)
+                options += ["Dictator","Emperor"]
+            case 2:
+                system = "Theocratic Authoritarian"
+                royal_option = rand.choice(["King/Queen","Prince/Princess","Duke/Duchess","Marquess/Marchioness","Earl/Countess","Viscount/Viscountess","Baron,Baroness"])
+                options.append(royal_option)
+                options +=  ["Cleric","Elder","Pontiff","Priest","Deacon","Emperor"]
+            case 3:
+                system = "Communism"
+                title = ["Chancellor of the People"]
+            case 4:
+                system = "Military Dictatorship"
+                royal_option = rand.choice(["King/Queen","Prince/Princess","Duke/Duchess","Marquess/Marchioness","Earl/Countess","Viscount/Viscountess","Baron,Baroness"])
+                options.append(royal_option)
+                options +=  ["General","Dictator","Emperor"]
+            case 5:
+                system = "Democracy"
+                options =  ["Council Head","Lead Parlimentarian","Chancellor","Senator","Elder"]
+            case 6:
+                system = "Monarchy"
+                options =  ["King/Queen","Prince/Princess","Duke/Duchess","Marquess/Marchioness","Earl/Countess","Viscount/Viscountess","Baron,Baroness"]
+                
+        if len(options) != 0:
+            title = rand.choice(options)
+
+        if choice in [1,4,6]: # absolute rules
+            home = self.generateLOI(False,False)
+        elif choice == 2:
+            diety = (title.partition("of "))
+            home = self.generateReligiousBuildingName(diety= diety[2] )
+        elif choice == 5:
+            home = (self.generateBuilding("Notable_Housing"))[0]
+
+        return system,title,home
+
 
 
