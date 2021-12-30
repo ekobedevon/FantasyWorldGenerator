@@ -2,7 +2,8 @@ from random import choice, randint
 from typing import List
 import NPC
 import Generator
-import PySimpleGUI as sg 
+import PySimpleGUI as sg
+npc_button_size = (24,3)
 
 
 class Building():
@@ -48,6 +49,7 @@ class Building():
                     case 3:
                         hook =gen.generateHook(Q_type=0)
                 self.hooks.append(hook)
+            self.occupants.insert(0,self.owner)
                     
                     
             
@@ -67,27 +69,23 @@ class Building():
     
     def createDisplay(self):
         layout = [[]]
-        colTitle = [[sg.Text("Building Type:",font="bold")],[sg.Text("Building Name: ",font="bold")],[sg.Text("Owner:",font="bold")]]
+        colTitle = [[sg.Text("Building Type:",font='Helvitic 12 bold')],[sg.Text("Building Name: ",font='Helvitic 12 bold')],[sg.Text("Owner:",font='Helvitic 12 bold')]]
         colDetails = [[]]
 
         if(self.building_type == "Normal_Homes" or self.building_type == "Notable_Housing"): # get the title
-            colDetails=[[sg.Text("Housing")],[sg.Text(self.building_name + " of "+ self.owner.name) ],[sg.Text(self.owner.name)]]
+            colDetails=[[sg.Text("Housing",font='Helvitic 12')],[sg.Text(self.building_name + " of "+ self.owner.name,font='Helvitic 12') ],[sg.Text(self.owner.name,font='Helvitic 12')]]
         else:
             colDetails=[[sg.Text(self.building_type.replace("_"," "))],[sg.Text(self.building_name) ],[sg.Text(self.owner.name)]]
         
         layout = [[sg.Column(colTitle),sg.Column(colDetails)]] # add the title
     
-
         npc_cols = []
-        npc_cols.append(sg.Column(self.owner.createDisplay()))
-
-        for npcs in self.occupants:
-            npc_cols.append(sg.Column(npcs.createDisplay(),vertical_alignment="top"))
-        
+        for value,npc in enumerate(self.occupants):
+            npc_cols.append(sg.Column([[sg.Button(npc.name + "\n"+ npc.profession,size=npc_button_size,key=str(value)+"_building")]],vertical_alignment="top"))
         
         layout.append(npc_cols)
         if len(self.hooks) != 0:
-            layout.append([sg.Text("Hooks",font="bold")])
+            layout.append([sg.Text("Hooks",font='Helvitic 12 bold')])
             hooks = []
             for text in self.hooks:
                 hooks.append([sg.Text(text)])

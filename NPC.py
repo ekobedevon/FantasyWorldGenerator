@@ -7,13 +7,19 @@ class NPC():
     sex = ""
     age = 0
     profession = ""
-    def __init__(self,gen: Generator.generator = None,dict_data = None, isAdult:bool = True):
+    background = ""
+    goals = ""
+    background_details = {}
+    def __init__(self,gen: Generator.generator = None,dict_data = None, isAdult:bool = True,goals:str = ""):
+        self.background_details = {}
         if dict_data == None:
             self.race = gen.generateRace()
             self.sex = Generator.generateGender()
             self.name = gen.generateName(self.race,self.sex)
             self.age = gen.generateAge(self.race,isAdult)
             self.profession = gen.generateProfession()
+            self.background, self.background_details = gen.generateBackground()
+            self.goals = goals
         else:
             self.name = dict_data['name']
             self.age = dict_data['age']
@@ -26,11 +32,18 @@ class NPC():
 
     def createDisplay(self):
         profession_text = textwrap.wrap("Profession: " + self.profession,30)
-        layout =[[sg.Text("Race: " +self.race)],
+   
+        layout =[[sg.Text("General Details",font='Helvitic 12 bold')],
+            [sg.Text("Name: "+self.name)],
+            [sg.Text("Race: " +self.race)],
             [sg.Text("Sex: " +self.sex)],
             [sg.Text("Age: " +str(self.age))]]
         for text in profession_text:
             layout.append([sg.Text(text)])
+        layout.append([sg.Text("Personality",font='Helvitic 12 bold')])
+        layout.append([sg.Text("Background: "+self.background)])
+        for key in self.background_details:
+            layout.append([sg.Text(key+": "+self.background_details[key])])
         
         layout = [[sg.Frame("NPC: " + self.name,layout)]]
 

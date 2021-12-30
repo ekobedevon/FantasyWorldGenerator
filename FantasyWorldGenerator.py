@@ -30,7 +30,7 @@ current_displayed = None #used to hold the currently displayed element
 displayed_stack = [] #used to store in order, the parent elements in order to allow layers in menu
 button_menu = 1
 is_visible = False
-exit =0;
+exit =1;
 while(exit): # loop until exit is changed
     button_layout = [[]]
     general_buttons = [[]]
@@ -118,9 +118,19 @@ while(exit): # loop until exit is changed
                     os.chdir(BASE_PATH)
         else:
             if "_city" in events:
-                b_index = int(events.removesuffix("_city")) # the int of the building clicked
+                b_index = (events.removesuffix("_city")) # the int of the building clicked
                 displayed_stack.append(current_displayed) # push displayed onto stack
-                current_displayed = current_displayed.buildings_list[b_index]
+                if "_building" in events:
+                    b_index = int(b_index.removesuffix("_building"))
+                    current_displayed = current_displayed.buildings_list[b_index]
+                else:
+                    b_index = int(b_index.removesuffix("_npc"))
+                    current_displayed = current_displayed.wandering_npcs[b_index]
+                window.close()
+            elif "_building" in events:
+                displayed_stack.append(current_displayed)
+                b_index = int(events.removesuffix("_building"))
+                current_displayed = current_displayed.occupants[b_index]
                 window.close()
 
 

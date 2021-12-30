@@ -118,10 +118,8 @@ def intialize_backgrounds():
         os.chdir("./"+folder) # got into the folder of each background
         details = os.listdir("./") #get all directories in this folders
         if len(details) == 4: # if there are not exactly 4 files
-            print("GOING TO FOLDER: " + folder)
             background_details[folder] = {} # create a sub dictionary
             for file_name in details: # for each file in the specific folder
-                print("IN FILE " + file_name)
                 file = open(file_name) 
                 data = js.load(file)
                 background_details[folder][file_name.removesuffix(".json")] = data
@@ -129,9 +127,7 @@ def intialize_backgrounds():
             print("Invalid Parameters")
         os.chdir(base)
 
-    for name in list(background_details.keys()):
-        print("-----------------------------")
-        print(background_details[name])
+    return background_details
         
         
 
@@ -155,6 +151,7 @@ class generator(): # create a generator object
     location_details = {}
     quest_details = {}
     city_details = {}
+    background_details = {}
     #create a generator object that stores all the data at the start
     def __init__(self):
         base = os.getcwd()
@@ -183,7 +180,7 @@ class generator(): # create a generator object
         os.chdir(base)
         self.city_details = intialize_city_details()
         os.chdir(base)
-        intialize_backgrounds()
+        self.background_details = intialize_backgrounds()
         os.chdir(base)
 
 
@@ -293,10 +290,10 @@ class generator(): # create a generator object
         match(building_type):
             case "Shops":
                 building_name = self.generateBuildingName()
-                owner_proffesion = "Owner and Operator of " + building_name
+                owner_proffesion = "Owner of " + building_name
             case "Tavern":
                 building_name = self.generateTavernName()
-                owner_proffesion = "Owner and Operator of " + building_name
+                owner_proffesion = "Owner of " + building_name
             case "Guild_Types":
                 building_name = rand.choice(self.building_types_names["Guild_Types"]) + " Guild Branch" + suffix
                 owner_proffesion = "Leader of local " + building_name
@@ -311,7 +308,7 @@ class generator(): # create a generator object
                 owner_proffesion = ""
             case "Craftsmen":
                 building_name = self.generateBuildingName() + " " + rand.choice(self.building_types_names['Craftsmen'])
-                owner_proffesion = "Owner and Operator of " + building_name
+                owner_proffesion = "Owner of " + building_name
             case "Religious":
                 building_name = self.generateReligiousBuildingName()
                 owner_proffesion = "Member of " + building_name
@@ -417,3 +414,13 @@ class generator(): # create a generator object
 
     def generateCityName(self):
         return rand.choice(self.city_details["Name_Start"]) + rand.choice(self.city_details["Name_Endings"]).lower()
+
+
+    def generateBackground(self,Background: str = ""):
+        if Background == "":
+            Backgrounds = list(self.background_details.keys())
+            Background = rand.choice(Backgrounds)
+        Background_Details = {}
+        for detail in self.background_details[Background]:
+            Background_Details[detail] = rand.choice(self.background_details[Background][detail])
+        return Background,Background_Details

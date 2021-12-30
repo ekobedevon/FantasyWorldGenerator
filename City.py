@@ -1,11 +1,10 @@
-from ctypes import alignment
-from tkinter.constants import FALSE, UNDERLINE
+
 import NPC
 import Building
 import random as rand
 import Generator
 import PySimpleGUI as sg
-from typing import Container, List
+from typing import List
 
 
 class City():
@@ -49,41 +48,42 @@ class City():
                         hook =gen.generateHook(Q_type=0,location=location)
                     
                 self.hooks.append(hook)
+            self.wandering_npcs.insert(0,self.city_leader)
                 
 
     def createDisplay(self):
         layout =[[]]
-        colTitle = [[sg.Text("City Name:",font="bold")],[sg.Text("City Population: ",font="bold")],[sg.Text("Local Leader:",font="bold")]]
-        colDetails = [[sg.Text(self.city_name)],[sg.Text(self.city_pop)],[sg.Text(self.city_leader.name)]]
+        colTitle = [[sg.Text("City Name:",font='Helvitic 12 bold')],[sg.Text("City Population: ",font='Helvitic 12 bold')],[sg.Text("Local Leader:",font='Helvitic 12 bold')]]
+        colDetails = [[sg.Text(self.city_name,font='Helvitic 12')],[sg.Text(self.city_pop,font='Helvitic 12')],[sg.Text(self.city_leader.name,font='Helvitic 12')]]
         layout=[[sg.Column(colTitle),sg.Column(colDetails)]]
         
-        button_size = (24,3) # default button size for buttons
+        button_size = (30,3) # default button size for buttons
         building_cols = []
         temp_col = [] 
-        layout.append([sg.Text("Local Buildings",font="bold")])
         for value, building in enumerate(self.buildings_list):
             if value % 5 == 0 and value != 0:
                 building_cols.append(temp_col)
                 temp_col = []
-            temp_col.append(sg.Button(building.building_name,size=button_size,key=str(value)+"_city"))
+            temp_col.append(sg.Button(building.building_name,size=button_size,key=str(value)+"_building_city"))
         building_cols.append(temp_col)
-        Container = [sg.Column(building_cols)]
+        Container = [sg.Frame("Buildings",building_cols)]
         layout.append(Container)
 
         npc_cols = []
         temp_col = []
-        temp_col.append(sg.Column(self.city_leader.createDisplay()))
-        layout.append([sg.Text("Wandering NPCs",font="bold")])
-        for value,npcs in enumerate(self.wandering_npcs):
-            if (value+1)% 5 == 0 and value != 0: #starting at +1 to account for the city leader npc
+        for value,npc in enumerate(self.wandering_npcs):
+            if (value)% 5 == 0 and value != 0: #starting at +1 to account for the city leader npc
                 npc_cols.append(temp_col)
                 temp_col = []
-            temp_col.append(sg.Column(npcs.createDisplay(),vertical_alignment="top"))
+            temp_col.append(sg.Button(npc.name + "\n"+ npc.profession,size=button_size,key=str(value) + "_npc_city"))
         npc_cols.append(temp_col)
-        Container = [sg.Column(npc_cols)]
+
+
+
+        Container = [sg.Frame("Wandering NPCs",layout=npc_cols)]
         layout.append(Container)
 
-        layout.append([sg.Text("Nearby Locations of Interest",font="bold")])
+        layout.append([sg.Text("Nearby Locations of Interest",font='Helvitic 12 bold')])
         LOI = []
         temp_col = []
         for value,locaiton in enumerate(self.LOI):
@@ -95,7 +95,7 @@ class City():
         Container = [sg.Column(LOI)]
         layout.append(Container)
 
-        layout.append([sg.Text("Local Hooks",font="bold")])
+        layout.append([sg.Text("Local Hooks",font='Helvitic 12 bold')])
         hooks = []
         for hook in self.hooks:
             hooks.append([sg.Text(hook)])
