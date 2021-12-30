@@ -4,11 +4,13 @@ import Building
 import City
 import NPC
 import Region
+import Generator
 extra = ""
 tags = {}
 tags["c"] = "[City]"
 tags["b"] = "[Building]"
 tags["r"] = "[Region]"
+tags["p"] = "[Pantheon]"
 
 
 """NOTE: Obsidian uses paths to distinguish unique names, so in the future as world gen gets bigger, it might be needed to add a process that ensures all names are unique before exporting"""
@@ -19,7 +21,7 @@ def GenerateUniqueName(file_name: str,file_set: set,file_extension: str = ""):
     return file_name + file_extension
 
 
-def export(item): #generic export to be used when item type is not stricly defined
+def export(item,gen:Generator.generator = None): #generic export to be used when item type is not stricly defined
     if type(item) == Region.Region:
         exportRegion(item)
     elif type(item) == City.City:
@@ -28,6 +30,24 @@ def export(item): #generic export to be used when item type is not stricly defin
         exportBuilding(item)
     elif type(item) == NPC.NPC:
         exportNPC(item)
+
+
+def exportGeneralDetail(gen:Generator.generator):
+    os.mkdir("./Pantheon") # create pantheon folder
+    os.chdir("./Pantheon") # enter panthon directory
+    for god in list(gen.pantheon.keys()):
+        file = open("Diety of "+god+".MD" 'w')
+        file.write("## General Details<br>\n")
+        file.write("**Name:** %s<br>\n" % gen.pantheon[god])
+        file.close()
+
+def getDomain(string:str): # get the domain of the god
+    temp = string.partition("Diety")
+    domain = temp[1]+temp[2]
+    domain = domain.removesuffix(" domain") #remove the domain
+    domain = domain.replace("the ","",1) # remove "the"
+    return domain
+    
 
 
 def exportNPC(npc: NPC.NPC):
@@ -39,7 +59,14 @@ def exportNPC(npc: NPC.NPC):
     file.write("**Race:** %s<br>\n" % npc.race)
     file.write("**Sex:** %s<br>\n" % npc.sex)
     file.write("**Age:** %s<br>\n" % npc.age)
-    file.write("**Profession:** %s<br>\n" % npc.profession)
+    file.write("**Profession:** ")
+    if "Diety" not in npc.profession:
+        file.write("%s<br>\n" % npc.profession)
+    else: #link to god
+        domain = getDomain(npc.profession)
+        title_tuple = npc.profession.partition(domain)
+        new_title = title_tuple[0] + "[[" + title_tuple[1] + "]]" + title_tuple[2]
+        file.write("%s<br>\n" % new_title)
     if npc.goals != "":
         file.write("**Lair:** %s<br>\n" % npc.lair)
     file.write("**Origin:** %s<br>\n" % npc.origin)
@@ -62,7 +89,20 @@ def exportBuilding(building: Building.Building):
     os.mkdir("Occupants") #create occupants folder
     file = open(folder_name.removeprefix(tags["b"]) + ".MD", 'w')
     file.write("## General Info <br>\n")
-    file.write("**Name:** %s<br>\n" % building.building_name)
+    file.write("**Name:** ")
+    if "Diety" not in building.building_name:
+        print("!")
+        file.write("%s<br>\n" % building.building_name)
+    else: #link to god
+        print("?")
+        domain = getDomain(building.building_name)
+        print(domain)
+        remove = domain +" domain"
+        print(remove)
+        print(building.building_name[:building.building_name.index(",")])
+        new_title = building.building_name[:building.building_name.index(",")] + ", [[" +domain+ "]] domain"
+        file.write("%s<br>\n" % new_title)
+    print("?")
     file.write("**Building Type:** %s<br>\n" % building.building_type)
     file.write("**Owner:**  [[%s]] <br>\n" % building.owner.name ) 
     file.write("### Occupants <br>\n")
@@ -76,6 +116,7 @@ def exportBuilding(building: Building.Building):
     exportNPC(building.owner)
     for occupant in building.occupants:
         exportNPC(occupant)
+
 
 
 def exportCity(city:City.City):
@@ -115,6 +156,8 @@ def exportCity(city:City.City):
     os.chdir("./Wandering NPCs")
     for npc in city.wandering_npcs:
         exportNPC(npc)
+
+    os.chdir(base) # return to base directory
     
 def exportRegion(region:Region.Region):
     file_set = set(os.listdir()) #get all files in director
@@ -159,6 +202,10 @@ def exportRegion(region:Region.Region):
     os.chdir("./Regional Powers")
     for npc in region.region_powers:
         exportNPC(npc)
+
+    os.chdir(base) # return to base directory
+
+
     
 
 

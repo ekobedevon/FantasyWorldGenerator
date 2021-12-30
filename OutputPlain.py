@@ -4,6 +4,7 @@ import Building
 import City
 import NPC
 import Region
+import Generator
 extra = ""
 tags = {}
 tags["c"] = "[City]"
@@ -74,10 +75,13 @@ def exportBuilding(building: Building.Building):
     for hook in building.hooks:
         file.write("%s \n" % hook)
     file.close()
+    base = os.getcwd() #base working directory
     os.chdir("./Occupants") #write all occupants 
     exportNPC(building.owner)
     for occupant in building.occupants:
         exportNPC(occupant)
+    os.chdir(base) 
+    
 
 
 def exportCity(city:City.City):
@@ -118,6 +122,7 @@ def exportCity(city:City.City):
     exportNPC(city.city_leader)
     for npc in city.wandering_npcs:
         exportNPC(npc)
+    os.chdir(base) # return to base directory
 
 def exportRegion(region:Region.Region):
     file_set = set(os.listdir()) #get all files in director
@@ -163,6 +168,7 @@ def exportRegion(region:Region.Region):
     for npc in region.region_powers:
         exportNPC(npc)
     
+    os.chdir(base) 
 
 
 

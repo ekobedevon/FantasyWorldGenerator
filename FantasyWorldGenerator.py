@@ -16,7 +16,6 @@ BASE_PATH = os.getcwd()
 MASTER_GENERATOR =Generator.generator()
 random.seed(time.time())
 
-
 #STYLE STUFF
 d_f_b = (10,1) #DEFAULT BUTTON SIZE
 export_text = (80,1)

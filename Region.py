@@ -87,9 +87,16 @@ class Region():
 
         if self.capital == None: # even out cities
             self.cities.append(City.City(gen))
-        else:
+        else: # set political system information
             self.political_system = system
-            self.political_leader.profession = title
+            if system == "Theocratic Authoritarian":
+                temp = home.partition("Diety")
+                temp_domain = temp[1]+temp[2]
+                temp_domain = temp_domain.removesuffix(" domain") #remove the domain
+                temp_domain = temp_domain.replace("the ","",1) # remove "the"
+                self.political_leader.profession = title + ",Follower of the " +temp_domain
+            else:
+                self.political_leader.profession = title
             if home != "":
                 leader_building  = Building.Building(gen)
                 leader_building.building_name = home

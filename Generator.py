@@ -329,7 +329,7 @@ class generator(): # create a generator object
             case "Religious":
                 building_name = self.generateReligiousBuildingName()
                 diety_name = building_name.partition(" of ")
-                owner_proffesion = "Follower of " + diety_name[2]
+                owner_proffesion = " of " + diety_name[2]
 
         return building_name, owner_proffesion,building_type
             

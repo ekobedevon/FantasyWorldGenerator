@@ -20,8 +20,10 @@ class Building():
             building_name, building_owner, building_type = gen.generateBuilding(location=Location)
             self.building_type = building_type
             self.building_name = building_name
-            if building_owner != "": #if the building is not a house
+            if building_owner != "" and self.building_type != "Religious": #if the building is not a house
                 self.owner.profession = building_owner
+            if self.building_type == "Religious":
+                self.owner.profession += building_owner
             if self.building_type == "Normal_Homes":
                 self.building_name += " of " + self.owner.name
             elif self.building_type == "Notable_Housing":

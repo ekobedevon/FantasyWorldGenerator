@@ -4,6 +4,7 @@ import Building
 import City
 import NPC
 import Region
+import Generator
 extra = ""
 tags = {}
 tags["c"] = "[City]"
@@ -28,6 +29,22 @@ def export(item): #generic export to be used when item type is not stricly defin
         exportBuilding(item)
     elif type(item) == NPC.NPC:
         exportNPC(item)
+
+def exportGeneralDetail(gen:Generator.generator):
+    os.mkdir("./Pantheon") # create pantheon folder
+    os.chdir("./Pantheon") # enter panthon directory
+    for domain in list(gen.pantheon.keys()):
+        file = open("Diety of "+domain+".MD" 'w')
+        file.write("## General Details<br>\n")
+        file.write("**Name:** %s<br>\n" % gen.pantheon[domain])
+        file.close()
+
+def getDomain(string:str): # get the domain of the god
+    temp = string.partition("Diety")
+    domain = temp[1]+temp[2]
+    domain = domain.removesuffix(" domain") #remove the domain
+    domain = domain.replace("the ","",1) # remove "the"
+    return domain  
 
 
 def exportNPC(npc: NPC.NPC):
@@ -60,7 +77,7 @@ def exportBuilding(building: Building.Building):
     os.chdir("./"+folder_name) #enter that folder
     os.mkdir("Occupants") #create occupants folder
     file = open(folder_name.removeprefix(tags["b"]) + ".MD", 'w')
-    file.write("## General Info <br>\n")
+    file.write("## General Info <br>\n")   
     file.write("**Name:** %s<br>\n" % building.building_name)
     file.write("**Building Type:** %s<br>\n" % building.building_type)
     file.write("**Owner:**  %s <br>\n" % building.owner.name ) 
@@ -71,10 +88,13 @@ def exportBuilding(building: Building.Building):
     for hook in building.hooks:
         file.write("%s <br>\n" % hook)
     file.close()
+    base = os.getcwd() #base working directory
     os.chdir("./Occupants") #write all occupants 
     exportNPC(building.owner)
     for occupant in building.occupants:
         exportNPC(occupant)
+
+    os.chdir(base) 
 
 
 def exportCity(city:City.City):
@@ -115,6 +135,8 @@ def exportCity(city:City.City):
     exportNPC(city.city_leader)
     for npc in city.wandering_npcs:
         exportNPC(npc)
+
+    os.chdir(base) 
 
 def exportRegion(region:Region.Region):
     file_set = set(os.listdir()) #get all files in director
@@ -159,6 +181,8 @@ def exportRegion(region:Region.Region):
     os.chdir("./Regional Powers")
     for npc in region.region_powers:
         exportNPC(npc)
+
+    os.chdir(base) 
     
     
 

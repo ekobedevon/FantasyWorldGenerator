@@ -33,7 +33,6 @@ class NPC():
    
 
     def createDisplay(self):
-        profession_text = textwrap.wrap("Profession: " + self.profession,30)
    
         layout =[[sg.Text("General Details",font=s.Title_Style)],
             [sg.Text("Name: "+self.name)],
@@ -41,8 +40,7 @@ class NPC():
             [sg.Text("Sex: " +self.sex)],
             [sg.Text("Age: " +str(self.age))],
             [sg.Text("Lair: " +self.lair)]]
-        for text in profession_text:
-            layout.append([sg.Text(text)])
+        layout.append([sg.Text("Profession:" + self.profession)])
         layout.append([sg.Text("Personality",font=s.Title_Style)])
         layout.append([sg.Text("Origin: "+self.origin)])
         for key in self.origin_details:
