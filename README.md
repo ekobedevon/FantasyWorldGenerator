@@ -5,6 +5,9 @@ This project aims to simplify world building by handling the generation of the s
 ## Running the program
 The program is compiled using [psgcompiler](https://pypi.org/project/psgcompiler/). You can either compile from the source code yourself, or alternatively you can get the latest version from this [drive link](https://drive.google.com/drive/folders/1XVY92ZjCDrsCZ5TxiQvh2O8tXgkiBrbH?usp=sharing).
 
+## Disclaimer
+This program is designed to be a extremly useful ***tool*** that has a wide range of abilites to help you, but at the end it is only a ***tool***. This will not fully give you a publish ready world, but will instead give you the framework in order to build your own master piece on top of it. Of course as more features are added to the tool, the framework will be more and more complete, but it is safe to say it will never be able to add the spice of life that is human imagination that you, the user, provide. :)
+
 ## Patch Notes:
 
 ### Version 0.3.1
