@@ -2,6 +2,8 @@ import json as js
 import os
 import random as rand
 import math
+from typing import List
+
 
 def initialize_race(race: str):
     """Used to get all the information for each race in the Json File folder for races"""
@@ -108,6 +110,27 @@ def intialize_city_details():
         data = js.load(file)
         city_details[file_name.removesuffix(".json")] = data
     return city_details
+
+def intialize_origins():
+    os.chdir("Json_Files\Origins") # enter origin folder
+    origin_list  = os.listdir("./") # get all list of origins
+    base = os.getcwd() # get base directory
+    origin_details = {} # create dictionary
+    for folder in origin_list:
+        os.chdir("./"+folder) # got into the folder of each origin
+        details = os.listdir("./") #get all directories in this folders
+        if len(details) == 4: # if there are not exactly 4 files
+            origin_details[folder] = {} # create a sub dictionary
+            for file_name in details: # for each file in the specific folder
+                file = open(file_name) 
+                data = js.load(file)
+                origin_details[folder][file_name.removesuffix(".json")] = data
+        else:
+            print("Invalid Parameters")
+        os.chdir(base)
+
+    return origin_details
+        
         
 
 def generateGender():
@@ -130,6 +153,8 @@ class generator(): # create a generator object
     location_details = {}
     quest_details = {}
     city_details = {}
+    origin_details = {}
+    pantheon = {} #list to hold all gods
     #create a generator object that stores all the data at the start
     def __init__(self):
         base = os.getcwd()
@@ -158,6 +183,11 @@ class generator(): # create a generator object
         os.chdir(base)
         self.city_details = intialize_city_details()
         os.chdir(base)
+        self.origin_details = intialize_origins()
+        os.chdir(base)
+
+        for domain in self.general_details["Domains"]:
+            self.pantheon[domain] = self.generateGodName(domain=domain)
 
 
 
@@ -187,6 +217,15 @@ class generator(): # create a generator object
                     name = rand.choice(self.race_list[race][race+"_"+sex])
                 name = name + " of " + rand.choice(self.race_list[race][race+"_Pre"])  + " " + rand.choice(self.race_list[race][race+"_Post"])
         return name
+
+    def generateGodName(self,race:str = "",sex: str= "",domain:str = ""): # seperate method in order to allow easier change down the line
+        if race == "":
+            race =self.generateRace()
+        if sex == "":
+            sex = generateGender()
+        if domain == "":
+            domain = rand.choice(self.general_details["Domains"])
+        return self.generateName(race,sex) +", Diety of the "+ domain + " domain"
 
     def generateProfession(self,category: str = ""):
         job = ""
@@ -251,25 +290,27 @@ class generator(): # create a generator object
                 name = "The " + rand.choice(self.building_names["Nouns"]) + " & " + rand.choice(self.building_names["Nouns"])
         return name
 
-    def generateReligiousBuildingName(self):
-        name = rand.choice(self.building_names["Worship_Titles"]) + " of [" + rand.choice(self.general_details["Domains"]) + "] God"
+    def generateReligiousBuildingName(self,diety:str = ""):
+        if diety == "":
+            diety =rand.choice(list(self.pantheon.values()))
+        name = rand.choice(self.building_names["Worship_Titles"]) + " of " + diety
         return name
 
-    def generateBuilding(self,building_type: str = None,location: str = ""):
+    def generateBuilding(self,building_type: str = "",location: str = ""):
         building_name = ""
         owner_proffesion = ""
         suffix = ""
         if location != "":
             suffix = " of " + location 
-        if building_type == None or building_type not in self.building_type: #if their is no building type or if the building type is not valid
+        if building_type == "" or building_type not in self.building_types: #if their is no building type or if the building type is not valid
             building_type = rand.choice(self.building_types) # generate a building type
         match(building_type):
             case "Shops":
                 building_name = self.generateBuildingName()
-                owner_proffesion = "Owner and Operator of " + building_name
+                owner_proffesion = "Owner of " + building_name
             case "Tavern":
                 building_name = self.generateTavernName()
-                owner_proffesion = "Owner and Operator of " + building_name
+                owner_proffesion = "Owner of " + building_name
             case "Guild_Types":
                 building_name = rand.choice(self.building_types_names["Guild_Types"]) + " Guild Branch" + suffix
                 owner_proffesion = "Leader of local " + building_name
@@ -284,10 +325,11 @@ class generator(): # create a generator object
                 owner_proffesion = ""
             case "Craftsmen":
                 building_name = self.generateBuildingName() + " " + rand.choice(self.building_types_names['Craftsmen'])
-                owner_proffesion = "Owner and Operator of " + building_name
+                owner_proffesion = "Owner of " + building_name
             case "Religious":
                 building_name = self.generateReligiousBuildingName()
-                owner_proffesion = "Member of " + building_name
+                diety_name = building_name.partition(" of ")
+                owner_proffesion = " of " + diety_name[2]
 
         return building_name, owner_proffesion,building_type
             
@@ -307,7 +349,7 @@ class generator(): # create a generator object
             name = name + " of " + rand.choice(self.item_details["Item_Preffix"]) + " " + rand.choice(self.item_details["Item_Suffix"])
         return name # return name
 
-    def generateHook(self,quest_giver: str = None,target: str = None,location: str = None, reward: str = None,Q_type: int = 1):
+    def generateHook(self,quest_giver: str = None,target: str = None,location: str = None,location_list = [] ,reward: str = None,Q_type: int = 1):
         hook = None
         if quest_giver == None: #generate quest giver name if not given one
             quest_giver = self.generateName(self.generateRace(),generateGender())
@@ -319,6 +361,8 @@ class generator(): # create a generator object
                 reward = self.generateMacguffin() + " and level appropriate gold amount"
         if location == None:
             location = self.generateLOI()
+        if len(location_list) != 0: #if given a list of locations, generate from that list
+            location = rand.choice(location_list)
         
         if rand.randint(0,1) and Q_type == 1:
             party_verb = rand.choice(self.quest_details["Kill_Synonyms"])
@@ -330,7 +374,7 @@ class generator(): # create a generator object
             party_verb = rand.choice(self.quest_details["Find_Synonyms"])
             guide_item = rand.choice(self.quest_details["Map_Alternates"])
             
-            hook = "The Party " + party_verb + " a " + guide_item + " that leads them to " + location + ", the " + guide_item + " leads them to believe there is a " + reward + " located somewhere inside."
+            hook = "The Party " + party_verb + " a " + guide_item + " that leads them to the " + location + ", the " + guide_item + " leads them to believe there is a " + reward + " located somewhere inside."
         return hook
             
     def generateLOI(self,natural: bool = None,include_city: bool = True):
@@ -390,3 +434,247 @@ class generator(): # create a generator object
 
     def generateCityName(self):
         return rand.choice(self.city_details["Name_Start"]) + rand.choice(self.city_details["Name_Endings"]).lower()
+
+
+    def generateOrigin(self,origin: str = ""):
+        if origin == "":
+            origins = list(self.origin_details.keys())
+            origin = rand.choice(origins)
+        origin_Details = {}
+        for detail in self.origin_details[origin]:
+            origin_Details[detail] = rand.choice(self.origin_details[origin][detail])
+        return origin,origin_Details
+    
+    def generateRegionName(self,region_name: str = ""):
+        location_type = rand.choice(self.location_details["Locations_Natural"])
+        if region_name != "":
+            return location_type + " " + region_name
+        else:
+            return rand.choice(self.location_details["Adjectives"]) + " " + location_type
+
+    def generatePowerGoal(self,minor_locations ,npcs ,major_locations,area_name,local_leader,cities):
+        if local_leader == "":
+            local_leader = self.generateName(self.generateRace(),generateGender())
+        Goal = ""
+        Avaiable_actions = []
+        match(rand.randint(1,6)):
+            case 1: #REVENGE
+                match(rand.randint(1,4)): #type of revenge
+                    case 1:
+                        Goal = "Revenge on " + (rand.choice(npcs)) #revenge on a person
+                    case 2:
+                        Goal = "Revenge on " + (rand.choice(npcs)) + "'s ancestors" #revenge on a blood line
+                    case 3:
+                        Goal = "Revenge on all" + (rand.choice(list(self.race_list.keys()))) #Revenge on a race
+                    case 4:
+                        Goal = "Revenge on all inhabitants of " + (rand.choice(major_locations))
+            case 2: #DOMINATION
+                match(rand.randint(1,3)):
+                    case 1:
+                        Goal = "Rule over " + rand.choice(minor_locations) # rule over a non city place
+                    case 2:
+                        Goal = "Rule over " + rand.choice(cities) # rule over a city
+                    case 3:
+                        Goal = "Complete Rule over " + area_name
+            case 3: # ACQUISITON Of X
+                match(rand.randint(1,6)):
+                    case 1:
+                        Goal = "To acquire " + self.generateMacguffin() #to get an item
+                    case 2:
+                        Goal = "To get " + self.generateMacguffin() + " back from " + rand.choice(npcs) # to get an item back from someone
+                    case 3:
+                        Goal = "To get " + self.generateMacguffin() + " back from " + rand.choice(minor_locations + major_locations) # to get an item back from somewhere
+                    case 4:
+                        Goal = "To get/steal the affection of " + rand.choice(npcs) # to steal someones love
+                    case 5:
+                        Goal = "To steal the title of " + rand.choice(npcs) # to steal the title from someone
+                    case 6:
+                        Goal = "To steal the birthwright of " + rand.choice(npcs) # to steal someone's birthwrite
+            case 4: #Life or death
+                match(rand.randint(1,4)):
+                    case 1: 
+                        Goal = "To achieve Lichdom"
+                    case 2:
+                        Goal = "To achieve Immortality"
+                    case 3:
+                        Goal = "To escape Immortality and truly die"
+                    case 4:
+                        Goal = "To resurect someone their true love"
+            case 5: # A power beyond
+                match(rand.randint(1,4)):
+                    case 1:
+                        Goal = "To ascend to godhood"
+                    case 2:
+                        Goal = "To kill a god"
+                    case 3:
+                        Goal = "To summon a god"
+                    case 4:
+                        Goal = "To open a portal to another plane/world"
+            case 6: #to amass power
+                match(rand.randint(1,2)):
+                    case 1:
+                        Goal = "To become insanely wealthy"
+                    case 2:
+                        Goal = "To become insanely powerful"
+                
+        means_of_action = ""
+
+        match(1): 
+            case 1: # TO STEAL SOMETHING
+                match(rand.randint(1,2)):
+                    case 1: # TO STEAL A ITEM
+                        match(rand.randint(1,4)): 
+                            case 1:
+                                means_of_action = "by stealing '" + self.generateMacguffin() + "' from " + rand.choice(cities+major_locations+ minor_locations)
+                            case 2:
+                                means_of_action = "by stealing '" + self.generateMacguffin() + "' from " + rand.choice(npcs)
+                            case 3:
+                                means_of_action = "by stealing '" + self.generateMacguffin() + "' from " + local_leader
+                            case 4:
+                                means_of_action = "by stealing '" + self.generateMacguffin() + "' from the " + rand.choice(list(self.race_list.keys()))
+                    case 2: #To steal people
+                        match(rand.randint(1,6)):
+                            case 1:
+                                means_of_action = "by kidnaping people"
+                            case 2:
+                                means_of_action = "by kidnaping people from " + rand.choice(cities)
+                            case 3:
+                                means_of_action = "by kidnaping people from " + rand.choice(minor_locations)
+                            case 4:
+                                means_of_action = "by kidnaping " + rand.choice(npcs)
+                            case 5:
+                                means_of_action = "by kidnaping leader of " + rand.choice(cities)
+                            case 6:
+                                means_of_action = "by kidnaping leader of " + rand.choice(minor_locations)
+                    
+            case 2: #TO KILL/SACRIFICE
+                match(rand.randint(1,2)):
+                    case 1: #KILL
+                        match(rand.randint(1,6)):
+                            case 1:
+                                means_of_action = "by killing all " + rand.choice(list(self.race_list.keys()))
+                            case 2:
+                                means_of_action = "by killing all inhabitants of " + rand.choice(cities+major_locations+ minor_locations)
+                            case 3:
+                                means_of_action = "by killing " + (rand.choice(npcs))
+                            case 4:
+                                means_of_action = "by killing a god"
+                            case 5:
+                                means_of_action = "by killing the legendary " + rand.choice(self.general_details["Monsters"]) + "(s)"
+                            case 6:
+                                means_of_action = "by killing all inhabitants of " + area_name
+                    case 2: #sacrifice
+                        match(rand.randint(1,7)):
+                            case 1:
+                                means_of_action = "by sacrificing all " + rand.choice(list(self.race_list.keys()))
+                            case 2:
+                                means_of_action = "by sacrificing all inhabitants of " + rand.choice(cities+major_locations+ minor_locations)
+                            case 3:
+                                means_of_action = "by killing all inhabitants of " + area_name
+                            case 4:
+                                means_of_action = "by sacrificing " + (rand.choice(npcs))
+                            case 5:
+                                means_of_action = "by sacrificing a god"
+                            case 6:
+                                means_of_action = "by sacrificing the legendary " + rand.choice(self.general_details["Monsters"]) + "(s)"
+                            case 7:
+                                means_of_action = "by sacrificing the legendary " + self.generateMacguffin()
+            case 3: #Conquer/Invade
+                match(rand.randint(1,2)):
+                    case 1: #Conquer
+                        match(rand.randint(1,2)):
+                            case 1:
+                                means_of_action = "by conquering " + area_name
+                            case 2:
+                                means_of_action = "by conquering " + rand.choice(cities+major_locations+ minor_locations)
+                    case 2: #Invade
+                        match(rand.randint(1,2)):
+                            case 1:
+                                means_of_action = "by invading neighboring region/nation" 
+                            case 2:
+                                means_of_action = "by invading " + rand.choice(cities+major_locations+ minor_locations)
+            case 3: #Destroy
+                match(rand.randint(1,4)):
+                    case 1:
+                        means_of_action = "by spreading Plague across the lands"
+                    case 2:
+                        means_of_action = "by driving out all residents out of " + area_name + " through action"
+                    case 2:
+                        means_of_action = "by driving out all residents out of " + rand.choice(cities+major_locations+ minor_locations) + " through action"
+                    case 4:
+                        means_of_action = "by reducing " + area_name + " to rubble"
+                    case 5:
+                        means_of_action = "by reducing " + rand.choice(cities+major_locations+ minor_locations) + " to rubble"
+            case 4: #To subvert
+                match(rand.randint(1,3)):
+                    case 1:
+                        means_of_action = "by subverting the hierachy of " +area_name
+                    case 2:
+                        means_of_action = "by subverting the hierachy of " +rand.choice(cities+major_locations+ minor_locations)
+                    case 3:
+                        means_of_action = "by subverting a religious hierachy"
+            case 5: #Politics
+                match(rand.randint(1,6)):
+                    case 1:
+                        means_of_action = "by betraying the leader of " +area_name
+                    case 2:
+                        means_of_action = "by betraying the leader of " +rand.choice(cities+major_locations+ minor_locations)
+                    case 3:
+                        means_of_action = "by starting a rebellion/revolution in " + area_name
+                    case 4:
+                        means_of_action = "by starting a rebellion/revolution in " + rand.choice(cities+major_locations+ minor_locations)
+                    case 5:
+                        means_of_action = "by starting a commiting acts of terrorism in " + area_name
+                    case 6:
+                        means_of_action = "by starting a commiting acts of terrorism in " + rand.choice(cities+major_locations+ minor_locations)
+
+        
+        return Goal + " " +  means_of_action       
+
+    def generatePoliticalSystem(self):
+        system = ""
+        title = ""
+        home = ""
+        choice = rand.randint(1,6)
+        options = []
+        match(choice):
+            case 1:
+                system = "Authoritarian/Dictator"
+                royal_option = rand.choice(["King/Queen","Prince/Princess","Duke/Duchess","Marquess/Marchioness","Earl/Countess","Viscount/Viscountess","Baron,Baroness"])
+                options.append(royal_option)
+                options += ["Dictator","Emperor"]
+            case 2:
+                system = "Theocratic Authoritarian"
+                royal_option = rand.choice(["King/Queen","Prince/Princess","Duke/Duchess","Marquess/Marchioness","Earl/Countess","Viscount/Viscountess","Baron,Baroness"])
+                options.append(royal_option)
+                options +=  ["Cleric","Elder","Pontiff","Priest","Deacon","Emperor"]
+            case 3:
+                system = "Communism"
+                title = ["Chancellor of the People"]
+            case 4:
+                system = "Military Dictatorship"
+                royal_option = rand.choice(["King/Queen","Prince/Princess","Duke/Duchess","Marquess/Marchioness","Earl/Countess","Viscount/Viscountess","Baron,Baroness"])
+                options.append(royal_option)
+                options +=  ["General","Dictator","Emperor"]
+            case 5:
+                system = "Democracy"
+                options =  ["Council Head","Lead Parlimentarian","Chancellor","Senator","Elder"]
+            case 6:
+                system = "Monarchy"
+                options =  ["King/Queen","Prince/Princess","Duke/Duchess","Marquess/Marchioness","Earl/Countess","Viscount/Viscountess","Baron,Baroness"]
+                
+        if len(options) != 0:
+            title = rand.choice(options)
+
+        if choice in [1,4,6]: # absolute rules
+            home = self.generateLOI(False,False)
+        elif choice == 2:
+            diety = (title.partition("of "))
+            home = self.generateReligiousBuildingName(diety= diety[2] )
+        elif choice == 5:
+            home = (self.generateBuilding("Notable_Housing"))[0]
+
+        return system,title,home
+
+
+

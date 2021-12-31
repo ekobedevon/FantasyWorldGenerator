@@ -2,7 +2,9 @@ from random import choice, randint
 from typing import List
 import NPC
 import Generator
-import PySimpleGUI as sg 
+import PySimpleGUI as sg
+import Style as s
+npc_button_size = (24,3)
 
 
 class Building():
@@ -18,8 +20,10 @@ class Building():
             building_name, building_owner, building_type = gen.generateBuilding(location=Location)
             self.building_type = building_type
             self.building_name = building_name
-            if building_owner != "": #if the building is not a house
+            if building_owner != "" and self.building_type != "Religious": #if the building is not a house
                 self.owner.profession = building_owner
+            if self.building_type == "Religious":
+                self.owner.profession += building_owner
             if self.building_type == "Normal_Homes":
                 self.building_name += " of " + self.owner.name
             elif self.building_type == "Notable_Housing":
@@ -48,6 +52,7 @@ class Building():
                     case 3:
                         hook =gen.generateHook(Q_type=0)
                 self.hooks.append(hook)
+            self.occupants.insert(0,self.owner)
                     
                     
             
@@ -67,27 +72,23 @@ class Building():
     
     def createDisplay(self):
         layout = [[]]
-        colTitle = [[sg.Text("Building Type:",font="bold")],[sg.Text("Building Name: ",font="bold")],[sg.Text("Owner:",font="bold")]]
+        colTitle = [[sg.Text("Building Type:",font=s.Title_Style)],[sg.Text("Building Name: ",font=s.Title_Style)],[sg.Text("Owner:",font=s.Title_Style)]]
         colDetails = [[]]
 
         if(self.building_type == "Normal_Homes" or self.building_type == "Notable_Housing"): # get the title
-            colDetails=[[sg.Text("Housing")],[sg.Text(self.building_name + " of "+ self.owner.name) ],[sg.Text(self.owner.name)]]
+            colDetails=[[sg.Text("Housing",font=s.Title_Size_Style)],[sg.Text(self.building_name + " of "+ self.owner.name,font=s.Title_Size_Style) ],[sg.Text(self.owner.name,font=s.Title_Size_Style)]]
         else:
-            colDetails=[[sg.Text(self.building_type.replace("_"," "))],[sg.Text(self.building_name) ],[sg.Text(self.owner.name)]]
+            colDetails=[[sg.Text(self.building_type.replace("_"," "),font=s.Title_Size_Style)],[sg.Text(self.building_name,font=s.Title_Size_Style) ],[sg.Text(self.owner.name,font=s.Title_Size_Style)]]
         
         layout = [[sg.Column(colTitle),sg.Column(colDetails)]] # add the title
     
-
         npc_cols = []
-        npc_cols.append(sg.Column(self.owner.createDisplay()))
-
-        for npcs in self.occupants:
-            npc_cols.append(sg.Column(npcs.createDisplay(),vertical_alignment="top"))
+        for value,npc in enumerate(self.occupants):
+            npc_cols.append(sg.Column([[sg.Button(npc.name + "\n"+ npc.profession,size=npc_button_size,key=str(value)+"_building")]],vertical_alignment="top"))
         
-        
-        layout.append(npc_cols)
+        layout.append([sg.Frame("Occupants",[npc_cols])])
         if len(self.hooks) != 0:
-            layout.append([sg.Text("Hooks",font="bold")])
+            layout.append([sg.Text("Hooks",font='Helvitic 12 bold')])
             hooks = []
             for text in self.hooks:
                 hooks.append([sg.Text(text)])
