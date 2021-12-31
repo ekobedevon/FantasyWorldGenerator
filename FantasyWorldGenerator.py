@@ -18,7 +18,7 @@ random.seed(time.time())
 
 #STYLE STUFF
 d_f_b = (10,1) #DEFAULT BUTTON SIZE
-export_text = (80,1)
+export_text = (100,1)
 
 #create Export Folder if not already existing
 if "Export" not in os.listdir():
@@ -81,7 +81,7 @@ while(exit): # loop until exit is changed
                     if "Obsidian" not in os.listdir():
                         os.mkdir("Obsidian")
                     os.chdir("./Obsidian")
-                    OutOD.export(current_displayed) # export the displayer info
+                    OutOD.export(current_displayed,gen = MASTER_GENERATOR) # export the displayer info
                     window.close()
                     path_current = os.getcwd()
                     layout = [[sg.Text("Exported to " + path_current,justification="center",size=export_text)],[sg.Text("Returning to main menu...",justification="center",size=export_text)],[sg.Column([[sg.Button("OK",size=d_f_b)]],justification='center')]]
@@ -96,7 +96,7 @@ while(exit): # loop until exit is changed
                     if "Plain Text" not in os.listdir():
                         os.mkdir("Plain Text")
                     os.chdir("./Plain Text")
-                    OutP.export(current_displayed) # export the displayer info
+                    OutP.export(current_displayed,gen = MASTER_GENERATOR) # export the displayer info
                     window.close()
                     path_current = os.getcwd()
                     layout = [[sg.Text("Exported to " + path_current,justification="center",size=export_text)],[sg.Text("Returning to main menu...",justification="center",size=export_text)],[sg.Column([[sg.Button("OK",size=d_f_b)]],justification='center')]]
@@ -111,7 +111,7 @@ while(exit): # loop until exit is changed
                     if "Mark Down" not in os.listdir():
                         os.mkdir("Mark Down")
                     os.chdir("./Mark Down")
-                    OutMD.export(current_displayed) # export the displayer info
+                    OutMD.export(current_displayed,gen = MASTER_GENERATOR) # export the displayer info
                     window.close()
                     path_current = os.getcwd()
                     layout = [[sg.Text("Exported to " + path_current,justification="center",size=export_text)],[sg.Text("Returning to main menu...",justification="center",size=export_text)],[sg.Column([[sg.Button("OK",size=d_f_b)]],justification='center')]]

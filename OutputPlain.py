@@ -20,7 +20,7 @@ def GenerateUniqueName(file_name: str,file_set: set,file_extension: str = ""):
     return file_name + file_extension
 
 
-def export(item): #generic export to be used when item type is not stricly defined
+def export(item,gen:Generator.generator = None): #generic export to be used when item type is not stricly defined
     if type(item) == Region.Region:
         exportRegion(item)
     elif type(item) == City.City:
@@ -29,6 +29,18 @@ def export(item): #generic export to be used when item type is not stricly defin
         exportBuilding(item)
     elif type(item) == NPC.NPC:
         exportNPC(item)
+        
+    if item != None and gen != None:
+        exportGeneralDetail(gen)
+        
+def exportGeneralDetail(gen:Generator.generator):
+    os.mkdir("./Pantheon") # create pantheon folder
+    os.chdir("./Pantheon") # enter panthon directory
+    for god in list(gen.pantheon.keys()):
+        file = open("Diety of "+god+".txt", 'w')
+        file.write("General Details\n")
+        file.write("Name: %s\n" % gen.pantheon[god])
+        file.close()
 
 
 def exportNPC(npc: NPC.NPC):
