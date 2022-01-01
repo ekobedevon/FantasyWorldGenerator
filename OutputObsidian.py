@@ -45,7 +45,7 @@ def exportGeneralDetail(gen:Generator.generator):
     os.mkdir("Pantheon") # create pantheon folder
     os.chdir("./Pantheon") # enter panthon directory
     for god in list(gen.pantheon.keys()):
-        file = open("Diety of "+god+".MD" 'w')
+        file = open("Diety of "+god+".MD",'w')
         file.write("## General Details<br>\n")
         file.write("**Name:** %s<br>\n" % gen.pantheon[god])
         file.close()
@@ -103,10 +103,6 @@ def exportBuilding(building: Building.Building):
         file.write("%s<br>\n" % building.building_name)
     else: #link to god
         domain = getDomain(building.building_name)
-        print(domain)
-        remove = domain +" domain"
-        print(remove)
-        print(building.building_name[:building.building_name.index(",")])
         new_title = building.building_name[:building.building_name.index(",")] + ", [[" +domain+ "]] domain"
         file.write("%s<br>\n" % new_title)
     file.write("**Building Type:** %s<br>\n" % building.building_type)
