@@ -499,6 +499,9 @@ class generator(): # create a generator object
     def generateCityName(self):
         return rand.choice(self.city_details["Name_Start"]) + rand.choice(self.city_details["Name_Endings"]).lower()
 
+    def generateWorldName(self):
+        return rand.choice(self.location_details["World Titles"]) + " of " + rand.choice(self.location_details["Adjectives"]) +  " " + rand.choice(self.location_details["Noun"])
+
 
     def generateOrigin(self,origin: str = ""):
         if origin == "":

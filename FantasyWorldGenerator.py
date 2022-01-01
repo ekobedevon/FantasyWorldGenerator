@@ -8,6 +8,7 @@ import Continent
 import Generator
 import random
 import time
+import datetime
 import OutputObsidian as OutOD
 import OutputPlain as OutP
 import OutputMarkdown as OutMD
@@ -17,11 +18,7 @@ BASE_PATH = os.getcwd()
 MASTER_GENERATOR =Generator.generator()
 random.seed(time.time())
 
-"""test_cont = Continent.Continent(MASTER_GENERATOR)
-layout = test_cont.createDisplay()
-window = sg.Window("test",layout)
-event, value = window.read()
-window.close()"""
+
 
 
 #STYLE STUFF
@@ -31,6 +28,11 @@ export_text = (80,1)
 #create Export Folder if not already existing
 if "Export" not in os.listdir():
     os.mkdir("Export")
+
+world_name = MASTER_GENERATOR.generateWorldName() # generate a world name
+
+
+
 #Variables used to maintina the GUI
 current_displayed = None #used to hold the currently displayed element
 displayed_stack = [] #used to store in order, the parent elements in order to allow layers in menu
@@ -90,12 +92,15 @@ while(exit): # loop until exit is changed
                     window.close()
                 case "--ExportOBS--": #export the currently displayed information
                     os.chdir("./Export")
-                    if "Obsidian" not in os.listdir():
-                        os.mkdir("Obsidian")
-                    os.chdir("./Obsidian")
-                    OutOD.export(current_displayed,MASTER_GENERATOR) # export the displayer info
-                    window.close()
+                    if (world_name+"_Obsidian") not in os.listdir():
+                        os.mkdir(world_name+"_Obsidian")
+                    os.chdir("./"+world_name+"_Obsidian")
                     path_current = os.getcwd()
+                    OutOD.export(current_displayed,MASTER_GENERATOR) # export the displayer info
+                    os.chdir(path_current)
+                    if "Pantheon" not in os.listdir():
+                        OutOD.exportGeneralDetail(MASTER_GENERATOR)
+                    window.close()
                     layout = [[sg.Text("Exported to " + path_current,justification="center",size=export_text)],[sg.Text("Returning to main menu...",justification="center",size=export_text)],[sg.Column([[sg.Button("OK",size=d_f_b)]],justification='center')]]
                     window = sg.Window("Abnormal World Generator",layout)
                     window.read()
@@ -105,9 +110,9 @@ while(exit): # loop until exit is changed
                     os.chdir(BASE_PATH)
                 case "--ExportPlain--": #export the currently displayed information
                     os.chdir("./Export")
-                    if "Plain Text" not in os.listdir():
-                        os.mkdir("Plain Text")
-                    os.chdir("./Plain Text")
+                    if (world_name+"_Plain Text") not in os.listdir():
+                        os.mkdir(world_name+"_Plain Text")
+                    os.chdir("./"+world_name+"_Plain Text")
                     OutP.export(current_displayed) # export the displayer info
                     window.close()
                     path_current = os.getcwd()
@@ -120,9 +125,9 @@ while(exit): # loop until exit is changed
                     os.chdir(BASE_PATH)
                 case "--ExportMD--": #export the currently displayed information
                     os.chdir("./Export")
-                    if "Mark Down" not in os.listdir():
-                        os.mkdir("Mark Down")
-                    os.chdir("./Mark Down")
+                    if (world_name+"_Mark Down") not in os.listdir():
+                        os.mkdir(world_name+"_Mark Down")
+                    os.chdir("./"+ world_name+"_Mark Down")
                     OutMD.export(current_displayed) # export the displayer info
                     window.close()
                     path_current = os.getcwd()
