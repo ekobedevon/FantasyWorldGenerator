@@ -17,7 +17,11 @@ BASE_PATH = os.getcwd()
 MASTER_GENERATOR =Generator.generator()
 random.seed(time.time())
 
-
+"""test_cont = Continent.Continent(MASTER_GENERATOR)
+layout = test_cont.createDisplay()
+window = sg.Window("test",layout)
+event, value = window.read()
+window.close()"""
 
 
 #STYLE STUFF
@@ -48,6 +52,7 @@ while(exit): # loop until exit is changed
                                 [sg.Button("New Building",key="--NewBuild--",size=d_f_b)],
                                 [sg.Button("New City",key="--NewCity--",size=d_f_b)],
                                 [sg.Button("New Region",key="--NewRegion--",size=d_f_b)],
+                                [sg.Button("New Continent",key="--NewCont--",size=d_f_b)],
                                 [sg.Button("Exit",key="--EXIT--",size=d_f_b)]]
         case 2:
             general_buttons = [[sg.Button("Return",key="--Return--",size=d_f_b)],[sg.Button("Exit",key="--EXIT--",size=d_f_b)],[sg.Button("Main Menu",key="--Main--",size=d_f_b,visible=is_visible)]]
@@ -74,6 +79,9 @@ while(exit): # loop until exit is changed
                 case "--NewRegion--":
                     current_displayed = Region.Region(MASTER_GENERATOR)
                     window.close()
+                case "--NewCont--":
+                        current_displayed = Continent.Continent(MASTER_GENERATOR)
+                        window.close()
                 case "--Return--": #go up one layer
                     current_displayed = displayed_stack.pop() # pop last display of stack
                     window.close()
@@ -85,7 +93,7 @@ while(exit): # loop until exit is changed
                     if "Obsidian" not in os.listdir():
                         os.mkdir("Obsidian")
                     os.chdir("./Obsidian")
-                    OutOD.export(current_displayed) # export the displayer info
+                    OutOD.export(current_displayed,MASTER_GENERATOR) # export the displayer info
                     window.close()
                     path_current = os.getcwd()
                     layout = [[sg.Text("Exported to " + path_current,justification="center",size=export_text)],[sg.Text("Returning to main menu...",justification="center",size=export_text)],[sg.Column([[sg.Button("OK",size=d_f_b)]],justification='center')]]
@@ -126,7 +134,18 @@ while(exit): # loop until exit is changed
                     is_visible = True # set return button as visible
                     os.chdir(BASE_PATH)
         else:
-            if "_region" in events:
+            if "_cont" in events:
+                b_index = (events.removesuffix("_cont"))
+                if "_region" in events:
+                    b_index = int(b_index.removesuffix("_region")) # the int of the building clicked
+                    displayed_stack.append(current_displayed)
+                    current_displayed = current_displayed.regions[b_index]
+                else:
+                    b_index = int(b_index.removesuffix("_npc"))
+                    displayed_stack.append(current_displayed)
+                    current_displayed = current_displayed.continent_powers[b_index]
+                window.close()
+            elif "_region" in events:
                 b_index = (events.removesuffix("_region"))
                 if "_city" in events:
                     b_index = int(b_index.removesuffix("_city")) # the int of the building clicked

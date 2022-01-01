@@ -110,11 +110,6 @@ class Region():
 
 
     def createDisplay(self):
-        """[summary]
-
-        Returns:
-            [sg layout]: the layout for a region
-        """
         button_size = (30,3)
         layout =[[]]
         colTitle = [[sg.Text("Region Name:",font=s.Title_Style)],[sg.Text("Region Pop:",font=s.Title_Style)],[sg.Text("Political System:",font=s.Title_Style)]]
