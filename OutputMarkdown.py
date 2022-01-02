@@ -4,12 +4,15 @@ import Building
 import City
 import NPC
 import Region
+import Continent
 import Generator
 extra = ""
 tags = {}
 tags["c"] = "[City]"
 tags["b"] = "[Building]"
 tags["r"] = "[Region]"
+tags["p"] = "[Pantheon]"
+tags["ct"] = "[Continent]"
 
 
 """NOTE: Obsidian uses paths to distinguish unique names, so in the future as world gen gets bigger, it might be needed to add a process that ensures all names are unique before exporting"""
@@ -20,8 +23,10 @@ def GenerateUniqueName(file_name: str,file_set: set,file_extension: str = ""):
     return file_name + file_extension
 
 
-def export(item): #generic export to be used when item type is not stricly defined
-    if type(item) == Region.Region:
+def export(item,gen:Generator.generator = None): #generic export to be used when item type is not stricly defined
+    if type(item) == Continent.Continent:
+        exportContinent(item)
+    elif type(item) == Region.Region:
         exportRegion(item)
     elif type(item) == City.City:
         exportCity(item)
@@ -185,6 +190,49 @@ def exportRegion(region:Region.Region):
     os.chdir(base) 
     
     
+   
+def exportContinent(cont:Continent.Continent):
+    file_set = set(os.listdir()) #get all files in director
+    folder_name = cont.continent_name #get potential name
+    folder_name = GenerateUniqueName(tags["ct"] +folder_name,file_set) #generate unique name  for this building
+    os.mkdir(folder_name) #create a folder just for the building name
+    os.chdir("./"+folder_name) #enter that folder
+    os.mkdir("Regions") #create buildings folder
+    os.mkdir("Continental Powers")
+    file = open((folder_name + ".MD").removeprefix(tags["r"]), 'w')
+    file.write("## General Info <br>\n")
+    file.write("**Name:** %s<br>\n" % cont.continent_name)
+    file.write("**Population:** %s<br>\n" % int(cont.sumPop))
+    if cont.capital != None:
+        file.write("**Political System:** %s<br>\n" % cont.political_system)
+        file.write("**Capital:** %s<br>\n" % cont.capital.city_name)
+        file.write("**Continental Leader Leader:**  [[%s]] <br>\n" % cont.political_leader.name)
+    file.write("### Continental Regiond<br>\n")
+    for regions in cont.regions:
+        file.write(" %s <br>\n" % regions.region_name)
+    file.write("### Continental Powers<br>\n")
+    for npc in cont.continent_powers:
+        file.write(" %s <br>\n" % npc.name)
+    file.write("### Major Locations of Interest <br>\n")
+    for loi in cont.major_LOI:
+        file.write("%s <br>\n" % loi)
+    file.write("### Minor Locations of Interest <br>\n")
+    for loi in cont.minor_LOI:
+        file.write("%s <br>\n" % loi)
 
+
+    base = os.getcwd() # base working directory
+    os.chdir("./Regions")
+    curDirectory = os.getcwd()
+    for region in cont.regions:
+        os.chdir(curDirectory)
+        exportRegion(region)
+
+    os.chdir(base) # return to proper directory
+    os.chdir("./Continental Powers")
+    for npc in cont.continent_powers:
+        exportNPC(npc)
+
+    os.chdir(base) # return to base directory
 
 

@@ -36,10 +36,7 @@ def export(item,gen:Generator.generator = None): #generic export to be used when
     elif type(item) == NPC.NPC:
         exportNPC(item)
 
-    if "Pantheon" not in os.listdir():
-        exportGeneralDetail(gen)
 
-    
 
 def exportGeneralDetail(gen:Generator.generator):
     os.mkdir("Pantheon") # create pantheon folder
