@@ -15,7 +15,7 @@ import OutputPlain as OutP
 import OutputMarkdown as OutMD
 import Style as s
 import Menu
-sg.theme('DarkTeal9') # my preffered default theme
+
 BASE_PATH = os.getcwd()
 MASTER_GENERATOR =Generator.generator()
 random.seed(time.time())
@@ -38,6 +38,7 @@ world_name = MASTER_GENERATOR.generateWorldName() # generate a world name
 #settins
 file = open("settings.json")
 settings = json.load(file)
+sg.theme(settings["Current Theme"])
 
 
 #Variables used to maintina the GUI
@@ -75,11 +76,12 @@ while(exit): # loop until exit is changed
             match(events):
                 case "--SETTINGS--":
                     window.close()
-                    setting = Menu.createMenu(settings)
-                    sg.theme = setting["Current Theme"]       
+                    settings = Menu.createMenu(settings)
+                    sg.theme = settings["Current Theme"]
 
                 case "--EXIT--": # exit program
                     exit = 0
+                    
                     window.close()
                 case "--NewNPC--": # generate a new NPC
                     current_displayed = NPC.NPC(MASTER_GENERATOR)
@@ -129,7 +131,9 @@ while(exit): # loop until exit is changed
                     path_current = os.getcwd()
                     OutP.export(current_displayed) # export the displayer info
                     os.chdir(path_current)
+                    print(settings["Export Pantheon"])
                     if "Pantheon" not in os.listdir() and settings["Export Pantheon"] == True:
+                        print("HERE")
                         OutOD.exportGeneralDetail(MASTER_GENERATOR)
                     window.close()
                     path_current = os.getcwd()
@@ -207,10 +211,11 @@ while(exit): # loop until exit is changed
 
 
     if events == None:
-        with open("settings.json",'w') as outfile:
-            json.dump(settings,outfile)
         exit = 0
         window.close()
+
+with open("settings.json",'w') as outfile:
+    json.dump(settings,outfile)
 
     
 

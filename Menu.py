@@ -24,8 +24,8 @@ def createMenu(settings:dict):
                 settings["Current Theme"] = theme
                 window.close()
                 sg.theme(theme)
-            if values["--ExportPanth--"] != settings["Export Pantheon"]: #if the box is different from current setting , update setting
-                settings["Export Pantheon"] = values["--ExportPanth--"]
+            settings["Export Pantheon"] = values["--ExportPanth--"]
+    settings["Export Pantheon"] = values["--ExportPanth--"] # make sure settings are exported
     window.close()
     return settings
 
