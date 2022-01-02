@@ -9,13 +9,11 @@ import Continent
 import Generator
 import random
 import time
-import datetime
 import OutputObsidian as OutOD
 import OutputPlain as OutP
 import OutputMarkdown as OutMD
 import Style as s
 import Menu
-
 BASE_PATH = os.getcwd()
 MASTER_GENERATOR =Generator.generator()
 random.seed(time.time())
