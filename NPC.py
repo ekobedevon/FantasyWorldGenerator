@@ -1,4 +1,3 @@
-import textwrap
 import Generator
 import Style as s
 import PySimpleGUI as sg
@@ -33,7 +32,6 @@ class NPC():
    
 
     def createDisplay(self):
-   
         layout =[[sg.Text("General Details",font=s.Title_Style)],
             [sg.Text("Name: "+self.name)],
             [sg.Text("Race: " +self.race)],

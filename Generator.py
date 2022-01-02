@@ -199,10 +199,12 @@ class generator(): # create a generator object
         self.origin_details = intialize_origins()
         os.chdir(base)
 
+        self.generatePantheon()
+
+
+    def generatePantheon(self):
         for domain in self.general_details["Domains"]:
             self.pantheon[domain] = self.generateGodName(domain=domain)
-
-
 
     def generateRace(self):
         if len(self.race_list) != None:

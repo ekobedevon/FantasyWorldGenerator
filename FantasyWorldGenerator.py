@@ -22,6 +22,8 @@ random.seed(time.time())
 
 
 
+
+
 #STYLE STUFF
 d_f_b = (10,1) #DEFAULT BUTTON SIZE
 export_text = (100,1)
@@ -30,12 +32,21 @@ export_text = (100,1)
 if "Export" not in os.listdir():
     os.mkdir("Export")
 
+
+
+
 world_name = MASTER_GENERATOR.generateWorldName() # generate a world name
 
 #settins
+os.chdir("./Settings")
 file = open("settings.json")
 settings = json.load(file)
 sg.theme(settings["Current Theme"])
+if "pantheon.json" in os.listdir(): # if pantheon not already generated,generate a new one.
+    file = open("pantheon.json")
+    data = json.load(file)
+    MASTER_GENERATOR.pantheon = data
+os.chdir(BASE_PATH)
 
 
 #Variables used to maintina the GUI
@@ -215,8 +226,12 @@ while(exit): # loop until exit is changed
         exit = 0
         window.close()
 
-with open("settings.json",'w') as outfile:
+with open("Settings\settings.json",'w') as outfile:
     json.dump(settings,outfile)
+
+export_panth = MASTER_GENERATOR.pantheon
+with open("Settings\pantheon.json",'w') as outfile: # export pantheon
+    json.dump(export_panth,outfile)
 
     
 
