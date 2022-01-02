@@ -40,10 +40,6 @@ class Region():
             self.region_name = gen.generateRegionName(self.capital.city_name)
             self.political_leader = self.capital.city_leader
             named_location_list.append(self.capital.city_name)
-                    
-                
-
-
         else:
             self.region_name = gen.generateRegionName("")
             self.capital = None
@@ -60,6 +56,7 @@ class Region():
             self.major_LOI.append(gen.generateLOI(include_city=False))
         for c in self.cities: # append cities to named location list
             named_location_list.append(c.city_name)
+            
         named_location_list += self.major_LOI + self.minor_LOI
         for x in range(0,5*multiplier):
             self.hooks.append(gen.generateHook(location_list=named_location_list))

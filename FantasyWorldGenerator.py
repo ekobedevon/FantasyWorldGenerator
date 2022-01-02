@@ -1,9 +1,11 @@
 import PySimpleGUI as sg
 import os
+import json
 import NPC
 import Building
 import City
 import Region
+import Continent
 import Generator
 import random
 import time
@@ -11,10 +13,15 @@ import OutputObsidian as OutOD
 import OutputPlain as OutP
 import OutputMarkdown as OutMD
 import Style as s
-sg.theme('DarkTeal9')
+import Menu
 BASE_PATH = os.getcwd()
 MASTER_GENERATOR =Generator.generator()
 random.seed(time.time())
+
+
+
+
+
 
 #STYLE STUFF
 d_f_b = (10,1) #DEFAULT BUTTON SIZE
@@ -23,12 +30,21 @@ export_text = (100,1)
 #create Export Folder if not already existing
 if "Export" not in os.listdir():
     os.mkdir("Export")
+
+world_name = MASTER_GENERATOR.generateWorldName() # generate a world name
+
+#settins
+file = open("settings.json")
+settings = json.load(file)
+sg.theme(settings["Current Theme"])
+
+
 #Variables used to maintina the GUI
 current_displayed = None #used to hold the currently displayed element
 displayed_stack = [] #used to store in order, the parent elements in order to allow layers in menu
 button_menu = 1
 is_visible = False
-exit =1;
+exit =1
 while(exit): # loop until exit is changed
     button_layout = [[]]
     general_buttons = [[]]
@@ -44,7 +60,9 @@ while(exit): # loop until exit is changed
                                 [sg.Button("New Building",key="--NewBuild--",size=d_f_b)],
                                 [sg.Button("New City",key="--NewCity--",size=d_f_b)],
                                 [sg.Button("New Region",key="--NewRegion--",size=d_f_b)],
-                                [sg.Button("Exit",key="--EXIT--",size=d_f_b)]]
+                                [sg.Button("New Continent",key="--NewCont--",size=d_f_b)],
+                                [sg.Button("Exit",key="--EXIT--",size=d_f_b)],
+                                [sg.Button("Settings",key="--SETTINGS--",size=d_f_b)]]
         case 2:
             general_buttons = [[sg.Button("Return",key="--Return--",size=d_f_b)],[sg.Button("Exit",key="--EXIT--",size=d_f_b)],[sg.Button("Main Menu",key="--Main--",size=d_f_b,visible=is_visible)]]
     button_layout.append([sg.Frame("General",general_buttons)])
@@ -54,8 +72,14 @@ while(exit): # loop until exit is changed
     if events != None:
         if "_" not in events:
             match(events):
+                case "--SETTINGS--":
+                    window.close()
+                    settings = Menu.createMenu(settings)
+                    sg.theme = settings["Current Theme"]
+
                 case "--EXIT--": # exit program
                     exit = 0
+                    
                     window.close()
                 case "--NewNPC--": # generate a new NPC
                     current_displayed = NPC.NPC(MASTER_GENERATOR)
@@ -70,6 +94,9 @@ while(exit): # loop until exit is changed
                 case "--NewRegion--":
                     current_displayed = Region.Region(MASTER_GENERATOR)
                     window.close()
+                case "--NewCont--":
+                    current_displayed = Continent.Continent(MASTER_GENERATOR)
+                    window.close()
                 case "--Return--": #go up one layer
                     current_displayed = displayed_stack.pop() # pop last display of stack
                     window.close()
@@ -78,12 +105,19 @@ while(exit): # loop until exit is changed
                     window.close()
                 case "--ExportOBS--": #export the currently displayed information
                     os.chdir("./Export")
-                    if "Obsidian" not in os.listdir():
-                        os.mkdir("Obsidian")
-                    os.chdir("./Obsidian")
-                    OutOD.export(current_displayed,gen = MASTER_GENERATOR) # export the displayer info
-                    window.close()
+
+                    if (world_name+"_Obsidian") not in os.listdir():
+                        os.mkdir(world_name+"_Obsidian")
+                    os.chdir("./"+world_name+"_Obsidian")
+
+                  
+
                     path_current = os.getcwd()
+                    OutOD.export(current_displayed,MASTER_GENERATOR) # export the displayer info
+                    os.chdir(path_current)
+                    if "Pantheon" not in os.listdir() and settings["Export Pantheon"] == True:
+                        OutOD.exportGeneralDetail(MASTER_GENERATOR)
+                    window.close()
                     layout = [[sg.Text("Exported to " + path_current,justification="center",size=export_text)],[sg.Text("Returning to main menu...",justification="center",size=export_text)],[sg.Column([[sg.Button("OK",size=d_f_b)]],justification='center')]]
                     window = sg.Window("Abnormal World Generator",layout)
                     window.read()
@@ -93,10 +127,17 @@ while(exit): # loop until exit is changed
                     os.chdir(BASE_PATH)
                 case "--ExportPlain--": #export the currently displayed information
                     os.chdir("./Export")
-                    if "Plain Text" not in os.listdir():
-                        os.mkdir("Plain Text")
-                    os.chdir("./Plain Text")
-                    OutP.export(current_displayed,gen = MASTER_GENERATOR) # export the displayer info
+
+                    if (world_name+"_Plain Text") not in os.listdir():
+                        os.mkdir(world_name+"_Plain Text")
+                    os.chdir("./"+world_name+"_Plain Text")
+                    path_current = os.getcwd()
+                    OutP.export(current_displayed) # export the displayer info
+                    os.chdir(path_current)
+                    print(settings["Export Pantheon"])
+                    if "Pantheon" not in os.listdir() and settings["Export Pantheon"] == True:
+                        print("HERE")
+                        OutOD.exportGeneralDetail(MASTER_GENERATOR)
                     window.close()
                     path_current = os.getcwd()
                     layout = [[sg.Text("Exported to " + path_current,justification="center",size=export_text)],[sg.Text("Returning to main menu...",justification="center",size=export_text)],[sg.Column([[sg.Button("OK",size=d_f_b)]],justification='center')]]
@@ -108,12 +149,22 @@ while(exit): # loop until exit is changed
                     os.chdir(BASE_PATH)
                 case "--ExportMD--": #export the currently displayed information
                     os.chdir("./Export")
+
+                    if (world_name+"_Mark Down") not in os.listdir():
+                        os.mkdir(world_name+"_Mark Down")
+                    os.chdir("./"+ world_name+"_Mark Down")
+                    path_current = os.getcwd()
+                    OutMD.export(current_displayed) # export the displayer info
+                    os.chdir(path_current)
+                    if "Pantheon" not in os.listdir() and settings["Export Pantheon"] == True:
+                        OutOD.exportGeneralDetail(MASTER_GENERATOR)
+
                     if "Mark Down" not in os.listdir():
                         os.mkdir("Mark Down")
                     os.chdir("./Mark Down")
                     OutMD.export(current_displayed,gen = MASTER_GENERATOR) # export the displayer info
+
                     window.close()
-                    path_current = os.getcwd()
                     layout = [[sg.Text("Exported to " + path_current,justification="center",size=export_text)],[sg.Text("Returning to main menu...",justification="center",size=export_text)],[sg.Column([[sg.Button("OK",size=d_f_b)]],justification='center')]]
                     window = sg.Window("Abnormal World Generator",layout)
                     window.read()
@@ -122,7 +173,18 @@ while(exit): # loop until exit is changed
                     is_visible = True # set return button as visible
                     os.chdir(BASE_PATH)
         else:
-            if "_region" in events:
+            if "_cont" in events:
+                b_index = (events.removesuffix("_cont"))
+                if "_region" in events:
+                    b_index = int(b_index.removesuffix("_region")) # the int of the building clicked
+                    displayed_stack.append(current_displayed)
+                    current_displayed = current_displayed.regions[b_index]
+                else:
+                    b_index = int(b_index.removesuffix("_npc"))
+                    displayed_stack.append(current_displayed)
+                    current_displayed = current_displayed.continent_powers[b_index]
+                window.close()
+            elif "_region" in events:
                 b_index = (events.removesuffix("_region"))
                 if "_city" in events:
                     b_index = int(b_index.removesuffix("_city")) # the int of the building clicked
@@ -161,6 +223,11 @@ while(exit): # loop until exit is changed
     if events == None:
         exit = 0
         window.close()
+
+with open("settings.json",'w') as outfile:
+    json.dump(settings,outfile)
+
+    
 
 
 

@@ -9,6 +9,21 @@ The program is compiled using [psgcompiler](https://pypi.org/project/psgcompiler
 This program is designed to be a extremly useful ***tool*** that has a wide range of abilites to help you, but at the end it is only a ***tool***. This will not fully give you a publish ready world, but will instead give you the framework in order to build your own master piece on top of it. Of course as more features are added to the tool, the framework will be more and more complete, but it is safe to say it will never be able to add the spice of life that is human imagination that you, the user, provide. :)
 
 ## Patch Notes:
+### Version 1.0.0
+1. Added Continent Generation
+2. Added "World" Generation
+3. Added Pantheon Toggle
+4. Added Settings Menu
+5. Added Theme Menu
+
+### Version 0.4.0
+1. Added Region Generation
+2. Added Regional Powers
+3. Added Region GUI
+4. Added Basic Goals Generation
+5. Added Export Support for Regions
+6. Added Pantheons
+7. Add Pantheon Export Support
 
 ### Version 0.4.0
 1. Added Region Generation

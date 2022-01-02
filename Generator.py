@@ -197,8 +197,16 @@ class generator(): # create a generator object
             return rand.choice(list_keys)
 
 
-    def generateName(self,race: str, sex: str = ""):
-        """Given a string, generate a name based of settings"""
+    def generateName(self,race: str, sex: str):
+        """Generate a name base on parameters
+
+        Args:
+            race (str, optional): The race of the person that needs the name. Defaults to "".
+            sex (str, optional): The sex of the person that needs the name. Defaults to "".
+
+        Returns:
+            [str]: returns a name
+        """
         name = ""
         match len(self.race_list[race]):
             case 1:
@@ -219,6 +227,16 @@ class generator(): # create a generator object
         return name
 
     def generateGodName(self,race:str = "",sex: str= "",domain:str = ""): # seperate method in order to allow easier change down the line
+        """Generate a god name base on parameters
+
+        Args:
+            race (str, optional): The race of the person that needs the name. Defaults to "".
+            sex (str, optional): The sex of the person that needs the name. Defaults to "".
+            domain (str, optional): The desired domain of the god. Defaults to "".
+
+        Returns:
+            [type]: [description]
+        """
         if race == "":
             race =self.generateRace()
         if sex == "":
@@ -239,6 +257,15 @@ class generator(): # create a generator object
         return job
         
     def generateAge(self,race: str = "Human",isAdult: bool = True):
+        """Given proper parameter, returns an appororaite age for a given race
+
+        Args:
+            race (str, optional): The race of the person. Defaults to "Human".
+            isAdult (bool, optional): If the npc is a adult. Defaults to True.
+
+        Returns:
+            [int]: the age
+        """
         max_age = self.race_list[race]["Settings"]["Max_Age"]
         maturity = self.race_list[race]["Settings"]["Maturity"]
         multiplier = rand.uniform(0,1)
@@ -250,6 +277,11 @@ class generator(): # create a generator object
             return math.floor
         
     def generateTavernName(self):
+        """Generates a random taven name
+
+        Returns:
+            [str]: tavern name
+        """
         name = ""
         num = rand.randint(0,9)
         match(num):
@@ -277,6 +309,11 @@ class generator(): # create a generator object
         return name
 
     def generateBuildingName(self):
+        """Generates a random building name
+
+        Returns:
+            [str]: building name
+        """
         name = ""
         num = rand.randint(0,3)
         match(num):
@@ -291,12 +328,31 @@ class generator(): # create a generator object
         return name
 
     def generateReligiousBuildingName(self,diety:str = ""):
+        """Generates a random taven name
+        Args:
+            domain (str, optional): The desired god for the building . Defaults to a randomly generater diety.
+
+        Returns:
+            [str]: Religious Building name
+        """
         if diety == "":
             diety =rand.choice(list(self.pantheon.values()))
         name = rand.choice(self.building_names["Worship_Titles"]) + " of " + diety
         return name
 
     def generateBuilding(self,building_type: str = "",location: str = ""):
+        """ Generates the details needed for a building based 
+
+        Args:
+            building_type (str, optional): The type of building to be generated. Defaults to "".
+                Vailid Building Types: Shops,Tavern,Guild_Types,Normal_Homes,Notable_Housing,Government Buidling,Craftsmen,Religious
+            location (str, optional): The city in which the building is located, if desired. Defaults to "".
+
+        Returns:
+            [str]: name of builidng
+            [str]: profession of owner
+            [str]: type of builidng
+        """
         building_name = ""
         owner_proffesion = ""
         suffix = ""
@@ -334,6 +390,14 @@ class generator(): # create a generator object
         return building_name, owner_proffesion,building_type
             
     def generateMacguffin(self,item_type: str = None):
+        """[summary]
+
+        Args:
+            item_type (str, optional): the type of item desired. Defaults to None.
+
+        Returns:
+            [str]: item name
+        """
         name =""
         if item_type == None or item_type not in self.item_details["Item_Types"]:# generate a item type if no valid item is given
             item_base  = rand.choice(self.item_details["Item_Types"])
@@ -435,6 +499,9 @@ class generator(): # create a generator object
     def generateCityName(self):
         return rand.choice(self.city_details["Name_Start"]) + rand.choice(self.city_details["Name_Endings"]).lower()
 
+    def generateWorldName(self):
+        return rand.choice(self.location_details["World Titles"]) + " of " + rand.choice(self.location_details["Adjectives"]) +  " " + rand.choice(self.location_details["Noun"])
+
 
     def generateOrigin(self,origin: str = ""):
         if origin == "":
@@ -453,6 +520,19 @@ class generator(): # create a generator object
             return rand.choice(self.location_details["Adjectives"]) + " " + location_type
 
     def generatePowerGoal(self,minor_locations ,npcs ,major_locations,area_name,local_leader,cities):
+        """Generates a Goal for a npc based on paramerters given
+
+        Args:
+            minor_locations (list[str]): a list of locations
+            npcs (list[str]): a list of npc names
+            major_locations (list[str]): a list of locations
+            area_name (list[str]): name of the overall location
+            local_leader (list[str]): name of local leader
+            cities (list[str]): a list of city names
+
+        Returns:
+            [str]: A 1 line goal with motive and means of achieving
+        """
         if local_leader == "":
             local_leader = self.generateName(self.generateRace(),generateGender())
         Goal = ""
