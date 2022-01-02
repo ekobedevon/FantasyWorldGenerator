@@ -15,7 +15,7 @@ def initialize_race(race: str):
     for file_name in file_list: #store all the json files in a dict
             file = open(path + file_name);
             race_dict[file_name.removesuffix('.json')] = js.load(file)
-    if len(race_dict["Settings"]) != 2: #if settings doesn't have current minimum settings
+    if len(race_dict["Settings"]) < 3 : #if settings doesn't have current minimum settings
         return -1
     return race_dict
 
@@ -165,7 +165,7 @@ class generator(): # create a generator object
             if type(data) != type(1): #if the data type is not an int
                 self.race_list[race] = data # store in data
             else:
-                print(race + "is not in a valid format, checking settings file in race folder")
+                print(race + " is not in a valid format, checking settings file in race folder")
         os.chdir(base)
         self.profession_master, self.professions_Categorized = intialize_professions() #intialize profession master
         os.chdir(base)
@@ -207,20 +207,33 @@ class generator(): # create a generator object
         Returns:
             [str]: returns a name
         """
+        name_convention = self.race_list[race]["Settings"]["Name Convention"]
         name = ""
-        match len(self.race_list[race]):
-            case 1:
+        match (name_convention):
+            case 0:
                 print("Not enough arguments")
-            case 2:
-                print("Non gendered names to come")
-            case 3:# races with no last names 
+            case 1:
+                name = rand.choice(self.race_list[race]["Genderless"])
+            case 2:# races with last names from other races
                 if sex == "M" or sex == "F":
                     name = rand.choice(self.race_list[race][race+"_"+sex])
-            case 4: #races with simple last names
+                keys = self.race_list[race]["Settings"]
+                if "Origins" not in list(keys.keys()): # if no orgins key is present
+                    print("Settings file not correct, race has no origins for last name, returning first name only")
+                else: 
+                    origin = self.race_list[race]["Settings"]["Origins"] # get origin list
+                    race = rand.choice(origin) #get a race from the origin list
+                    last_name_patern = self.race_list[race]["Settings"]["Name Convention"] # get the last name pattern of the parent race
+                    match(last_name_patern): #
+                        case 3: # standard last name pattern
+                            name = name + " " + rand.choice(self.race_list[race][race+"_Last"])
+                        case 4: # complex last name
+                            name = name + " of " + rand.choice(self.race_list[race][race+"_Pre"])  + " " + rand.choice(self.race_list[race][race+"_Post"])
+            case 3: #races with simple last names
                 if sex == "M" or sex == "F":
                     name = rand.choice(self.race_list[race][race+"_"+sex])
                 name = name + " " + rand.choice(self.race_list[race][race+"_Last"])
-            case 5: #races with complex last names(2 parts)
+            case 4: #races with complex last names(2 parts)
                 if sex == "M" or sex == "F":
                     name = rand.choice(self.race_list[race][race+"_"+sex])
                 name = name + " of " + rand.choice(self.race_list[race][race+"_Pre"])  + " " + rand.choice(self.race_list[race][race+"_Post"])
