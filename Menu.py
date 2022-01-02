@@ -1,5 +1,4 @@
 import PySimpleGUI as sg
-import json as js
 
 def createMenu(settings:dict):
     event = []
