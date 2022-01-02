@@ -70,8 +70,7 @@ def exportNPC(npc: NPC.NPC):
         file.write("%s<br>\n" % npc.profession)
     else: #link to god
         domain = getDomain(npc.profession)
-        title_tuple = npc.profession.partition(domain)
-        new_title = title_tuple[0] + "[[" + title_tuple[1] + "]]" + title_tuple[2]
+        new_title = npc.profession[:npc.profession.index(",")] + ", [[" +domain+ "]] domain"
         file.write("%s<br>\n" % new_title)
     if npc.goals != "":
         file.write("**Lair:** %s<br>\n" % npc.lair)

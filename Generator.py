@@ -517,7 +517,16 @@ class generator(): # create a generator object
         if region_name != "":
             return location_type + " " + region_name
         else:
-            return rand.choice(self.location_details["Adjectives"]) + " " + location_type
+            match(rand.randint(1,4)):
+                case 1:
+                    return location_type + " of " + rand.choice(self.location_details["Adjectives"]) +  " " + rand.choice(self.location_details["Noun"])
+                case 2:
+                    return rand.choice(self.location_details["World Titles"]) + " of " + rand.choice(self.location_details["Adjectives"]) +  " " + rand.choice(self.location_details["Noun"])
+                case 3:
+                    return "The " + rand.choice(self.location_details["Adjectives"]) + " " + location_type
+                case 4: 
+                    return "The " + rand.choice(self.location_details["Adjectives"]) + " " + rand.choice(self.location_details["Noun"]) + " " + location_type
+
 
     def generatePowerGoal(self,minor_locations ,npcs ,major_locations,area_name,local_leader,cities):
         """Generates a Goal for a npc based on paramerters given
