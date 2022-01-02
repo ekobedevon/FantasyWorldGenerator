@@ -6,6 +6,21 @@ This project aims to simplify world building by handling the generation of the s
 The program is compiled using [psgcompiler](https://pypi.org/project/psgcompiler/). You can either compile from the source code yourself, or alternatively you can get the latest version from this [drive link](https://drive.google.com/drive/folders/1XVY92ZjCDrsCZ5TxiQvh2O8tXgkiBrbH?usp=sharing).
 
 ## Patch Notes:
+### Version 1.0.0
+1. Added Continent Generation
+2. Added "World" Generation
+3. Added Pantheon Toggle
+4. Added Settings Menu
+5. Added Theme Menu
+
+### Version 0.4.0
+1. Added Region Generation
+2. Added Regional Powers
+3. Added Region GUI
+4. Added Basic Goals Generation
+5. Added Export Support for Regions
+6. Added Pantheons
+7. Add Pantheon Export Support
 
 ### Version 0.3.1
 1. Added City Generation
