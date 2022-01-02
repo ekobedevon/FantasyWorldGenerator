@@ -25,7 +25,7 @@ random.seed(time.time())
 
 #STYLE STUFF
 d_f_b = (10,1) #DEFAULT BUTTON SIZE
-export_text = (80,1)
+export_text = (100,1)
 
 #create Export Folder if not already existing
 if "Export" not in os.listdir():
@@ -105,9 +105,13 @@ while(exit): # loop until exit is changed
                     window.close()
                 case "--ExportOBS--": #export the currently displayed information
                     os.chdir("./Export")
+
                     if (world_name+"_Obsidian") not in os.listdir():
                         os.mkdir(world_name+"_Obsidian")
                     os.chdir("./"+world_name+"_Obsidian")
+
+                  
+
                     path_current = os.getcwd()
                     OutOD.export(current_displayed,MASTER_GENERATOR) # export the displayer info
                     os.chdir(path_current)
@@ -123,6 +127,7 @@ while(exit): # loop until exit is changed
                     os.chdir(BASE_PATH)
                 case "--ExportPlain--": #export the currently displayed information
                     os.chdir("./Export")
+
                     if (world_name+"_Plain Text") not in os.listdir():
                         os.mkdir(world_name+"_Plain Text")
                     os.chdir("./"+world_name+"_Plain Text")
@@ -144,6 +149,7 @@ while(exit): # loop until exit is changed
                     os.chdir(BASE_PATH)
                 case "--ExportMD--": #export the currently displayed information
                     os.chdir("./Export")
+
                     if (world_name+"_Mark Down") not in os.listdir():
                         os.mkdir(world_name+"_Mark Down")
                     os.chdir("./"+ world_name+"_Mark Down")
@@ -152,6 +158,12 @@ while(exit): # loop until exit is changed
                     os.chdir(path_current)
                     if "Pantheon" not in os.listdir() and settings["Export Pantheon"] == True:
                         OutOD.exportGeneralDetail(MASTER_GENERATOR)
+
+                    if "Mark Down" not in os.listdir():
+                        os.mkdir("Mark Down")
+                    os.chdir("./Mark Down")
+                    OutMD.export(current_displayed,gen = MASTER_GENERATOR) # export the displayer info
+
                     window.close()
                     layout = [[sg.Text("Exported to " + path_current,justification="center",size=export_text)],[sg.Text("Returning to main menu...",justification="center",size=export_text)],[sg.Column([[sg.Button("OK",size=d_f_b)]],justification='center')]]
                     window = sg.Window("Abnormal World Generator",layout)

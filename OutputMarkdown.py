@@ -24,6 +24,7 @@ def GenerateUniqueName(file_name: str,file_set: set,file_extension: str = ""):
 
 
 def export(item,gen:Generator.generator = None): #generic export to be used when item type is not stricly defined
+
     if type(item) == Continent.Continent:
         exportContinent(item)
     elif type(item) == Region.Region:
@@ -34,22 +35,18 @@ def export(item,gen:Generator.generator = None): #generic export to be used when
         exportBuilding(item)
     elif type(item) == NPC.NPC:
         exportNPC(item)
+        
+    if item != None and gen != None:
+        exportGeneralDetail(gen)
 
 def exportGeneralDetail(gen:Generator.generator):
     os.mkdir("./Pantheon") # create pantheon folder
     os.chdir("./Pantheon") # enter panthon directory
     for domain in list(gen.pantheon.keys()):
-        file = open("Diety of "+domain+".MD" 'w')
+        file = open("Diety of "+domain+".MD",'w')
         file.write("## General Details<br>\n")
         file.write("**Name:** %s<br>\n" % gen.pantheon[domain])
         file.close()
-
-def getDomain(string:str): # get the domain of the god
-    temp = string.partition("Diety")
-    domain = temp[1]+temp[2]
-    domain = domain.removesuffix(" domain") #remove the domain
-    domain = domain.replace("the ","",1) # remove "the"
-    return domain  
 
 
 def exportNPC(npc: NPC.NPC):
