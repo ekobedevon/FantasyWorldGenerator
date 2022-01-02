@@ -38,7 +38,6 @@ world_name = MASTER_GENERATOR.generateWorldName() # generate a world name
 #settins
 file = open("settings.json")
 settings = json.load(file)
-print(settings)
 
 
 #Variables used to maintina the GUI
@@ -112,7 +111,7 @@ while(exit): # loop until exit is changed
                     path_current = os.getcwd()
                     OutOD.export(current_displayed,MASTER_GENERATOR) # export the displayer info
                     os.chdir(path_current)
-                    if "Pantheon" not in os.listdir():
+                    if "Pantheon" not in os.listdir() and settings["Export Pantheon"] == True:
                         OutOD.exportGeneralDetail(MASTER_GENERATOR)
                     window.close()
                     layout = [[sg.Text("Exported to " + path_current,justification="center",size=export_text)],[sg.Text("Returning to main menu...",justification="center",size=export_text)],[sg.Column([[sg.Button("OK",size=d_f_b)]],justification='center')]]
@@ -130,7 +129,7 @@ while(exit): # loop until exit is changed
                     path_current = os.getcwd()
                     OutP.export(current_displayed) # export the displayer info
                     os.chdir(path_current)
-                    if "Pantheon" not in os.listdir():
+                    if "Pantheon" not in os.listdir() and settings["Export Pantheon"] == True:
                         OutOD.exportGeneralDetail(MASTER_GENERATOR)
                     window.close()
                     path_current = os.getcwd()
@@ -149,7 +148,7 @@ while(exit): # loop until exit is changed
                     path_current = os.getcwd()
                     OutMD.export(current_displayed) # export the displayer info
                     os.chdir(path_current)
-                    if "Pantheon" not in os.listdir():
+                    if "Pantheon" not in os.listdir() and settings["Export Pantheon"] == True:
                         OutOD.exportGeneralDetail(MASTER_GENERATOR)
                     window.close()
                     layout = [[sg.Text("Exported to " + path_current,justification="center",size=export_text)],[sg.Text("Returning to main menu...",justification="center",size=export_text)],[sg.Column([[sg.Button("OK",size=d_f_b)]],justification='center')]]
