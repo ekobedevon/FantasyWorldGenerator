@@ -199,7 +199,7 @@ class generator(): # create a generator object
         self.origin_details = intialize_origins()
         os.chdir(base)
 
-        self.generatePantheon()
+        
 
 
     def generatePantheon(self):

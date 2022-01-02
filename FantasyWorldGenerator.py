@@ -18,6 +18,12 @@ BASE_PATH = os.getcwd()
 MASTER_GENERATOR =Generator.generator()
 random.seed(time.time())
 
+#Variables used to maintina the GUI
+current_displayed = None #used to hold the currently displayed element
+displayed_stack = [] #used to store in order, the parent elements in order to allow layers in menu
+button_menu = 1
+is_visible = False
+exit = 1
 
 
 
@@ -42,19 +48,31 @@ os.chdir("./Settings")
 file = open("settings.json")
 settings = json.load(file)
 sg.theme(settings["Current Theme"])
-if "pantheon.json" in os.listdir(): # if pantheon not already generated,generate a new one.
-    file = open("pantheon.json")
-    data = json.load(file)
-    MASTER_GENERATOR.pantheon = data
-os.chdir(BASE_PATH)
+if "pantheon.json" in os.listdir(): # if pantheon already generated, ask user if they want to use it, allows for pantheon to save between worlds
+    layout = [[sg.Column([[sg.Text("Pantheon Detected in settings folder. Use?")]],justification='center')],[sg.Column([[sg.Button("Yes",key="Keep"),sg.Button("New Pantheon",key="New")]],justification='center')]]
+    window = sg.Window("Pantheon Detected",layout)
+    events, values = window.read()
+    if "New" in events:
+        window.close()
+        layout = [[sg.Column([[sg.Text("Are you sure?")]],justification='center')],[sg.Column([[sg.Button("Keep Pantheon",key="Keep"),sg.Button("New Pantheon",key="New")]],justification='center')]]
+        window = sg.Window("Confirm",layout)
+        events, values = window.read()
+        if "New" in events:
+            window.close()
+            MASTER_GENERATOR.generatePantheon()
+    if "Keep" in events: # if keep is pressed, load in the pantheon from the file
+        window.close()
+        file = open("pantheon.json")
+        data = json.load(file)
+        MASTER_GENERATOR.pantheon = data
+        MASTER_GENERATOR.general_details["Domains"] = list(data.keys()) # import the keys of the domain
+
+else: # generate a new pantheon
+    MASTER_GENERATOR.pantheon()
+os.chdir(BASE_PATH) # return to base file path
 
 
-#Variables used to maintina the GUI
-current_displayed = None #used to hold the currently displayed element
-displayed_stack = [] #used to store in order, the parent elements in order to allow layers in menu
-button_menu = 1
-is_visible = False
-exit =1
+
 while(exit): # loop until exit is changed
     button_layout = [[]]
     general_buttons = [[]]
