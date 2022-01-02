@@ -62,14 +62,14 @@ class City():
         colDetails = [[sg.Text(self.city_name,font=s.Title_Size_Style)],[sg.Text(self.city_pop,font=s.Title_Size_Style)],[sg.Text(self.city_leader.name,font=s.Title_Size_Style)]]
         layout=[[sg.Column(colTitle),sg.Column(colDetails)]]
         
-        button_size = (30,3) # default button size for buttons
+        button_size = (34,3) # default button size for buttons
         building_cols = []
         temp_col = [] 
         for value, building in enumerate(self.buildings_list):
             if value % 5 == 0 and value != 0:
                 building_cols.append(temp_col)
                 temp_col = []
-            temp_col.append(sg.Button(building.building_name,size=button_size,key=str(value)+"_building_city"))
+            temp_col.append(sg.Button(building.building_name+"\n"+building.building_type,size=button_size,key=str(value)+"_building_city"))
         building_cols.append(temp_col)
         Container = [sg.Frame("Buildings",building_cols)]
         layout.append(Container)

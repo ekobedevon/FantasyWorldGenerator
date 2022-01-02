@@ -102,13 +102,16 @@ def exportBuilding(building: Building.Building):
         new_title = building.building_name[:building.building_name.index(",")] + ", [[" +domain+ "]] domain"
         file.write("%s<br>\n" % new_title)
     file.write("**Building Type:** %s<br>\n" % building.building_type)
-    file.write("**Owner:**  [[%s]] <br>\n" % building.owner.name ) 
+    file.write("**Owner:**  [[%s]] <br>\n" % building.owner.name )
+    if building.building_menu != "":
+        file.write("**Building Offerings**:<br>\n %s" % building.building_menu)
     file.write("### Occupants <br>\n")
     for occupant in building.occupants:
         file.write(" [[%s]] <br>\n" % occupant.name)
     file.write("### Hooks <br>\n")
     for hook in building.hooks:
         file.write("%s <br>\n" % hook)
+    
     file.close()
     os.chdir("./Occupants") #write all occupants 
     exportNPC(building.owner)

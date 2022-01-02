@@ -43,6 +43,17 @@ def intialize_building_names():
         building_name_details[file_name.removesuffix(".json")] = data
     return building_name_details
 
+def intialize_building_menu():
+    """Read in files from the buildings folder and store then in the proper lists needed for world generation"""
+    os.chdir("Json_Files\Buildings\Menu") # set to building directory
+    building_fileList = os.listdir("./")
+    building_menu_details = {}
+    for file_name in building_fileList:
+        file = open(file_name)
+        data = js.load(file)
+        building_menu_details[file_name.removesuffix(".json")] = data
+    return  building_menu_details
+
 def intialize_building_types():
     os.chdir("Json_Files\Buildings")
     file = open("Building_Types.json")
@@ -172,6 +183,8 @@ class generator(): # create a generator object
         self.building_names = intialize_building_names()
         os.chdir(base)
         self.general_details = initlalize_general_details()
+        os.chdir(base)
+        self.general_details["Menu"] = intialize_building_menu()
         os.chdir(base)
         self.building_types, self.building_types_names = intialize_building_types()
         os.chdir(base)
@@ -353,12 +366,34 @@ class generator(): # create a generator object
         name = rand.choice(self.building_names["Worship_Titles"]) + " of " + diety
         return name
 
+    def generateBuildingMenu(self,building_type: str,amount:int):
+        """return a list of offerings based on the building type
+
+        Args:
+            building_type (str): the type of building
+            amount (int): the amount of options to generate
+        """
+        menu = ""
+        if building_type == "Tavern":
+            for x in range(amount):
+                main_dish = rand.choice(self.general_details["Menu"]["Meal_Types"]) + " " + rand.choice(self.general_details["Menu"]["Dishes"])
+                sides = rand.choice(self.general_details["Menu"]["Sides"]) + ", " + rand.choice(self.general_details["Menu"]["Sides"]) + ", and " + rand.choice(self.general_details["Menu"]["Sides"])
+                menu = menu + main_dish + " with a side of " + sides + "\n"
+        if building_type == "Magic Shop":
+            for x in range(amount):
+                menu = menu + self.generateMacguffin() + "\n"
+
+        return menu
+
+
+
+
     def generateBuilding(self,building_type: str = "",location: str = ""):
         """ Generates the details needed for a building based 
 
         Args:
             building_type (str, optional): The type of building to be generated. Defaults to "".
-                Vailid Building Types: Shops,Tavern,Guild_Types,Normal_Homes,Notable_Housing,Government Buidling,Craftsmen,Religious
+                Vailid Building Types: Shop,Tavern,Guild,Normal Homes,Notable Housing,Government Buidling,Craftsmen,Religious
             location (str, optional): The city in which the building is located, if desired. Defaults to "".
 
         Returns:
@@ -374,23 +409,26 @@ class generator(): # create a generator object
         if building_type == "" or building_type not in self.building_types: #if their is no building type or if the building type is not valid
             building_type = rand.choice(self.building_types) # generate a building type
         match(building_type):
-            case "Shops":
+            case "Shop":
+                building_name = self.generateBuildingName()
+                owner_proffesion = "Owner of " + building_name
+            case "Magic Shop":
                 building_name = self.generateBuildingName()
                 owner_proffesion = "Owner of " + building_name
             case "Tavern":
                 building_name = self.generateTavernName()
                 owner_proffesion = "Owner of " + building_name
-            case "Guild_Types":
-                building_name = rand.choice(self.building_types_names["Guild_Types"]) + " Guild Branch" + suffix
+            case "Guild":
+                building_name = rand.choice(self.building_types_names["Guild"]) + " Guild Branch" + suffix
                 owner_proffesion = "Leader of local " + building_name
-            case "Normal_Homes":
-                building_name = rand.choice(self.building_types_names["Normal_Homes"])
+            case "Normal Homes":
+                building_name = rand.choice(self.building_types_names["Normal Homes"])
                 owner_proffesion = ""
             case "Government Building":
                 building_name = "Government Building" + suffix
                 owner_proffesion = "Leader for local government"
-            case "Notable_Housing":
-                building_name = rand.choice(self.building_types_names["Notable_Housing"])
+            case "Notable Housing":
+                building_name = rand.choice(self.building_types_names["Notable Housing"])
                 owner_proffesion = ""
             case "Craftsmen":
                 building_name = self.generateBuildingName() + " " + rand.choice(self.building_types_names['Craftsmen'])

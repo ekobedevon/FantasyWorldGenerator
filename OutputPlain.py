@@ -85,7 +85,9 @@ def exportBuilding(building: Building.Building):
     file.write("General Info \n")
     file.write("Name: %s\n" % building.building_name)
     file.write("Building Type: %s\n" % building.building_type)
-    file.write("Owner:  %s \n" % building.owner.name ) 
+    file.write("Owner:  %s \n" % building.owner.name )
+    if building.building_menu != "":
+        file.write("Building Offerings:\n%s" % building.building_menu)
     file.write("Occupants \n")
     for occupant in building.occupants:
         file.write(" %s \n" % occupant.name)

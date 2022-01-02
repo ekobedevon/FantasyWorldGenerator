@@ -10,6 +10,7 @@ npc_button_size = (24,3)
 class Building():
     building_type = ""
     building_name = ""
+    building_menu = ""
     owner = NPC.NPC
     occupants:List[NPC.NPC] = []
     hooks = []
@@ -28,7 +29,7 @@ class Building():
                 self.building_name += " of " + self.owner.name
             elif self.building_type == "Notable_Housing":
                 self.building_name = gen.generateInterstingName(self.owner.name,self.building_name)    
-
+            self.building_menu = gen.generateBuildingMenu(self.building_type,randint(4,12)) # generate a building menu
 
             self.occupants = []
             for x in range(0,randint(0,4)): # generate some npcs for the building
@@ -94,6 +95,8 @@ class Building():
                 hooks.append([sg.Text(text)])
             Container = [sg.Column(hooks)]
             layout.append(Container)
+        if self.building_menu != "":
+            layout.append([sg.Frame("Building Offerings",[[sg.Text(self.building_menu)]])])
 
         return layout
 

@@ -43,7 +43,7 @@ current_displayed = None #used to hold the currently displayed element
 displayed_stack = [] #used to store in order, the parent elements in order to allow layers in menu
 button_menu = 1
 is_visible = False
-exit =0
+exit =1
 while(exit): # loop until exit is changed
     button_layout = [[]]
     general_buttons = [[]]
@@ -133,9 +133,7 @@ while(exit): # loop until exit is changed
                     path_current = os.getcwd()
                     OutP.export(current_displayed) # export the displayer info
                     os.chdir(path_current)
-                    print(settings["Export Pantheon"])
                     if "Pantheon" not in os.listdir() and settings["Export Pantheon"] == True:
-                        print("HERE")
                         OutOD.exportGeneralDetail(MASTER_GENERATOR)
                     window.close()
                     path_current = os.getcwd()
@@ -157,12 +155,6 @@ while(exit): # loop until exit is changed
                     os.chdir(path_current)
                     if "Pantheon" not in os.listdir() and settings["Export Pantheon"] == True:
                         OutOD.exportGeneralDetail(MASTER_GENERATOR)
-
-                    if "Mark Down" not in os.listdir():
-                        os.mkdir("Mark Down")
-                    os.chdir("./Mark Down")
-                    OutMD.export(current_displayed,gen = MASTER_GENERATOR) # export the displayer info
-
                     window.close()
                     layout = [[sg.Text("Exported to " + path_current,justification="center",size=export_text)],[sg.Text("Returning to main menu...",justification="center",size=export_text)],[sg.Column([[sg.Button("OK",size=d_f_b)]],justification='center')]]
                     window = sg.Window("Abnormal World Generator",layout)

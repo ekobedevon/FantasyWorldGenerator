@@ -82,7 +82,9 @@ def exportBuilding(building: Building.Building):
     file.write("## General Info <br>\n")   
     file.write("**Name:** %s<br>\n" % building.building_name)
     file.write("**Building Type:** %s<br>\n" % building.building_type)
-    file.write("**Owner:**  %s <br>\n" % building.owner.name ) 
+    file.write("**Owner:**  %s <br>\n" % building.owner.name )
+    if building.building_menu != "":
+        file.write("**Building Offerings**:<br>\n%s" % building.building_menu)
     file.write("### Occupants <br>\n")
     for occupant in building.occupants:
         file.write(" %s <br>\n" % occupant.name)
@@ -95,6 +97,7 @@ def exportBuilding(building: Building.Building):
     exportNPC(building.owner)
     for occupant in building.occupants:
         exportNPC(occupant)
+    
 
     os.chdir(base) 
 
