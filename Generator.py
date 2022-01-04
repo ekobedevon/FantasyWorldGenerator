@@ -271,7 +271,7 @@ class generator(): # create a generator object
             sex = generateGender()
         if domain == "":
             domain = rand.choice(self.general_details["Domains"])
-        return self.generateName(race,sex) +", Diety of the "+ domain + " domain"
+        return self.generateName(race,sex) +", Deity of the "+ domain + " domain"
 
     def generateProfession(self,category: str = ""):
         job = ""
@@ -355,17 +355,17 @@ class generator(): # create a generator object
                 name = "The " + rand.choice(self.building_names["Nouns"]) + " & " + rand.choice(self.building_names["Nouns"])
         return name
 
-    def generateReligiousBuildingName(self,diety:str = ""):
+    def generateReligiousBuildingName(self,Deity:str = ""):
         """Generates a random taven name
         Args:
-            domain (str, optional): The desired god for the building . Defaults to a randomly generater diety.
+            domain (str, optional): The desired god for the building . Defaults to a randomly generater Deity.
 
         Returns:
             [str]: Religious Building name
         """
-        if diety == "":
-            diety =rand.choice(list(self.pantheon.values()))
-        name = rand.choice(self.building_names["Worship_Titles"]) + " of " + diety
+        if Deity == "":
+            Deity =rand.choice(list(self.pantheon.values()))
+        name = rand.choice(self.building_names["Worship_Titles"]) + " of " + Deity
         return name
 
     def generateBuildingMenu(self,building_type: str,amount:int):
@@ -437,8 +437,8 @@ class generator(): # create a generator object
                 owner_proffesion = "Owner of " + building_name
             case "Religious":
                 building_name = self.generateReligiousBuildingName()
-                diety_name = building_name.partition(" of ")
-                owner_proffesion = " of " + diety_name[2]
+                Deity_name = building_name.partition(" of ")
+                owner_proffesion = " of " + Deity_name[2]
 
         return building_name, owner_proffesion,building_type
             
@@ -811,8 +811,8 @@ class generator(): # create a generator object
         if choice in [1,4,6]: # absolute rules
             home = self.generateLOI(False,False)
         elif choice == 2:
-            diety = (title.partition("of "))
-            home = self.generateReligiousBuildingName(diety= diety[2] )
+            Deity = (title.partition("of "))
+            home = self.generateReligiousBuildingName(Deity= Deity[2] )
         elif choice == 5:
             home = (self.generateBuilding("Notable_Housing"))[0]
 

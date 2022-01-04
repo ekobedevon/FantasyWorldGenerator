@@ -68,7 +68,7 @@ if "pantheon.json" in os.listdir(): # if pantheon already generated, ask user if
         MASTER_GENERATOR.general_details["Domains"] = list(data.keys()) # import the keys of the domain
 
 else: # generate a new pantheon
-    MASTER_GENERATOR.pantheon()
+    MASTER_GENERATOR.generatePantheon()
 os.chdir(BASE_PATH) # return to base file path
 
 
@@ -92,7 +92,9 @@ while(exit): # loop until exit is changed
                                 [sg.Button("Exit",key="--EXIT--",size=d_f_b)],
                                 [sg.Button("Settings",key="--SETTINGS--",size=d_f_b)]]
         case 2:
-            general_buttons = [[sg.Button("Return",key="--Return--",size=d_f_b)],[sg.Button("Exit",key="--EXIT--",size=d_f_b)],[sg.Button("Main Menu",key="--Main--",size=d_f_b,visible=is_visible)]]
+            general_buttons = [[sg.Button("Return",key="--Return--",size=d_f_b)],
+                                [sg.Button("Exit",key="--EXIT--",size=d_f_b)],
+                                [sg.Button("Main Menu",key="--Main--",size=d_f_b,visible=is_visible)]]
     button_layout.append([sg.Frame("General",general_buttons)])
     layout= [[sg.Column(layout),sg.Column(button_layout)]]
     window = sg.Window("Abnormal World Generator",layout)
