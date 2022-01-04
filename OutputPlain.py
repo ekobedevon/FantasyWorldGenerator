@@ -97,7 +97,6 @@ def exportBuilding(building: Building.Building):
     file.close()
     base = os.getcwd() #base working directory
     os.chdir("./Occupants") #write all occupants 
-    exportNPC(building.owner)
     for occupant in building.occupants:
         exportNPC(occupant)
     os.chdir(base) 
@@ -139,7 +138,6 @@ def exportCity(city:City.City):
 
     os.chdir(base) #return to proper directory
     os.chdir("./Wandering NPCs")
-    exportNPC(city.city_leader)
     for npc in city.wandering_npcs:
         exportNPC(npc)
     os.chdir(base) # return to base directory
