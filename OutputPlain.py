@@ -43,7 +43,7 @@ def exportGeneralDetail(gen:Generator.generator):
     os.mkdir("./Pantheon") # create pantheon folder
     os.chdir("./Pantheon") # enter panthon directory
     for god in list(gen.pantheon.keys()):
-        file = open("Diety of "+god+".txt", 'w')
+        file = open("Deity of "+god+".txt", 'w')
         file.write("General Details\n")
         file.write("Name: %s\n" % gen.pantheon[god])
         file.close()
