@@ -607,7 +607,7 @@ class generator(): # create a generator object
                     case 2:
                         Goal = "Revenge on " + (rand.choice(npcs)) + "'s ancestors" #revenge on a blood line
                     case 3:
-                        Goal = "Revenge on all" + (rand.choice(list(self.race_list.keys()))) #Revenge on a race
+                        Goal = "Revenge on all " + (rand.choice(list(self.race_list.keys()))) #Revenge on a race
                     case 4:
                         Goal = "Revenge on all inhabitants of " + (rand.choice(major_locations))
             case 2: #DOMINATION
@@ -673,7 +673,7 @@ class generator(): # create a generator object
                             case 3:
                                 means_of_action = "by stealing '" + self.generateMacguffin() + "' from " + local_leader
                             case 4:
-                                means_of_action = "by stealing '" + self.generateMacguffin() + "' from the " + rand.choice(list(self.race_list.keys()))
+                                means_of_action = "by stealing '" + self.generateMacguffin() + "' from the " + rand.choice(list(self.race_list.keys())) + "s"
                     case 2: #To steal people
                         match(rand.randint(1,6)):
                             case 1:
