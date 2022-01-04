@@ -48,7 +48,7 @@ def exportGeneralDetail(gen:Generator.generator):
         file.close()
 
 def getDomain(string:str): # get the domain of the god
-    temp = string.partition("Diety")
+    temp = string.partition("Deity")
     domain = temp[1]+temp[2]
     domain = domain.removesuffix(" domain") #remove the domain
     domain = domain.replace("the ","",1) # remove "the"
