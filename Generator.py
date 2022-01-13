@@ -661,7 +661,7 @@ class generator(): # create a generator object
                 
         means_of_action = ""
 
-        match(1): 
+        match(rand.randint(1,5)): 
             case 1: # TO STEAL SOMETHING
                 match(rand.randint(1,2)):
                     case 1: # TO STEAL A ITEM
@@ -716,10 +716,8 @@ class generator(): # create a generator object
                             case 4:
                                 means_of_action = "by sacrificing " + (rand.choice(npcs))
                             case 5:
-                                means_of_action = "by sacrificing a god"
-                            case 6:
                                 means_of_action = "by sacrificing the legendary " + rand.choice(self.general_details["Monsters"]) + "(s)"
-                            case 7:
+                            case 6:
                                 means_of_action = "by sacrificing the legendary " + self.generateMacguffin()
             case 3: #Conquer/Invade
                 match(rand.randint(1,2)):
@@ -766,9 +764,9 @@ class generator(): # create a generator object
                     case 4:
                         means_of_action = "by starting a rebellion/revolution in " + rand.choice(cities+major_locations+ minor_locations)
                     case 5:
-                        means_of_action = "by starting a commiting acts of terrorism in " + area_name
+                        means_of_action = "by commiting acts of terrorism in " + area_name
                     case 6:
-                        means_of_action = "by starting a commiting acts of terrorism in " + rand.choice(cities+major_locations+ minor_locations)
+                        means_of_action = "by commiting acts of terrorism in " + rand.choice(cities+major_locations+ minor_locations)
 
         
         return Goal + " " +  means_of_action       
