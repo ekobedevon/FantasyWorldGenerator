@@ -109,7 +109,6 @@ while(exit): # loop until exit is changed
 
                 case "--EXIT--": # exit program
                     exit = 0
-                    
                     window.close()
                 case "--NewNPC--": # generate a new NPC
                     current_displayed = NPC.NPC(MASTER_GENERATOR)
