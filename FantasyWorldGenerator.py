@@ -27,9 +27,6 @@ exit = 1
 
 
 
-
-
-
 #STYLE STUFF
 d_f_b = (10,1) #DEFAULT BUTTON SIZE
 export_text = (100,1)

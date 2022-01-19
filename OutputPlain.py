@@ -8,11 +8,11 @@ import Continent
 import Generator
 extra = ""
 tags = {}
-tags["c"] = "[City]"
-tags["b"] = "[Building]"
-tags["r"] = "[Region]"
-tags["p"] = "[Pantheon]"
-tags["ct"] = "[Continent]"
+tags["c"] = "City_"
+tags["b"] = "Building_"
+tags["r"] = "Region_"
+tags["p"] = "Pantheon_"
+tags["ct"] = "Continent_"
 
 """NOTE: Obsidian uses paths to distinguish unique names, so in the future as world gen gets bigger, it might be needed to add a process that ensures all names are unique before exporting"""
 

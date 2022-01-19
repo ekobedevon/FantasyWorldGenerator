@@ -812,7 +812,7 @@ class generator(): # create a generator object
             Deity = (title.partition("of "))
             home = self.generateReligiousBuildingName(Deity= Deity[2] )
         elif choice == 5:
-            home = (self.generateBuilding("Notable_Housing"))[0]
+            home = (self.generateBuilding("Notable Housing"))[0]
 
         return system,title,home
 
