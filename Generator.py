@@ -15,7 +15,7 @@ def initialize_race(race: str):
     for file_name in file_list: #store all the json files in a dict
             file = open(path + file_name);
             race_dict[file_name.removesuffix('.json')] = js.load(file)
-    if len(race_dict["Settings"]) != 2: #if settings doesn't have current minimum settings
+    if len(race_dict["Settings"]) < 3 : #if settings doesn't have current minimum settings
         return -1
     return race_dict
 
@@ -42,6 +42,17 @@ def intialize_building_names():
         data = js.load(file)
         building_name_details[file_name.removesuffix(".json")] = data
     return building_name_details
+
+def intialize_building_menu():
+    """Read in files from the buildings folder and store then in the proper lists needed for world generation"""
+    os.chdir("Json_Files\Buildings\Menu") # set to building directory
+    building_fileList = os.listdir("./")
+    building_menu_details = {}
+    for file_name in building_fileList:
+        file = open(file_name)
+        data = js.load(file)
+        building_menu_details[file_name.removesuffix(".json")] = data
+    return  building_menu_details
 
 def intialize_building_types():
     os.chdir("Json_Files\Buildings")
@@ -165,13 +176,15 @@ class generator(): # create a generator object
             if type(data) != type(1): #if the data type is not an int
                 self.race_list[race] = data # store in data
             else:
-                print(race + "is not in a valid format, checking settings file in race folder")
+                print(race + " is not in a valid format, checking settings file in race folder")
         os.chdir(base)
         self.profession_master, self.professions_Categorized = intialize_professions() #intialize profession master
         os.chdir(base)
         self.building_names = intialize_building_names()
         os.chdir(base)
         self.general_details = initlalize_general_details()
+        os.chdir(base)
+        self.general_details["Menu"] = intialize_building_menu()
         os.chdir(base)
         self.building_types, self.building_types_names = intialize_building_types()
         os.chdir(base)
@@ -186,10 +199,12 @@ class generator(): # create a generator object
         self.origin_details = intialize_origins()
         os.chdir(base)
 
+        
+
+
+    def generatePantheon(self):
         for domain in self.general_details["Domains"]:
             self.pantheon[domain] = self.generateGodName(domain=domain)
-
-
 
     def generateRace(self):
         if len(self.race_list) != None:
@@ -207,20 +222,33 @@ class generator(): # create a generator object
         Returns:
             [str]: returns a name
         """
+        name_convention = self.race_list[race]["Settings"]["Name Convention"]
         name = ""
-        match len(self.race_list[race]):
-            case 1:
+        match (name_convention):
+            case 0:
                 print("Not enough arguments")
-            case 2:
-                print("Non gendered names to come")
-            case 3:# races with no last names 
+            case 1:
+                name = rand.choice(self.race_list[race]["Genderless"])
+            case 2:# races with last names from other races
                 if sex == "M" or sex == "F":
                     name = rand.choice(self.race_list[race][race+"_"+sex])
-            case 4: #races with simple last names
+                keys = self.race_list[race]["Settings"]
+                if "Origins" not in list(keys.keys()): # if no orgins key is present
+                    print("Settings file not correct, race has no origins for last name, returning first name only")
+                else: 
+                    origin = self.race_list[race]["Settings"]["Origins"] # get origin list
+                    race = rand.choice(origin) #get a race from the origin list
+                    last_name_patern = self.race_list[race]["Settings"]["Name Convention"] # get the last name pattern of the parent race
+                    match(last_name_patern): #
+                        case 3: # standard last name pattern
+                            name = name + " " + rand.choice(self.race_list[race][race+"_Last"])
+                        case 4: # complex last name
+                            name = name + " of " + rand.choice(self.race_list[race][race+"_Pre"])  + " " + rand.choice(self.race_list[race][race+"_Post"])
+            case 3: #races with simple last names
                 if sex == "M" or sex == "F":
                     name = rand.choice(self.race_list[race][race+"_"+sex])
                 name = name + " " + rand.choice(self.race_list[race][race+"_Last"])
-            case 5: #races with complex last names(2 parts)
+            case 4: #races with complex last names(2 parts)
                 if sex == "M" or sex == "F":
                     name = rand.choice(self.race_list[race][race+"_"+sex])
                 name = name + " of " + rand.choice(self.race_list[race][race+"_Pre"])  + " " + rand.choice(self.race_list[race][race+"_Post"])
@@ -243,7 +271,7 @@ class generator(): # create a generator object
             sex = generateGender()
         if domain == "":
             domain = rand.choice(self.general_details["Domains"])
-        return self.generateName(race,sex) +", Diety of the "+ domain + " domain"
+        return self.generateName(race,sex) +", Deity of the "+ domain + " domain"
 
     def generateProfession(self,category: str = ""):
         job = ""
@@ -327,25 +355,47 @@ class generator(): # create a generator object
                 name = "The " + rand.choice(self.building_names["Nouns"]) + " & " + rand.choice(self.building_names["Nouns"])
         return name
 
-    def generateReligiousBuildingName(self,diety:str = ""):
+    def generateReligiousBuildingName(self,Deity:str = ""):
         """Generates a random taven name
         Args:
-            domain (str, optional): The desired god for the building . Defaults to a randomly generater diety.
+            domain (str, optional): The desired god for the building . Defaults to a randomly generater Deity.
 
         Returns:
             [str]: Religious Building name
         """
-        if diety == "":
-            diety =rand.choice(list(self.pantheon.values()))
-        name = rand.choice(self.building_names["Worship_Titles"]) + " of " + diety
+        if Deity == "":
+            Deity =rand.choice(list(self.pantheon.values()))
+        name = rand.choice(self.building_names["Worship_Titles"]) + " of " + Deity
         return name
+
+    def generateBuildingMenu(self,building_type: str,amount:int):
+        """return a list of offerings based on the building type
+
+        Args:
+            building_type (str): the type of building
+            amount (int): the amount of options to generate
+        """
+        menu = ""
+        if building_type == "Tavern":
+            for x in range(amount):
+                main_dish = rand.choice(self.general_details["Menu"]["Meal_Types"]) + " " + rand.choice(self.general_details["Menu"]["Dishes"])
+                sides = rand.choice(self.general_details["Menu"]["Sides"]) + ", " + rand.choice(self.general_details["Menu"]["Sides"]) + ", and " + rand.choice(self.general_details["Menu"]["Sides"])
+                menu = menu + main_dish + " with a side of " + sides + "\n"
+        if building_type == "Magic Shop":
+            for x in range(amount):
+                menu = menu + self.generateMacguffin() + "\n"
+
+        return menu
+
+
+
 
     def generateBuilding(self,building_type: str = "",location: str = ""):
         """ Generates the details needed for a building based 
 
         Args:
             building_type (str, optional): The type of building to be generated. Defaults to "".
-                Vailid Building Types: Shops,Tavern,Guild_Types,Normal_Homes,Notable_Housing,Government Buidling,Craftsmen,Religious
+                Vailid Building Types: Shop,Tavern,Guild,Normal Homes,Notable Housing,Government Buidling,Craftsmen,Religious
             location (str, optional): The city in which the building is located, if desired. Defaults to "".
 
         Returns:
@@ -361,31 +411,34 @@ class generator(): # create a generator object
         if building_type == "" or building_type not in self.building_types: #if their is no building type or if the building type is not valid
             building_type = rand.choice(self.building_types) # generate a building type
         match(building_type):
-            case "Shops":
+            case "Shop":
+                building_name = self.generateBuildingName()
+                owner_proffesion = "Owner of " + building_name
+            case "Magic Shop":
                 building_name = self.generateBuildingName()
                 owner_proffesion = "Owner of " + building_name
             case "Tavern":
                 building_name = self.generateTavernName()
                 owner_proffesion = "Owner of " + building_name
-            case "Guild_Types":
-                building_name = rand.choice(self.building_types_names["Guild_Types"]) + " Guild Branch" + suffix
+            case "Guild":
+                building_name = rand.choice(self.building_types_names["Guild"]) + " Guild Branch" + suffix
                 owner_proffesion = "Leader of local " + building_name
-            case "Normal_Homes":
-                building_name = rand.choice(self.building_types_names["Normal_Homes"])
+            case "Normal Homes":
+                building_name = rand.choice(self.building_types_names["Normal Homes"])
                 owner_proffesion = ""
             case "Government Building":
                 building_name = "Government Building" + suffix
                 owner_proffesion = "Leader for local government"
-            case "Notable_Housing":
-                building_name = rand.choice(self.building_types_names["Notable_Housing"])
+            case "Notable Housing":
+                building_name = rand.choice(self.building_types_names["Notable Housing"])
                 owner_proffesion = ""
             case "Craftsmen":
                 building_name = self.generateBuildingName() + " " + rand.choice(self.building_types_names['Craftsmen'])
                 owner_proffesion = "Owner of " + building_name
             case "Religious":
                 building_name = self.generateReligiousBuildingName()
-                diety_name = building_name.partition(" of ")
-                owner_proffesion = " of " + diety_name[2]
+                Deity_name = building_name.partition(" of ")
+                owner_proffesion = " of " + Deity_name[2]
 
         return building_name, owner_proffesion,building_type
             
@@ -517,7 +570,16 @@ class generator(): # create a generator object
         if region_name != "":
             return location_type + " " + region_name
         else:
-            return rand.choice(self.location_details["Adjectives"]) + " " + location_type
+            match(rand.randint(1,4)):
+                case 1:
+                    return location_type + " of " + rand.choice(self.location_details["Adjectives"]) +  " " + rand.choice(self.location_details["Noun"])
+                case 2:
+                    return rand.choice(self.location_details["World Titles"]) + " of " + rand.choice(self.location_details["Adjectives"]) +  " " + rand.choice(self.location_details["Noun"])
+                case 3:
+                    return "The " + rand.choice(self.location_details["Adjectives"]) + " " + location_type
+                case 4: 
+                    return "The " + rand.choice(self.location_details["Adjectives"]) + " " + rand.choice(self.location_details["Noun"]) + " " + location_type
+
 
     def generatePowerGoal(self,minor_locations ,npcs ,major_locations,area_name,local_leader,cities):
         """Generates a Goal for a npc based on paramerters given
@@ -545,7 +607,7 @@ class generator(): # create a generator object
                     case 2:
                         Goal = "Revenge on " + (rand.choice(npcs)) + "'s ancestors" #revenge on a blood line
                     case 3:
-                        Goal = "Revenge on all" + (rand.choice(list(self.race_list.keys()))) #Revenge on a race
+                        Goal = "Revenge on all " + (rand.choice(list(self.race_list.keys()))) #Revenge on a race
                     case 4:
                         Goal = "Revenge on all inhabitants of " + (rand.choice(major_locations))
             case 2: #DOMINATION
@@ -599,7 +661,7 @@ class generator(): # create a generator object
                 
         means_of_action = ""
 
-        match(1): 
+        match(rand.randint(1,5)): 
             case 1: # TO STEAL SOMETHING
                 match(rand.randint(1,2)):
                     case 1: # TO STEAL A ITEM
@@ -611,7 +673,7 @@ class generator(): # create a generator object
                             case 3:
                                 means_of_action = "by stealing '" + self.generateMacguffin() + "' from " + local_leader
                             case 4:
-                                means_of_action = "by stealing '" + self.generateMacguffin() + "' from the " + rand.choice(list(self.race_list.keys()))
+                                means_of_action = "by stealing '" + self.generateMacguffin() + "' from the " + rand.choice(list(self.race_list.keys())) + "s"
                     case 2: #To steal people
                         match(rand.randint(1,6)):
                             case 1:
@@ -654,10 +716,8 @@ class generator(): # create a generator object
                             case 4:
                                 means_of_action = "by sacrificing " + (rand.choice(npcs))
                             case 5:
-                                means_of_action = "by sacrificing a god"
-                            case 6:
                                 means_of_action = "by sacrificing the legendary " + rand.choice(self.general_details["Monsters"]) + "(s)"
-                            case 7:
+                            case 6:
                                 means_of_action = "by sacrificing the legendary " + self.generateMacguffin()
             case 3: #Conquer/Invade
                 match(rand.randint(1,2)):
@@ -704,9 +764,9 @@ class generator(): # create a generator object
                     case 4:
                         means_of_action = "by starting a rebellion/revolution in " + rand.choice(cities+major_locations+ minor_locations)
                     case 5:
-                        means_of_action = "by starting a commiting acts of terrorism in " + area_name
+                        means_of_action = "by commiting acts of terrorism in " + area_name
                     case 6:
-                        means_of_action = "by starting a commiting acts of terrorism in " + rand.choice(cities+major_locations+ minor_locations)
+                        means_of_action = "by commiting acts of terrorism in " + rand.choice(cities+major_locations+ minor_locations)
 
         
         return Goal + " " +  means_of_action       
@@ -749,10 +809,10 @@ class generator(): # create a generator object
         if choice in [1,4,6]: # absolute rules
             home = self.generateLOI(False,False)
         elif choice == 2:
-            diety = (title.partition("of "))
-            home = self.generateReligiousBuildingName(diety= diety[2] )
+            Deity = (title.partition("of "))
+            home = self.generateReligiousBuildingName(Deity= Deity[2] )
         elif choice == 5:
-            home = (self.generateBuilding("Notable_Housing"))[0]
+            home = (self.generateBuilding("Notable Housing"))[0]
 
         return system,title,home
 

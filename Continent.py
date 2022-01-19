@@ -39,8 +39,8 @@ class Continent():
             self.political_system = main_region.political_system
            # self.region_name = gen.generateRegionName(self.capital.city_name)
             self.political_leader = main_region.political_leader # set the continent political leader from the main region
-            self.continent_name = main_region.region_name
-            main_region.region_name = gen.generateRegionName()
+            self.continent_name = gen.generateWorldName()
+            
         else:
             main_region = Region.Region(gen) # generate a region to use to even out the above 
             self.region_name = gen.generateRegionName("")

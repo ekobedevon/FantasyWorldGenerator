@@ -18,8 +18,12 @@ BASE_PATH = os.getcwd()
 MASTER_GENERATOR =Generator.generator()
 random.seed(time.time())
 
-
-
+#Variables used to maintina the GUI
+current_displayed = None #used to hold the currently displayed element
+displayed_stack = [] #used to store in order, the parent elements in order to allow layers in menu
+button_menu = 1
+is_visible = False
+exit = 1
 
 
 
@@ -31,20 +35,41 @@ export_text = (100,1)
 if "Export" not in os.listdir():
     os.mkdir("Export")
 
+
+
+
 world_name = MASTER_GENERATOR.generateWorldName() # generate a world name
 
 #settins
+os.chdir("./Settings")
 file = open("settings.json")
 settings = json.load(file)
 sg.theme(settings["Current Theme"])
+if "pantheon.json" in os.listdir(): # if pantheon already generated, ask user if they want to use it, allows for pantheon to save between worlds
+    layout = [[sg.Column([[sg.Text("Pantheon Detected in settings folder. Use?")]],justification='center')],[sg.Column([[sg.Button("Yes",key="Keep"),sg.Button("New Pantheon",key="New")]],justification='center')]]
+    window = sg.Window("Pantheon Detected",layout)
+    events, values = window.read()
+    if "New" in events:
+        window.close()
+        layout = [[sg.Column([[sg.Text("Are you sure?")]],justification='center')],[sg.Column([[sg.Button("Keep Pantheon",key="Keep"),sg.Button("New Pantheon",key="New")]],justification='center')]]
+        window = sg.Window("Confirm",layout)
+        events, values = window.read()
+        if "New" in events:
+            window.close()
+            MASTER_GENERATOR.generatePantheon()
+    if "Keep" in events: # if keep is pressed, load in the pantheon from the file
+        window.close()
+        file = open("pantheon.json")
+        data = json.load(file)
+        MASTER_GENERATOR.pantheon = data
+        MASTER_GENERATOR.general_details["Domains"] = list(data.keys()) # import the keys of the domain
+
+else: # generate a new pantheon
+    MASTER_GENERATOR.generatePantheon()
+os.chdir(BASE_PATH) # return to base file path
 
 
-#Variables used to maintina the GUI
-current_displayed = None #used to hold the currently displayed element
-displayed_stack = [] #used to store in order, the parent elements in order to allow layers in menu
-button_menu = 1
-is_visible = False
-exit =1
+
 while(exit): # loop until exit is changed
     button_layout = [[]]
     general_buttons = [[]]
@@ -64,7 +89,9 @@ while(exit): # loop until exit is changed
                                 [sg.Button("Exit",key="--EXIT--",size=d_f_b)],
                                 [sg.Button("Settings",key="--SETTINGS--",size=d_f_b)]]
         case 2:
-            general_buttons = [[sg.Button("Return",key="--Return--",size=d_f_b)],[sg.Button("Exit",key="--EXIT--",size=d_f_b)],[sg.Button("Main Menu",key="--Main--",size=d_f_b,visible=is_visible)]]
+            general_buttons = [[sg.Button("Return",key="--Return--",size=d_f_b)],
+                                [sg.Button("Exit",key="--EXIT--",size=d_f_b)],
+                                [sg.Button("Main Menu",key="--Main--",size=d_f_b,visible=is_visible)]]
     button_layout.append([sg.Frame("General",general_buttons)])
     layout= [[sg.Column(layout),sg.Column(button_layout)]]
     window = sg.Window("Abnormal World Generator",layout)
@@ -79,7 +106,6 @@ while(exit): # loop until exit is changed
 
                 case "--EXIT--": # exit program
                     exit = 0
-                    
                     window.close()
                 case "--NewNPC--": # generate a new NPC
                     current_displayed = NPC.NPC(MASTER_GENERATOR)
@@ -134,9 +160,7 @@ while(exit): # loop until exit is changed
                     path_current = os.getcwd()
                     OutP.export(current_displayed) # export the displayer info
                     os.chdir(path_current)
-                    print(settings["Export Pantheon"])
                     if "Pantheon" not in os.listdir() and settings["Export Pantheon"] == True:
-                        print("HERE")
                         OutOD.exportGeneralDetail(MASTER_GENERATOR)
                     window.close()
                     path_current = os.getcwd()
@@ -158,12 +182,6 @@ while(exit): # loop until exit is changed
                     os.chdir(path_current)
                     if "Pantheon" not in os.listdir() and settings["Export Pantheon"] == True:
                         OutOD.exportGeneralDetail(MASTER_GENERATOR)
-
-                    if "Mark Down" not in os.listdir():
-                        os.mkdir("Mark Down")
-                    os.chdir("./Mark Down")
-                    OutMD.export(current_displayed,gen = MASTER_GENERATOR) # export the displayer info
-
                     window.close()
                     layout = [[sg.Text("Exported to " + path_current,justification="center",size=export_text)],[sg.Text("Returning to main menu...",justification="center",size=export_text)],[sg.Column([[sg.Button("OK",size=d_f_b)]],justification='center')]]
                     window = sg.Window("Abnormal World Generator",layout)
@@ -224,8 +242,12 @@ while(exit): # loop until exit is changed
         exit = 0
         window.close()
 
-with open("settings.json",'w') as outfile:
+with open("Settings\settings.json",'w') as outfile:
     json.dump(settings,outfile)
+
+export_panth = MASTER_GENERATOR.pantheon
+with open("Settings\pantheon.json",'w') as outfile: # export pantheon
+    json.dump(export_panth,outfile)
 
     
 

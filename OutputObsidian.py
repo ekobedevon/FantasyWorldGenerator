@@ -9,11 +9,11 @@ import Region
 import Generator
 extra = ""
 tags = {}
-tags["c"] = "[City]"
-tags["b"] = "[Building]"
-tags["r"] = "[Region]"
-tags["p"] = "[Pantheon]"
-tags["ct"] = "[Continent]"
+tags["c"] = "City_"
+tags["b"] = "Building_"
+tags["r"] = "Region_"
+tags["p"] = "Pantheon_"
+tags["ct"] = "Continent_"
 
 
 """NOTE: Obsidian uses paths to distinguish unique names, so in the future as world gen gets bigger, it might be needed to add a process that ensures all names are unique before exporting"""
@@ -42,13 +42,13 @@ def exportGeneralDetail(gen:Generator.generator):
     os.mkdir("Pantheon") # create pantheon folder
     os.chdir("./Pantheon") # enter panthon directory
     for god in list(gen.pantheon.keys()):
-        file = open("Diety of "+god+".MD",'w')
+        file = open("Deity of "+god+".MD",'w')
         file.write("## General Details<br>\n")
         file.write("**Name:** %s<br>\n" % gen.pantheon[god])
         file.close()
 
 def getDomain(string:str): # get the domain of the god
-    temp = string.partition("Diety")
+    temp = string.partition("Deity")
     domain = temp[1]+temp[2]
     domain = domain.removesuffix(" domain") #remove the domain
     domain = domain.replace("the ","",1) # remove "the"
@@ -70,8 +70,7 @@ def exportNPC(npc: NPC.NPC):
         file.write("%s<br>\n" % npc.profession)
     else: #link to god
         domain = getDomain(npc.profession)
-        title_tuple = npc.profession.partition(domain)
-        new_title = title_tuple[0] + "[[" + title_tuple[1] + "]]" + title_tuple[2]
+        new_title = npc.profession[:npc.profession.index(",")] + ", [[" +domain+ "]] domain"
         file.write("%s<br>\n" % new_title)
     if npc.goals != "":
         file.write("**Lair:** %s<br>\n" % npc.lair)
@@ -103,16 +102,18 @@ def exportBuilding(building: Building.Building):
         new_title = building.building_name[:building.building_name.index(",")] + ", [[" +domain+ "]] domain"
         file.write("%s<br>\n" % new_title)
     file.write("**Building Type:** %s<br>\n" % building.building_type)
-    file.write("**Owner:**  [[%s]] <br>\n" % building.owner.name ) 
+    file.write("**Owner:**  [[%s]] <br>\n" % building.owner.name )
+    if building.building_menu != "":
+        file.write("**Building Offerings**:<br>\n %s" % building.building_menu)
     file.write("### Occupants <br>\n")
     for occupant in building.occupants:
         file.write(" [[%s]] <br>\n" % occupant.name)
     file.write("### Hooks <br>\n")
     for hook in building.hooks:
         file.write("%s <br>\n" % hook)
+    
     file.close()
     os.chdir("./Occupants") #write all occupants 
-    exportNPC(building.owner)
     for occupant in building.occupants:
         exportNPC(occupant)
 

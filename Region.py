@@ -37,7 +37,7 @@ class Region():
             self.political_united = rand.randint(0,1) #50/50 if the area is politically united
         if(self.political_united):
             self.capital = City.City(gen) # generate the capital city
-            self.region_name = gen.generateRegionName(self.capital.city_name)
+            self.region_name = gen.generateRegionName("")
             self.political_leader = self.capital.city_leader
             named_location_list.append(self.capital.city_name)
         else:

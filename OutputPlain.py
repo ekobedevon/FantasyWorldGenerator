@@ -8,11 +8,11 @@ import Continent
 import Generator
 extra = ""
 tags = {}
-tags["c"] = "[City]"
-tags["b"] = "[Building]"
-tags["r"] = "[Region]"
-tags["p"] = "[Pantheon]"
-tags["ct"] = "[Continent]"
+tags["c"] = "City_"
+tags["b"] = "Building_"
+tags["r"] = "Region_"
+tags["p"] = "Pantheon_"
+tags["ct"] = "Continent_"
 
 """NOTE: Obsidian uses paths to distinguish unique names, so in the future as world gen gets bigger, it might be needed to add a process that ensures all names are unique before exporting"""
 
@@ -43,7 +43,7 @@ def exportGeneralDetail(gen:Generator.generator):
     os.mkdir("./Pantheon") # create pantheon folder
     os.chdir("./Pantheon") # enter panthon directory
     for god in list(gen.pantheon.keys()):
-        file = open("Diety of "+god+".txt", 'w')
+        file = open("Deity of "+god+".txt", 'w')
         file.write("General Details\n")
         file.write("Name: %s\n" % gen.pantheon[god])
         file.close()
@@ -85,7 +85,9 @@ def exportBuilding(building: Building.Building):
     file.write("General Info \n")
     file.write("Name: %s\n" % building.building_name)
     file.write("Building Type: %s\n" % building.building_type)
-    file.write("Owner:  %s \n" % building.owner.name ) 
+    file.write("Owner:  %s \n" % building.owner.name )
+    if building.building_menu != "":
+        file.write("Building Offerings:\n%s" % building.building_menu)
     file.write("Occupants \n")
     for occupant in building.occupants:
         file.write(" %s \n" % occupant.name)
@@ -95,7 +97,6 @@ def exportBuilding(building: Building.Building):
     file.close()
     base = os.getcwd() #base working directory
     os.chdir("./Occupants") #write all occupants 
-    exportNPC(building.owner)
     for occupant in building.occupants:
         exportNPC(occupant)
     os.chdir(base) 
@@ -137,7 +138,6 @@ def exportCity(city:City.City):
 
     os.chdir(base) #return to proper directory
     os.chdir("./Wandering NPCs")
-    exportNPC(city.city_leader)
     for npc in city.wandering_npcs:
         exportNPC(npc)
     os.chdir(base) # return to base directory
