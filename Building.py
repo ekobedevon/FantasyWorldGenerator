@@ -25,8 +25,6 @@ class Building():
                 self.owner.profession = building_owner
             if self.building_type == "Religious":
                 self.owner.profession += building_owner
-            if self.building_type == "Normal Homes":
-                self.building_name += " of " + self.owner.name
             elif self.building_type == "Notable Housing":
                 self.building_name = gen.generateInterstingName(self.owner.name,self.building_name)    
             self.building_menu = gen.generateBuildingMenu(self.building_type,randint(4,12)) # generate a building menu

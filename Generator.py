@@ -395,7 +395,7 @@ class generator(): # create a generator object
 
         Args:
             building_type (str, optional): The type of building to be generated. Defaults to "".
-                Vailid Building Types: Shop,Tavern,Guild,Normal Homes,Notable Housing,Government Buidling,Craftsmen,Religious
+                Vailid Building Types: Shop,Tavern,Guild,Notable Housing,Government Buidling,Craftsmen,Religious
             location (str, optional): The city in which the building is located, if desired. Defaults to "".
 
         Returns:
@@ -423,9 +423,6 @@ class generator(): # create a generator object
             case "Guild":
                 building_name = rand.choice(self.building_types_names["Guild"]) + " Guild Branch" + suffix
                 owner_proffesion = "Leader of local " + building_name
-            case "Normal Homes":
-                building_name = rand.choice(self.building_types_names["Normal Homes"])
-                owner_proffesion = ""
             case "Government Building":
                 building_name = "Government Building" + suffix
                 owner_proffesion = "Leader for local government"
