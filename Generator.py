@@ -21,7 +21,7 @@ def initialize_race(race: str):
 
 def intialize_professions():
     """Read in from the professions files and generate the lists needed for world generation"""
-    os.chdir("Json_Files\Professions") #set to profession directory
+    os.chdir("Json_Files/Professions") #set to profession directory
     profession_fileList = os.listdir("./")
     profession_master=[] #list of ALL professions
     professions_Categorized = {} #professions sorted by categories
@@ -34,7 +34,7 @@ def intialize_professions():
 
 def intialize_building_names():
     """Read in files from the buildings folder and store then in the proper lists needed for world generation"""
-    os.chdir("Json_Files\Buildings\Building_Details") # set to building directory
+    os.chdir("Json_Files/Buildings/Building_Details") # set to building directory
     building_fileList = os.listdir("./")
     building_name_details = {}
     for file_name in building_fileList:
@@ -45,7 +45,7 @@ def intialize_building_names():
 
 def intialize_building_menu():
     """Read in files from the buildings folder and store then in the proper lists needed for world generation"""
-    os.chdir("Json_Files\Buildings\Menu") # set to building directory
+    os.chdir("Json_Files/Buildings/Menu") # set to building directory
     building_fileList = os.listdir("./")
     building_menu_details = {}
     for file_name in building_fileList:
@@ -55,7 +55,7 @@ def intialize_building_menu():
     return  building_menu_details
 
 def intialize_building_types():
-    os.chdir("Json_Files\Buildings")
+    os.chdir("Json_Files/Buildings")
     file = open("Building_Types.json")
     data = js.load(file)
     building_types = data
@@ -72,7 +72,7 @@ def intialize_building_types():
 
 def initlalize_general_details():
     """Read in files from the General details folder and store then in the proper lists needed for world generation"""
-    os.chdir("Json_Files\General_Details")
+    os.chdir("Json_Files/General_Details")
     general_fileList = os.listdir("./")
     general_details  = {}
     for file_name in general_fileList:
@@ -83,7 +83,7 @@ def initlalize_general_details():
 
 def intialize_item_details():
     """Read in files from item folder and store them in a dictionary"""
-    os.chdir("Json_Files\Items")
+    os.chdir("Json_Files/Items")
     general_fileList = os.listdir("./")
     item_details = {}
     for file_name in general_fileList:
@@ -93,7 +93,7 @@ def intialize_item_details():
     return item_details
 
 def intialize_quest_details():
-    os.chdir("Json_Files\Quest_Details")
+    os.chdir("Json_Files/Quest_Details")
     general_fileList = os.listdir("./")
     quest_details = {}
     for file_name in general_fileList:
@@ -103,7 +103,7 @@ def intialize_quest_details():
     return quest_details
 
 def intialize_location_details():
-    os.chdir("Json_Files\Location")
+    os.chdir("Json_Files/Location")
     general_fileList = os.listdir("./")
     location_details = {}
     for file_name in general_fileList:
@@ -113,7 +113,7 @@ def intialize_location_details():
     return location_details
 
 def intialize_city_details():
-    os.chdir("Json_Files\Cities")
+    os.chdir("Json_Files/Cities")
     general_fileList = os.listdir("./")
     city_details = {}
     for file_name in general_fileList:
@@ -123,7 +123,7 @@ def intialize_city_details():
     return city_details
 
 def intialize_origins():
-    os.chdir("Json_Files\Origins") # enter origin folder
+    os.chdir("Json_Files/Origins") # enter origin folder
     origin_list  = os.listdir("./") # get all list of origins
     base = os.getcwd() # get base directory
     origin_details = {} # create dictionary
@@ -169,7 +169,7 @@ class generator(): # create a generator object
     #create a generator object that stores all the data at the start
     def __init__(self):
         base = os.getcwd()
-        os.chdir("Json_Files\Races")
+        os.chdir("Json_Files/Races")
         race_fileList = os.listdir("./") # all races in the files
         for race in race_fileList:
             data = initialize_race(race) 
@@ -380,10 +380,10 @@ class generator(): # create a generator object
             for x in range(amount):
                 main_dish = rand.choice(self.general_details["Menu"]["Meal_Types"]) + " " + rand.choice(self.general_details["Menu"]["Dishes"])
                 sides = rand.choice(self.general_details["Menu"]["Sides"]) + ", " + rand.choice(self.general_details["Menu"]["Sides"]) + ", and " + rand.choice(self.general_details["Menu"]["Sides"])
-                menu = menu + main_dish + " with a side of " + sides + "\n"
+                menu = menu + main_dish + " with a side of " + sides + "/n"
         if building_type == "Magic Shop":
             for x in range(amount):
-                menu = menu + self.generateMacguffin() + "\n"
+                menu = menu + self.generateMacguffin() + "/n"
 
         return menu
 

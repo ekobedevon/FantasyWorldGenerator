@@ -242,11 +242,11 @@ while(exit): # loop until exit is changed
         exit = 0
         window.close()
 
-with open("Settings\settings.json",'w') as outfile:
+with open("Settings/settings.json",'w') as outfile:
     json.dump(settings,outfile)
 
 export_panth = MASTER_GENERATOR.pantheon
-with open("Settings\pantheon.json",'w') as outfile: # export pantheon
+with open("Settings/pantheon.json",'w') as outfile: # export pantheon
     json.dump(export_panth,outfile)
 
     
